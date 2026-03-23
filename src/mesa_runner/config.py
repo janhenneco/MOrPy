@@ -1,0 +1,164 @@
+from dataclasses import dataclass
+from functools import total_ordering
+import re
+from pathlib import Path
+import os
+import subprocess
+
+@total_ordering
+@dataclass(frozen = True)
+class MesaVersion:
+    """Class that holds and sets the MESA version in raw and normalised numeric format to allow comparisons.
+
+    Attributes:
+        version_name: Raw format of the MESA version
+        scheme: revision (rXXXXX), release (rXX.XX.X), or git hash (XXXXX) scheme
+        revision: Optional attribute set in case `version_name` is in revision format
+        year: Optional attribute set in case `version_name` is in release format. 
+            Represents the first pair of digits of rXX.XX.X
+        month: Optional attribute set in case `version_name` is in release format. 
+            Represents the second pair of digits of rXX.XX.X 
+        patch: Optional attribute set in case `version_name` is in release format. 
+            Represents the last digit of rXX.XX.X 
+    """
+    version_name: str
+    scheme: str
+    revision: int | None = None
+    year: int | None = None
+    month: int | None = None
+    patch: int = 1
+
+    @classmethod
+    def parse_mesa_version(cls, version_name: str) -> "MesaVersion": # the "" are here because object technically does not exist yet
+        """ Parse the raw MESA version string into a normalised MesaVersion.
+
+        Args:
+            version_name: Raw MESA version string, for example `r23.05.1`, `12786`,
+                or a git hash.
+
+        Returns:
+            A MesaVersion instance with detected scheme and parsed numeric fields.
+
+        Raises:
+            ValueError: If `version_name` does not match a supported format.
+        """
+        # strip whitespaces and quotation marks
+        text = version_name.strip().strip('"\'')
+        # check if the version name is in the release format, i.e. rXX.XX.X
+        release_match = re.fullmatch(r"r?(\d+)\.(\d+)(?:\.(\d+))?", text, re.IGNORECASE)
+        # if in the release format, then extract year, month, and patch number
+        if release_match:
+            return cls(
+                version_name = version_name, 
+                scheme = "release",
+                year = int(release_match.group(1)),
+                month = int(release_match.group(2)),
+                patch = int(release_match.group(3) or 1)
+            )
+        
+        # if version_name was not in release format, it is likely (otherwise wrong format) in revision format
+        revision_match = re.fullmatch(r"r?(\d+)", text, re.IGNORECASE)
+        if revision_match:
+            return cls(
+                version_name = version_name,
+                scheme = "revision",
+                revision = int(revision_match.group(1))
+            )
+        
+        # Git hash format: 7 to 40 hex characters
+        git_match = re.fullmatch(r"[0-9a-f]{7,40}", text, re.IGNORECASE)
+        if git_match:
+            return cls(
+                version_name = version_name,
+                scheme="git",
+            )
+
+        # if the `return` statement has not been triggered by now, there is something wrong with the format
+        raise ValueError(f"Could not parse MESA version: {version_name!r}")
+    
+    def _comparison_key(self) -> tuple[int, int, int, int]:
+        if self.scheme == "revision":
+            return (0, self.revision or 0, 0, 0)
+        if self.scheme == "git":
+            return (2, 0, 0, 0)
+        return (1, self.year or 0, self.month or 0, self.patch)
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, MesaVersion):
+            return NotImplemented
+        return self._comparison_key() < other._comparison_key()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MesaVersion):
+            return NotImplemented
+        return self._comparison_key() == other._comparison_key()
+        
+
+@dataclass
+class MesaConfig:
+    """ Class that holds the configuration related to the used MESA version.
+    
+    Attributes:
+        mesa_dir: Path to the MESA source directory.
+        mesa_version: MesaVersion object
+        version_raw: Optional attribute with the raw MESA version name. 
+            Only needed when the MESA version cannot be recovered from the MESA directory. 
+    """
+    mesa_dir: Path
+    mesa_version: MesaVersion
+    version_raw: str | None = None
+
+    @classmethod
+    def setup(cls, mesa_dir: Path | str | None = None, version_name: str | None = None) -> "MesaConfig":
+        """Create a MesaConfig from a MESA source directory.
+
+        Args:
+            mesa_dir: Optional path to the MESA source directory. If omitted, uses
+                the `MESA_DIR` environment variable.
+            version_name: Optional manual version override. Required when automatic
+                detection yields a git hash.
+
+        Returns:
+            A MesaConfig instance with resolved path and parsed version.
+
+        Raises:
+            EnvironmentError: If `MESA_DIR` is not set and `mesa_dir` is not provided.
+            FileNotFoundError: If the resolved MESA directory does not exist.
+            ValueError: If version parsing fails or a git hash requires manual input.
+        """
+        if mesa_dir is not None:
+            resolved = Path(mesa_dir).expanduser().resolve()
+        else:
+            env_value = os.environ.get("MESA_DIR")
+            if not env_value:
+                raise EnvironmentError(
+                    "MESA_DIR is not set and no mesa_dir was provided."
+                )
+            resolved = Path(env_value).expanduser().resolve()
+
+        if not resolved.is_dir():
+            raise FileNotFoundError(f"MESA directory does not exist: {resolved}")
+
+        version_file = resolved / "data" / "version_number"
+        version_raw = version_file.read_text(encoding="utf-8").strip()
+        
+        # Use manually provided version_name if given, otherwise parse from file
+        if version_name:
+            mesa_version = MesaVersion.parse_mesa_version(version_name)
+        else:
+            mesa_version = MesaVersion.parse_mesa_version(version_raw)
+            
+            # If detected as git, require manual specification
+            if mesa_version.scheme == "git":
+                raise ValueError(
+                    f"MESA version detected as git hash ({version_raw}). "
+                    "Cannot determine version scheme automatically. "
+                    "Please specify version_name manually: "
+                    "MesaConfig.setup(version_name='r23.05.1')"
+                )
+
+        return cls(
+            mesa_dir = resolved,
+            mesa_version = mesa_version,
+            version_raw = version_raw,
+        )
