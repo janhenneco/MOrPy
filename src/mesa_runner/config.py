@@ -3,7 +3,7 @@ from functools import total_ordering
 import re
 from pathlib import Path
 import os
-import subprocess
+from typing import Self
 
 @total_ordering
 @dataclass(frozen = True)
@@ -29,7 +29,7 @@ class MesaVersion:
     patch: int = 1
 
     @classmethod
-    def parse_mesa_version(cls, version_name: str) -> "MesaVersion": # the "" are here because object technically does not exist yet
+    def parse_mesa_version(cls, version_name: str) -> Self:
         """ Parse the raw MESA version string into a normalised MesaVersion.
 
         Args:
@@ -109,7 +109,7 @@ class MesaConfig:
     version_raw: str | None = None
 
     @classmethod
-    def setup(cls, mesa_dir: Path | str | None = None, version_name: str | None = None) -> "MesaConfig":
+    def setup(cls, mesa_dir: Path | str | None = None, version_name: str | None = None) -> Self:
         """Create a MesaConfig from a MESA source directory.
 
         Args:
@@ -139,16 +139,19 @@ class MesaConfig:
         if not resolved.is_dir():
             raise FileNotFoundError(f"MESA directory does not exist: {resolved}")
 
-        version_file = resolved / "data" / "version_number"
-        version_raw = version_file.read_text(encoding="utf-8").strip()
-        
-        # Use manually provided version_name if given, otherwise parse from file
-        if version_name:
+        version_raw: str | None = None
+
+        # If provided explicitly, do not require reading data/version_number
+        if version_name is not None:
             mesa_version = MesaVersion.parse_mesa_version(version_name)
         else:
+            version_file = resolved / "data" / "version_number"
+            if not version_file.is_file():
+                raise FileNotFoundError(f"MESA version file does not exist: {version_file}")
+
+            version_raw = version_file.read_text(encoding="utf-8").strip()
             mesa_version = MesaVersion.parse_mesa_version(version_raw)
-            
-            # If detected as git, require manual specification
+
             if mesa_version.scheme == "git":
                 raise ValueError(
                     f"MESA version detected as git hash ({version_raw}). "
