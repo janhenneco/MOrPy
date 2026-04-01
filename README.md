@@ -4,11 +4,15 @@ A `Python` package to serve as an interface for the stellar structure and evolut
 
 The `mesa-runner` package's main modules are:
 
+- `config.py`: A module that gets and holds information about the `MESA` version. [DONE]
+
 - `parser.py`: A module that parses (1) the `MESA` defaults files: `controls.defaults`, `star_job.defaults`, `binary_controls.defaults`, `binary_job.defaults`, `kap.defaults`, `eos.defaults`, `pgstar.defaults`, and `pgbinary.defaults` files to gather all the inlist options and (2) parses existing `MESA` inlists so that they can be used as templates. [DONE]
 
-- `work_setup.py`: A module to create `MESA` work directories based on inlist specifications. [PLANNED]
+- `options.py`: A module that holds the classes and methods related to store, manipulate, and write out `MESA` inlist options. [WIP]
 
-- `inlist_setup.py`: A module to create inlists from within `Python`. [PLANNED]
+- `utils.py`: A collection of helper functions. [WIP] 
+
+- `work_setup.py`: A module to create `MESA` work directories based on inlist specifications. [PLANNED]
 
 - `runner.py`: A module to start a `MESA` run, collect its terminal output, and report any errors [PLANNED]
 
@@ -16,8 +20,4 @@ The `mesa-runner` package's main modules are:
 
 - `grid_run.py`: A module to run multiple models in parallel using `MPI` or `multiprocessing` when `MPI` is not available. [PLANNED]
 
-- `activate.py`: A module to activate the desired `MESA` version and compile the `Fortran` executable. [PLANNED]
-
-- `config.py`: A module that gets and holds information about the `MESA` version. [DONE]
-
-- `utils.py`: A collection of helper functions. [WIP] 
+- `compile.py`: A module to compile the `Fortran` executable. [PLANNED]

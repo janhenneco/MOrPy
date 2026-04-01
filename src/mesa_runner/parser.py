@@ -1,188 +1,101 @@
-from dataclasses import dataclass, field
-from typing import Literal, Self
 from pathlib import Path
-from .config import MesaConfig, MesaVersion
 import warnings
+from .config import MesaConfig, MesaVersion
+from .options import Inlist, DefaultsOptions, DefaultsFile, MesaOption, MesaNameList
 
-# Custom type for the MESA defaults namelist files
-MesaNameList = Literal['controls', 'star_job', 'binary_controls', 'binary_job', 'kap', 'eos', 'pgstar', 'pgbinary']
 # Version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
 
-@dataclass
-class MesaOption:
-   """Represents a single MESA inlist option parsed from a defaults file.
+def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOptions:
+    """Method to parse all the available defaults files and store them into this class.
+    Args:
+        defaults_dir: Path to the base location of the defaults files, usually the MESA installation directory
+        config: MesaConfig instance
 
-    Attributes:
-        name: The option name as it appears in the MESA defaults file (e.g. `initial_mass`).
-        default_option: The raw default value string as defined in the defaults
-            file, preserving Fortran notation (e.g. `1d0`).
-        description: The description comment from the defaults file (`!` lines).
-        namelist: The type of the defaults file this option belongs to (e.g. controls.defaults)
+    Returns:
+        A DefaultsOptions instance with parsed MESA defaults files as DefaultsFiles instances
+    
     """
-   name: str
-   default_option: str
-   description: str
-   namelist: MesaNameList
-   current_value: str | None = field(default=None)
+    # Note to self: technically this implementation only works with a self-provided
+    #   path to the defaults files directory if that directory has the same structure as in the
+    #   MESA installation directory. If ever necessary, I should make his more flexible.
+    controls = parse_defaults_file(
+        namelist="controls",
+        source_path=defaults_dir / "star" / "defaults" / "controls.defaults",
+        config=config,
+    )
+    star_job = parse_defaults_file(
+        namelist="star_job",
+        source_path=defaults_dir / "star" / "defaults" / "star_job.defaults",
+        config=config,
+    )
+    binary_controls = parse_defaults_file(
+        namelist="binary_controls",
+        source_path=defaults_dir / "binary" / "defaults" / "binary_controls.defaults",
+        config=config,
+    )
+    binary_job = parse_defaults_file(
+        namelist="binary_job",
+        source_path=defaults_dir / "binary" / "defaults" / "binary_job.defaults",
+        config=config,
+    )
+    pgstar = parse_defaults_file(
+        namelist="pgstar",
+        source_path=defaults_dir / "star" / "defaults" / "pgstar.defaults",
+        config=config,
+    )
 
-@dataclass
-class DefaultsFile:
-    """Class for a MESA defaults file.
+    pgbinary: DefaultsFile | None = None
+    try:
+        pgbinary = parse_defaults_file(
+            namelist="pgbinary",
+            source_path=defaults_dir / "binary" / "defaults" / "pgbinary.defaults",
+            config=config,
+        )
+    except FileNotFoundError:
+        warnings.warn(
+            "pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded from this file but are loaded from the pgstar file.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
 
-    Attributes:
-        namelist: The type of default namelist file this instance belongs to
-        source_path: Path to the defaults file from which this object was parsed.
-        options: A dictionary containing the parsed contents (i.e. MesaOption objects) 
-            of the namelist file at `source_path`
-        mesa_version: The MESA version for which the default options are parsed
-        
-    """
-    namelist: MesaNameList
-    source_path: Path
-    mesa_version: MesaVersion
-    options: dict[str, MesaOption] = field(default_factory=dict)
-
-@dataclass
-class DefaultsOptions:
-    """Class that holds all DefaultsFiles.
-
-    Attributes:
-        mesa_version: The MESA version for which the default options are parsed
-        controls: the `controls` DefaultsFile
-        star_job: the `star_job` DefaultsFile
-        kap: the `kap` DefaultsFile
-        eos: the `eos` DefaultsFile
-        binary_controls: the `binary_controls` DefaultsFile
-        binary_job: the `binary_job` DefaultsFile
-        pgstar: the `pgstar` DefaultsFile
-        pgbinary: the `pgbinary` DefaultsFile
-        
-    """
-    mesa_version: MesaVersion
-    controls: DefaultsFile
-    star_job: DefaultsFile
-    binary_controls: DefaultsFile
-    binary_job: DefaultsFile
-    pgstar: DefaultsFile
     kap: DefaultsFile | None = None
     eos: DefaultsFile | None = None
-    pgbinary: DefaultsFile | None = None
-
-    # These are two functions allowing the MesaNameList types to be linked to the attributes of this class.
-    def get_file(self, namelist_type: MesaNameList) -> DefaultsFile:
-        return getattr(self, namelist_type)
-
-    def __getitem__(self, namelist_type: MesaNameList) -> DefaultsFile:
-        return self.get_file(namelist_type)
-    
-    @classmethod
-    def from_defaults_dir(cls, defaults_dir: Path, config: MesaConfig) -> Self:
-        """Method to parse all the available defaults files and store them into this class.
-        Args:
-            defaults_dir: Path to the base location of the defaults files, usually the MESA installation directory
-            config: MesaConfig instance
-
-        Returns:
-            A DefaultsOptions instance with parsed MESA defaults files as DefaultsFiles instances
-        
-        """
-        # Note to self: technically this implementation only works with a self-provided
-        #   path to the defaults files directory if that directory has the same structure as in the
-        #   MESA installation directory. If ever necessary, I should make his more flexible.
-        controls = parse_defaults_file(
-            namelist="controls",
-            source_path=defaults_dir / "star" / "defaults" / "controls.defaults",
+    if config.mesa_version >= KAP_EOS_SPLIT_VERSION:
+        kap = parse_defaults_file(
+            namelist="kap",
+            source_path=defaults_dir / "kap" / "defaults" / "kap.defaults",
             config=config,
         )
-        star_job = parse_defaults_file(
-            namelist="star_job",
-            source_path=defaults_dir / "star" / "defaults" / "star_job.defaults",
-            config=config,
-        )
-        binary_controls = parse_defaults_file(
-            namelist="binary_controls",
-            source_path=defaults_dir / "binary" / "defaults" / "binary_controls.defaults",
-            config=config,
-        )
-        binary_job = parse_defaults_file(
-            namelist="binary_job",
-            source_path=defaults_dir / "binary" / "defaults" / "binary_job.defaults",
-            config=config,
-        )
-        pgstar = parse_defaults_file(
-            namelist="pgstar",
-            source_path=defaults_dir / "star" / "defaults" / "pgstar.defaults",
+        eos = parse_defaults_file(
+            namelist="eos",
+            source_path=defaults_dir / "eos" / "defaults" / "eos.defaults",
             config=config,
         )
 
-        pgbinary: DefaultsFile | None = None
-        try:
-            pgbinary = parse_defaults_file(
-                namelist="pgbinary",
-                source_path=defaults_dir / "binary" / "defaults" / "pgbinary.defaults",
-                config=config,
-            )
-        except FileNotFoundError:
-            warnings.warn(
-                "pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded from this file but are loaded from the pgstar file.",
-                RuntimeWarning,
-                stacklevel=2,
-            )
+    return DefaultsOptions(
+        mesa_version=config.mesa_version,
+        controls=controls,
+        star_job=star_job,
+        binary_controls=binary_controls,
+        binary_job=binary_job,
+        pgstar=pgstar,
+        kap=kap,
+        eos=eos,
+        pgbinary=pgbinary
+    )
 
-        kap: DefaultsFile | None = None
-        eos: DefaultsFile | None = None
-        if config.mesa_version >= KAP_EOS_SPLIT_VERSION:
-            kap = parse_defaults_file(
-                namelist="kap",
-                source_path=defaults_dir / "kap" / "defaults" / "kap.defaults",
-                config=config,
-            )
-            eos = parse_defaults_file(
-                namelist="eos",
-                source_path=defaults_dir / "eos" / "defaults" / "eos.defaults",
-                config=config,
-            )
+def build_defaults_options_from_config(config: MesaConfig) -> DefaultsOptions:
+    """Get the `defaults_dir` from the `MesaConfig` object for automatic parsing of defaults files.
 
-        return cls(
-            mesa_version=config.mesa_version,
-            controls=controls,
-            star_job=star_job,
-            binary_controls=binary_controls,
-            binary_job=binary_job,
-            pgstar=pgstar,
-            kap=kap,
-            eos=eos,
-            pgbinary=pgbinary
-        )
-    
-    @classmethod
-    def from_config(cls, config: MesaConfig) -> Self:
-        """Get the `defaults_dir` from the `MesaConfig` object for automatic parsing of defaults files.
+    Args:
+        config: MesaConfig instance
 
-        Args:
-            config: MesaConfig instance
-
-        Returns:
-            Calls `from_defaults_dir` class method to parse all available defaults files.
-        """
-        defaults_dir = config.mesa_dir
-        return cls.from_defaults_dir(defaults_dir, config)
-
-@dataclass
-class Inlist:
-    """Class for a MESA inlist (Fortran namelist) file.
-
-    Attributes:
-        source_path: Path to the defaults file from which this object was parsed.
-        options: A dictionary containing the parsed contents (i.e. MesaOption objects) 
-            of the inlist file at `source_path`
-        mesa_version: The MESA version for which the inlist is parsed
-        
+    Returns:
+        Calls `build_defaults_options` method to parse all available defaults files.
     """
-    source_path: Path
-    mesa_version: MesaVersion
-    options: dict[str, MesaOption] = field(default_factory=dict)
+    return build_defaults_options(config.mesa_dir, config)
+
 
 def parse_defaults_file(namelist: MesaNameList, source_path: Path, config: MesaConfig) -> DefaultsFile:
     """Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,
@@ -262,7 +175,7 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
         Inlist object with MesaOption instances.
     """
     if default_options is None:
-        default_options = DefaultsOptions.from_config(config)
+        default_options = build_defaults_options_from_config(config)
     
     il = Inlist(source_path = source_path, mesa_version = config.mesa_version)
 
