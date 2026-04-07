@@ -1,0 +1,57 @@
+@startuml classes_mesa_runner
+set namespaceSeparator none
+class "DefaultsFile" as mesa_runner.options.DefaultsFile {
+  mesa_version
+  namelist : Literal
+  options : dict[str, MesaOption]
+  source_path : Path
+}
+class "DefaultsOptions" as mesa_runner.options.DefaultsOptions {
+  binary_controls
+  binary_job
+  controls
+  eos : DefaultsFile | None
+  kap : DefaultsFile | None
+  mesa_version
+  pgbinary : DefaultsFile | None
+  pgstar
+  star_job
+  get_file(namelist_type: MesaNameList) -> DefaultsFile
+}
+class "Inlist" as mesa_runner.options.Inlist {
+  mesa_version
+  options : dict[str, MesaOption]
+  source_path : Path
+}
+class "MesaConfig" as mesa_runner.config.MesaConfig {
+  mesa_dir : Path
+  mesa_version
+  version_raw : str | None
+  setup(mesa_dir: Path | str | None, version_name: str | None) -> Self
+}
+class "MesaOption" as mesa_runner.options.MesaOption {
+  current_value : str | None
+  default_option : str
+  description : str
+  name : str
+  namelist : Literal
+}
+class "MesaVersion" as mesa_runner.config.MesaVersion {
+  month : int | None
+  patch : int
+  revision : int | None
+  scheme : str
+  version_name : str
+  year : int | None
+  parse_mesa_version(version_name: str) -> Self
+}
+mesa_runner.config.MesaConfig --> mesa_runner.config.MesaVersion : mesa_version
+mesa_runner.options.DefaultsFile --> mesa_runner.config.MesaVersion : mesa_version
+mesa_runner.options.DefaultsOptions --> mesa_runner.config.MesaVersion : mesa_version
+mesa_runner.options.Inlist --> mesa_runner.config.MesaVersion : mesa_version
+mesa_runner.options.DefaultsOptions --> mesa_runner.options.DefaultsFile : controls
+mesa_runner.options.DefaultsOptions --> mesa_runner.options.DefaultsFile : star_job
+mesa_runner.options.DefaultsOptions --> mesa_runner.options.DefaultsFile : binary_controls
+mesa_runner.options.DefaultsOptions --> mesa_runner.options.DefaultsFile : binary_job
+mesa_runner.options.DefaultsOptions --> mesa_runner.options.DefaultsFile : pgstar
+@enduml

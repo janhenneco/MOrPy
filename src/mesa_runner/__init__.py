@@ -1,10 +1,14 @@
 from .config import MesaConfig, MesaVersion
 from .parser import (parse_defaults_file, 
                      parse_inlist, 
-                     DefaultsFile, 
-                     DefaultsOptions, 
-                     MesaOption)
-from .utils import python_float_to_fortran_string, fortran_float_string_to_float
+                     build_defaults_options,
+                     build_defaults_options_from_config)
+from .utils import (python_float_to_fortran_string, 
+                    fortran_float_string_to_float)
+from .options import (MesaOption, 
+                      DefaultsFile, 
+                      DefaultsOptions, 
+                      Inlist)
 
 __all__ = [
     "MesaConfig",
@@ -13,7 +17,8 @@ __all__ = [
     "parse_inlist",
     "DefaultsFile",
     "DefaultsOptions",
-    "MesaOption",
+    "MesaOption", 
+    "Inlist",
     "python_float_to_fortran_string",
     "fortran_float_string_to_float",
 ]

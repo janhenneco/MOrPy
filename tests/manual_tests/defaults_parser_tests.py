@@ -3,7 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 version_name = 'r24.08.1'
-defaults_type = 'eos'
+defaults_type = 'star_job'
 test_data_dir_general = Path('/Users/janhenneco/GitHub/mesa-runner/tests/data_for_tests') 
 
 with TemporaryDirectory() as tmp:

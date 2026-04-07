@@ -1,10 +1,28 @@
 from pathlib import Path
 import warnings
 from .config import MesaConfig, MesaVersion
-from .options import Inlist, DefaultsOptions, DefaultsFile, MesaOption, MesaNameList
+from .options import (Inlist, 
+                      DefaultsOptions, 
+                      DefaultsFile, 
+                      MesaOption, 
+                      UnclassifiedNamelist, 
+                      MesaNameList)
 
 # Version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
+
+# MESA version at which separate pgbinary defaults inlist and the pgbinary block become a thing
+PGBINARY_SPLIT_VERSION = MesaVersion.parse_mesa_version("r23.05.1")
+
+# All MESA namelist blocks that the code can currently handle
+KNOWN_NAMELISTS = {"controls",
+                   "star_job",
+                   "binary_controls",
+                   "binary_job",
+                   "kap",
+                   "eos",
+                   "pgstar",
+                   "pgbinary"}
 
 def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOptions:
     """Method to parse all the available defaults files and store them into this class.
@@ -39,6 +57,7 @@ def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOp
         source_path=defaults_dir / "binary" / "defaults" / "binary_job.defaults",
         config=config,
     )
+    
     pgstar = parse_defaults_file(
         namelist="pgstar",
         source_path=defaults_dir / "star" / "defaults" / "pgstar.defaults",
@@ -54,7 +73,7 @@ def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOp
         )
     except FileNotFoundError:
         warnings.warn(
-            "pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded from this file but are loaded from the pgstar file.",
+            "pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded.",
             RuntimeWarning,
             stacklevel=2,
         )
@@ -183,15 +202,50 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
 
     block_type: MesaNameList | None = None
     defaults_file: DefaultsFile | None = None
+    active_unclassified_block_name: str | None = None
+    active_unclassified_block_lines: list[str] = []
 
     for i, line in enumerate(lines):
         stripped = line.strip()
 
+        # If we are inside an unknown block, keep raw lines until closing "/".
+        if active_unclassified_block_name is not None:
+            if stripped.startswith("/"):
+                il.additional_options.append(
+                    UnclassifiedNamelist(
+                        name=active_unclassified_block_name,
+                        body="\n".join(active_unclassified_block_lines),
+                    )
+                )
+                active_unclassified_block_name = None
+                active_unclassified_block_lines = []
+            else:
+                active_unclassified_block_lines.append(line)
+            continue
+
         # Determine which block type = MesaNameList type we're in
         if stripped.startswith('&'):
             potential_block_type = stripped.lstrip('&').strip()
-            block_type = potential_block_type
-            defaults_file = default_options[block_type]
+
+            # Take care of the fact that older MESA version do not have a pgbinary
+            # namelist but instead have a binary_pgstar namelist.
+            # We want to treat this as a pgbinary namelist internally.
+            if potential_block_type == "binary_pgstar" and config.mesa_version < PGBINARY_SPLIT_VERSION:
+                normalised_block_type = "pgbinary"
+            else:
+                normalised_block_type = potential_block_type
+            
+            # Check if we're dealing with a regular namelist or an unrecognised namelist
+            if normalised_block_type in KNOWN_NAMELISTS:
+                # Normnal behaviour for regular namelist
+                block_type = normalised_block_type
+                defaults_file = default_options[block_type]
+            else:
+                # Start collecting unknown block body as raw text.
+                block_type = None
+                defaults_file = None
+                active_unclassified_block_name = potential_block_type
+                active_unclassified_block_lines = []
             continue
         
         if stripped.startswith('/'):
@@ -200,7 +254,7 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
             continue
         
         if "=" in line and not stripped.startswith("!"):
-            if block_type is None or defaults_file is None:
+            if block_type is None:
                 continue
 
             name, _, value_part = line.partition("=")
@@ -217,16 +271,17 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
             description = ""
             default_value = ""
 
-            if "(" in name:
-                array_name = name.partition("(")[0]
-                for opt in defaults_file.options.values():
-                    if array_name == opt.name.partition("(")[0]:
-                        description = opt.description
-                        default_value = opt.default_option
-                        break
-            elif name in defaults_file.options:
-                description = defaults_file.options[name].description
-                default_value = defaults_file.options[name].default_option
+            if defaults_file is not None: # This is for the binary_pgstar blocks, which have no dedicated defaults file.
+                if "(" in name:
+                    array_name = name.partition("(")[0]
+                    for opt in defaults_file.options.values():
+                        if array_name == opt.name.partition("(")[0]:
+                            description = opt.description
+                            default_value = opt.default_option
+                            break
+                elif name in defaults_file.options:
+                    description = defaults_file.options[name].description
+                    default_value = defaults_file.options[name].default_option
 
             il.options[name] = MesaOption(
                 name=name,
@@ -234,7 +289,12 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
                 current_value=value,
                 description=description,
                 namelist=block_type,
-            )
+            ) 
+    
+    if active_unclassified_block_name is not None:
+        raise ValueError(
+            f"Unclosed namelist block '&{active_unclassified_block_name}' in {source_path}."
+        )
 
     return il
 

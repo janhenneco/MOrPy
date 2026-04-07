@@ -1,0 +1,245 @@
+&star_job
+
+      ! rotation
+      new_rotation_flag = .true.
+      change_rotation_flag = .true.
+      set_initial_surface_rotation_v = .true.
+      new_surface_rotation_v = 50 ! random number, tidal sync takes care of it
+
+      ! output
+      save_photo_when_terminate = .false.
+      save_model_when_terminate = .true.
+      save_model_filename = "model1.dat"
+      profile_starting_model = .true.
+
+      ! pgstar
+      pgstar_flag = .false.
+
+      ! nuclear nets
+      change_net = .true.
+      auto_extend_net = .false.
+      new_net_name = 'approx21.net'
+
+      ! opacity tables
+      kappa_file_prefix = 'a09'
+      kappa_CO_prefix = 'a09_co'
+      kappa_lowT_prefix = 'lowT_fa05_a09p'
+
+      ! cache directories
+      eosDT_cache_dir = './mesa_caches/eosDT_cache'
+      eosPT_cache_dir = './mesa_caches/eosPT_cache'
+      eosDE_cache_dir = './mesa_caches/eosDE_cache'
+      ionization_cache_dir = './mesa_caches/ionization_cache'
+      kap_cache_dir = './mesa_caches/kap_cache'
+      rates_cache_dir = './mesa_caches/rates_cache'
+
+/ ! end of star_job namelist
+
+
+&controls
+
+!!! PHYSICS
+      ! loading ZAMS model
+      initial_z = 0.0142
+      zams_filename = '/hits/fast/set/hennecjn/mesa_zams_models/zams_z0142_y2703.data'
+
+      ! regular mixing parameters
+      use_Ledoux_criterion = .true.
+      mixing_length_alpha = 2d0
+      alpha_semiconvection = 10d0
+      thermohaline_coeff = 1d0
+      remove_small_D_limit = 1d-10
+      mixing_D_limit_for_log = 1d-10
+      num_cells_for_smooth_gradL_composition_term = 0
+
+      ! overshooting
+      overshoot_scheme(1) = 'step'
+      overshoot_zone_type(1) = 'burn_H'
+      overshoot_zone_loc(1) = 'core'
+      overshoot_bdy_loc(1) = 'top'
+      overshoot_f(1) = 0.21 ! Martinet et al. (2021)
+      overshoot_f0(1) = 0.01
+
+      overshoot_scheme(2) = 'step'
+      overshoot_zone_type(2) = 'nonburn'
+      overshoot_zone_loc(2) = 'shell'
+      overshoot_bdy_loc(2) = 'bottom'
+      overshoot_f(2) = 0.055
+      overshoot_f0(2) = 0.005
+
+      overshoot_scheme(3) = 'exponential'
+      overshoot_zone_type(3) = 'any'
+      overshoot_zone_loc(3) = 'core'
+      overshoot_bdy_loc(3) = 'top'
+      overshoot_f(3) = 0.01
+      overshoot_f0(3) = 0.005
+
+      ! rotational mixing parameters
+      am_nu_ST_factor = 1.0
+      D_visc_factor = 0.0
+      am_nu_SH_factor = 0.0
+      D_ST_factor = 0.0
+      D_SH_factor = 0.0
+      D_GSF_factor = 1.0
+      D_ES_factor = 1.0
+      D_SSI_factor = 1.0
+      D_DSI_factor = 1.0
+      am_D_mix_factor = 0.0333d0
+      am_gradmu_factor = 0.1d0
+
+      ! smooth angular momentum profile in outer layers
+      x_logical_ctrl(1) = .false.
+      x_ctrl(1) = 0.90 ! smooth until this mass coordinate
+
+      ! limit mass accretion to the thermal rate
+      x_logical_ctrl(2) = .true.
+      x_ctrl(2) = 1.0d0 ! fraction of thermal timescale, choose value < 1.0 for faster than thermal
+
+      ! wind options
+      ! hot_wind_scheme = "Vink"
+      ! cool_wind_RGB_scheme = 'Dutch'
+      ! cool_wind_AGB_scheme = 'Dutch'
+      ! Dutch_wind_lowT_scheme = 'de Jager'
+      ! RGB_to_AGB_wind_switch = 1d-4
+      ! Dutch_scaling_factor = 1d0
+      ! de_Jager_scaling_factor = 1d0
+      ! Vink_scaling_factor = 1d0
+
+      use_other_wind = .true.
+
+      ! controls for implicit wind computation @ critical rotation
+      surf_avg_tau_min = 1 ! value adopted from Marchant et al. (2016)
+      surf_avg_tau = 10 ! value adopted from Marchant et al. (2016)
+      max_mdot_redo_cnt = 400
+      min_years_dt_for_redo_mdot = 0 ! DEFAULT
+      surf_w_div_w_crit_limit = 0.97d0 ! DEFAULT
+      surf_w_div_w_crit_tol = 0.025d0 ! NOT DEFAULT
+      mdot_revise_factor = 1.1d0 ! DEFAULT, Fabian: 1.2, going to high might make you miss the tolerance
+      implicit_mdot_boost = 0.1d0 ! DEFAULT
+
+      ! rotational enhancement
+      mdot_omega_power = 0.43d0 ! 0.43d0 default, 0d0 to switch it off
+      rotational_mdot_boost_fac = 1d5 ! DEFAULT
+      rotational_mdot_kh_fac = 1.0 ! allow for thermal timescale wind mass loss
+
+      max_mdot_jump_for_rotation = 1d99   ! this is to avoid odd behaviour when a star 
+                                          ! switches from accreting to mass losing -> useless when rotational enhancement is disabled
+
+      ! opacities
+      use_Type2_opacities = .true.
+      Zbase = 0.0142
+
+      ! stopping criteria
+      max_model_number = 40000
+      xa_central_lower_limit_species(1) = 'c12'
+      xa_central_lower_limit(1) = 1d-6
+      ! actual xa_central_lower_limit stopping condition for C-burning in src/run_star_extras.f
+
+!!! NUMERICS
+      ! timestep controls
+      !     these are for changes in mdot
+      delta_mdot_atol = 1d-3 ! DEFAULT
+      delta_mdot_rtol = 0.5d0 ! DEFAULT
+      ! delta_mdot_limit = -1 ! DEFAULT
+      ! delta_mdot_hard_limit = -1 ! DEFAULT
+      
+      !     these are to properly resolve core hydrogen depletion
+      delta_lg_XH_cntr_limit = 0.02d0
+      delta_lg_XH_cntr_max = 0.0d0
+      delta_lg_XH_cntr_min = -6.0d0
+      delta_lg_XH_cntr_hard_limit = 0.03d0
+
+        !     these are to properly resolve core helium depletion
+      delta_lg_XHe_cntr_limit = 0.02d0
+      delta_lg_XHe_cntr_max = 0.0d0
+      delta_lg_XHe_cntr_min = -6.0d0
+      delta_lg_XHe_cntr_hard_limit = 0.03d0
+
+        !     these are to properly resolve core carbon depletion
+      delta_lg_XC_cntr_limit = 0.02d0
+      delta_lg_XC_cntr_max = 0.0d0
+      delta_lg_XC_cntr_min = -5.0d0
+      delta_lg_XC_cntr_hard_limit = 0.03d0
+
+        !     this is mainly to resolve properly when the star goes off the main sequence
+      delta_HR_limit = 0.005d0
+
+      !     put this on .false. if you have "hard limit adjust_J_q" problems
+      do_adjust_J_lost = .true.
+      !     these stall the run artificially when not using dedt form
+      limit_for_rel_error_in_energy_conservation = -1d0
+      hard_limit_for_rel_error_in_energy_conservation = -1d0
+      warn_when_large_rel_run_E_err = 1d99
+
+      ! mesh controls
+      mesh_delta_coeff = 1d0
+      max_dq = 1d-3
+      min_dq_for_xa = 1d-3
+      max_allowed_nz = 20000
+
+      ! solver settings
+      redo_limit = -1
+      retry_hold = 5
+      max_tries_for_retry = 40
+      newton_iterations_limit = 10
+      use_dedt_form_of_energy_eqn = .false.
+      newton_itermin_until_reduce_min_corr_coeff = 25
+      tiny_corr_coeff_limit = 1000
+      corr_coeff_limit = 0.2d0
+      ignore_too_large_correction = .true.
+      use_gold_tolerances = .false.
+      gold_iter_for_resid_tol3 = 10
+      gold_tol_residual_norm3 = 1d-6
+      gold_tol_max_residual3 = 1d-3
+      tol_max_correction = 1d-2
+      tol_correction_norm = 1d-3
+      max_corr_jump_limit = 1d99
+      max_resid_jump_limit = 1d99
+      warn_when_stop_checking_residuals = .false.
+
+!!! OUTPUT
+      ! extra_terminal_output_file = 'LOGS1/log1' 
+      log_directory = 'LOGS1'
+      profile_interval = 200
+      photo_interval = 101
+      history_interval = 1
+      terminal_interval = 10
+      write_header_frequency = 100
+      max_num_profile_models = 10000
+
+      ! debugging
+      report_hydro_solver_progress = .false.
+      report_hydro_dt_info = .false.
+      report_ierr = .false.
+      report_why_dt_limits = .false.
+
+/ ! end of controls namelist
+
+
+&pgstar
+
+      HR_win_flag = .true.
+      HR_win_width = 10
+      HR_win_aspect_ratio = 1
+      HR_title = 'HRD primary'
+
+      Kipp_win_flag = .true.
+      Kipp_win_width = 6
+      Kipp_win_aspect_ratio = 0.75
+      Kipp_title = 'Kippenhahn diagram primary'
+
+      History_Track1_win_flag = .true.
+      History_Track1_win_width = 10
+      History_Track1_win_aspect_ratio = 0.75
+      History_Track1_title = 'Mass transfer'
+      History_Track1_xname = 'star_1_mass'
+      History_Track1_yname = 'lg_mtransfer_rate'
+      History_Track1_xaxis_label = 'M1 [Msol]'
+      History_Track1_yaxis_label = 'log10(Mdot)'
+      History_Track1_log_xaxis = .false. ! show log10 of abs value
+      History_Track1_log_yaxis = .false. ! show log10 of abs value
+      History_Track1_reverse_xaxis = .true.
+      History_Track1_ymin = -16
+      History_Track1_ymax = 1
+
+/ ! end of pgstar namelist
