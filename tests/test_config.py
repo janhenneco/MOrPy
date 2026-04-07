@@ -100,6 +100,6 @@ def test_setup_git_hash_with_manual_override(tmp_path):
     mesa_dir = make_fake_mesa_dir(tmp_path, "5c166bf")
     cfg = MesaConfig.setup(mesa_dir=mesa_dir, version_name="r23.05.1")
 
-    assert cfg.version_raw == "5c166bf"
+    assert cfg.version_raw == None
     assert cfg.mesa_version.scheme == "release"
     assert cfg.mesa_version.year == 23

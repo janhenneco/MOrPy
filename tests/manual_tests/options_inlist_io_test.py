@@ -17,6 +17,16 @@ with TemporaryDirectory() as tmp:
     out_dir = Path(__file__).parent / "output_tests"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    new_inlist_path = inlist.write(out_dir / 'options_inlist_io_test')
+    options = inlist.search('factor')
 
-print(new_inlist_path)
+    view = mrun.preview(inlist.search('factor'))
+
+    print(view.to_string(index=False))
+
+    # print(mrun.preview(option))
+
+
+
+    # new_inlist_path = inlist.write(out_dir / 'options_inlist_io_test', include_additional_options=True)
+
+# print(new_inlist_path)

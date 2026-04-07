@@ -21,3 +21,8 @@ The `mesa-runner` package's main modules are:
 - `grid_run.py`: A module to run multiple models in parallel using `MPI` or `multiprocessing` when `MPI` is not available. [PLANNED]
 
 - `compile.py`: A module to compile the `Fortran` executable. [PLANNED]
+
+
+##TODO:
+
+- Pandas should be added as an optional requirement. -> Done -> this should be clear in the README later!

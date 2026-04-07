@@ -168,3 +168,8 @@
    History_Track1_ymin = -16d0
    History_Track1_ymax = 1d0
 / ! end of pgstar namelist
+
+&unknown
+
+this = 1 ! test
+/ ! end of unknown namelist

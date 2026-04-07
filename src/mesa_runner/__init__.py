@@ -8,7 +8,8 @@ from .utils import (python_float_to_fortran_string,
 from .options import (MesaOption, 
                       DefaultsFile, 
                       DefaultsOptions, 
-                      Inlist)
+                      Inlist, 
+                      preview)
 
 __all__ = [
     "MesaConfig",
@@ -20,5 +21,6 @@ __all__ = [
     "MesaOption", 
     "Inlist",
     "python_float_to_fortran_string",
-    "fortran_float_string_to_float",
+    "fortran_float_string_to_float", 
+    "preview"
 ]

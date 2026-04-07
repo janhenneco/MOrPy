@@ -4,6 +4,7 @@ import pytest
 from mesa_runner.utils import (
     python_float_to_fortran_string,
     fortran_float_string_to_float,
+    fortran_value_to_python_value
 )
 
 
@@ -80,3 +81,26 @@ def test_round_trip_python_to_fortran_to_python(value):
     text = python_float_to_fortran_string(value)
     back = fortran_float_string_to_float(text)
     assert back == pytest.approx(value)
+
+# =============================================================================
+# fortran_value_to_python_value
+# =============================================================================
+@pytest.mark.parametrize(
+    "raw, expected",
+    [
+        (".true.", True),
+        (".false.", False),
+        ("  .TRUE.  ", True),
+        ("10", 10),
+        ("-3", -3),
+        ("10d0", 10.0),
+        ("1e1", 10.0),
+        ("2.5", 2.5),
+        ("'abc'", "abc"),
+        ('"abc"', "abc"),
+        ("'Jan''s model'", "Jan's model"),
+        ("not_a_number", "not_a_number"),
+    ],
+)
+def test_fortran_value_to_python_value(raw, expected):
+    assert fortran_value_to_python_value(raw) == expected

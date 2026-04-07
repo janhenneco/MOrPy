@@ -8,7 +8,7 @@ from .options import (Inlist,
                       UnclassifiedNamelist, 
                       MesaNameList)
 
-# Version at which kap and eos get separate defaults namelists
+# MESA version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
 
 # MESA version at which separate pgbinary defaults inlist and the pgbinary block become a thing

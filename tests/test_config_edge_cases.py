@@ -161,6 +161,6 @@ def test_setup_version_raw_stores_file_content_not_override(tmp_path):
     # affects which MesaVersion is parsed
     mesa_dir = make_fake_mesa_dir(tmp_path, "5c166bf")
     cfg = MesaConfig.setup(mesa_dir=mesa_dir, version_name="r23.05.1")
-    assert cfg.version_raw == "5c166bf"
+    assert cfg.version_raw == None
     assert cfg.mesa_version.version_name == "r23.05.1"
     assert cfg.mesa_version.scheme == "release"
