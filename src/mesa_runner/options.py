@@ -216,18 +216,26 @@ class Inlist:
     """Class for a MESA inlist (Fortran namelist) file.
 
     Attributes:
-        source_path: Path to the defaults file from which this object was parsed.
         options: A dictionary containing the parsed contents (i.e. MesaOption objects) 
             of the inlist file at `source_path`
         mesa_version: The MESA version for which the inlist is parsed
+        source_path: Path to the inlist file from which this object was parsed,
+            None if this Inlist object was not initialised from a file.
         
     """
-    source_path: Path
     mesa_version: MesaVersion
     options: dict[str, MesaOption] = field(default_factory=dict)
     additional_options: list[UnclassifiedNamelist] = field(default_factory=list)
+    source_path: Path | None
 
     def _add_option(self, opt: MesaOption) -> None:
+        """Method to add an option to the options attribute.
+
+        Agrs:
+            opt: MesaOption to be added
+        Returns:
+            None
+        """
         if (
             opt.namelist in {"kap", "eos"}
             and self.mesa_version < KAP_EOS_SPLIT_VERSION
@@ -240,11 +248,28 @@ class Inlist:
         self.options[opt.name] = opt
 
     def _remove_option(self, option_name: str) -> bool:
+        """Method to remove an option from the options attribute.
+
+        Agrs:
+            opt: name of the MesaOption object to be removed from the 
+                options attribute
+        Returns:
+            Boolean, True if removed, false if not present and, therefore, not removed
+        """
         is_removed = self.options.pop(option_name, None)
         return is_removed is not None
     
     @classmethod
-    def empty(cls, source_path: Path, mesa_version: MesaVersion) -> "Inlist":
+    def empty(cls, mesa_version: MesaVersion,  source_path: Path | None = None) -> "Inlist":
+        """Method to initiate and empty Inlist object which can be populated later.
+
+        Args:
+            mesa_version: MesaVersion of the Inlist object
+            source_path: Optional Path to source file. Here for compatibility
+                with the class interface, but only set by parser.parse_inlist()
+        Returns:
+            Inlist object
+        """
         return cls(source_path=source_path, mesa_version=mesa_version)
 
     def set_option(
@@ -254,6 +279,23 @@ class Inlist:
         defaults: DefaultsOptions,
         namelist: MesaNameList | None = None,
     ) -> MesaOption:
+        """Method to set a specific MesaOption for the Inlist object in question.
+
+        Args:
+            name: Name of the MesaOption. The method will check if this name is 
+                part of any of the DefaultsFiles to ensure its valid
+            value: Desired value for the MesaOption
+            defaults: DefaultsOptions object that holds all information about
+                MESA defaults
+            namelist: Optional attribute that specifies to which 
+                MESA namelist (MesaNamelist type) the specified option belongs.
+                Will be required for MesaOptions that occur in multiple namelists.
+        Returns:
+            MesaOption object that was set
+        """
+
+        # This method will verify whether the specified option is valid and return 
+        # the MesaOption template if so
         template = defaults.find_option(name=name, namelist=namelist)
 
         new_option = MesaOption(
@@ -284,6 +326,21 @@ class Inlist:
         pgstar: dict[str, object] | None = None,
         pgbinary: dict[str, object] | None = None,
     ) -> None:
+        """Method that allows for MESA options to be set in bulk and optionally
+            ordered based on the MESA namelist they belong to.
+
+        Args:
+            defaults: DefaultsOptions object that holds all information about
+                MESA defaults
+            options: Dictionary with all specified options to be added to the 
+                Inlist object. Allows options from all namelists to be mixed,
+                but will throw an error if one or more of the options is part
+                of more than one MESA namelist. In that case, the
+                namelist-specific dictionaries should be used.
+            controls, star_job, binary_controls, binary_job, kap, eos, pgstar, 
+            pgbinary: Namelist specific dictionaries for setting MesaOptions.
+        """
+
         if options is not None:
             for name, value in options.items():
                 self.set_option(name=name, value=value, defaults=defaults)
@@ -311,11 +368,34 @@ class Inlist:
                 )
 
     def remove_option(self, name: str) -> None:
+        """Public method to remove an option from the Inlist.
+
+        Args:
+            name: Name of the MesaOption to be removed.
+        Retruns:
+            None
+        Raises:
+            Raises Key Error if the specified option is not part of the Inlist object.
+        """
         if not self._remove_option(name):
             raise KeyError(f"Option '{name}' is not present in this inlist.")
     
-    def write(self, output_path: Path | None = None, include_additional_options: bool = False) -> Path:
-        target = output_path or self.source_path
+    def write(self, output_path: Path, include_additional_options: bool = False) -> Path:
+        """Method to write the contents of an Inlist object to an inlist file that
+            can be read by MESA.
+
+        Args:
+            output_path: Path object for the location and filename of the inlist file.
+            include_additional_options: Optional argument to write any additional
+                UnclassifiedNamelist objects to the inlist. Default = False
+        Returns: 
+            Path object pointing to location of written inlist file.
+        Raises: 
+            ValueError when no output_path is specified
+        """
+        if output_path is None:
+            raise ValueError("Output path to write the inlist file to is required.")
+        target = output_path
 
         def output_block_name(block: MesaNameList) -> str:
             if block == "pgbinary" and self.mesa_version < PGBINARY_SPLIT_VERSION:
@@ -465,8 +545,19 @@ class Inlist:
 def preview(options: list[MesaOption], 
             max_desc: int = 100, 
             prefer_pandas: bool = True):
-       
+    """Method to display a table of MesaOption objects.
+        Uses a pandas DataFrame if pandas is available (optional dependency),
+        uses plain text output if not.
+    
+    Args:
+        options: List of MesaOption objects
+        max_desc: Maxiumum number of charachters used to print the 
+            MesaOption.description attribute
+        prefer_pandas: Use pandas if available. Default = True
+    Returns:
+        None
 
+    """
     # Preview MesaOptions as pandas DataFrame (if available) or text table.
     rows: list[dict[str, str]] = []
     for o in options:
