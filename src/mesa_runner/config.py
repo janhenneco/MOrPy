@@ -4,6 +4,27 @@ import re
 from pathlib import Path
 import os
 from typing import Self
+from contextvars import ContextVar
+
+# This bit is here to make the active MesaConfig available by all modules
+# and avoid users having to pass a MesaVersion object when initialising Inlist and Model
+# instances.
+_ACTIVE_CONFIG: ContextVar["MesaConfig | None"] = ContextVar("_ACTIVE_CONFIG", default=None)
+
+def set_active_config(config: "MesaConfig") -> None:
+    _ACTIVE_CONFIG.set(config)
+
+def get_active_config() -> "MesaConfig | None":
+    return _ACTIVE_CONFIG.get()
+
+def require_active_config() -> "MesaConfig":
+    cfg = get_active_config()
+    if cfg is None:
+        raise RuntimeError(
+            "No active MesaConfig found. Run MesaConfig.setup(...) first, "
+            "or pass mesa_version/config explicitly."
+        )
+    return cfg
 
 @total_ordering
 @dataclass(frozen = True)
@@ -160,8 +181,10 @@ class MesaConfig:
                     "MesaConfig.setup(version_name='r23.05.1')"
                 )
 
-        return cls(
-            mesa_dir = resolved,
-            mesa_version = mesa_version,
-            version_raw = version_raw,
+        cfg = cls(
+            mesa_dir=resolved,
+            mesa_version=mesa_version,
+            version_raw=version_raw,
         )
+        set_active_config(cfg)
+        return cfg

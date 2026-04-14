@@ -1,6 +1,11 @@
 import pytest
 
-from mesa_runner.config import MesaConfig, MesaVersion
+from mesa_runner.config import (
+    MesaConfig,
+    MesaVersion,
+    get_active_config,
+    require_active_config,
+)
 
 
 def make_fake_mesa_dir(tmp_path, version_raw: str):
@@ -68,6 +73,16 @@ def test_setup_with_explicit_mesa_dir_release(tmp_path):
     assert cfg.mesa_dir == mesa_dir.resolve()
     assert cfg.version_raw == "r23.05.1"
     assert cfg.mesa_version.scheme == "release"
+
+
+def test_setup_sets_active_config(tmp_path):
+    mesa_dir = make_fake_mesa_dir(tmp_path, "r23.05.1")
+    cfg = MesaConfig.setup(mesa_dir=mesa_dir)
+
+    active = get_active_config()
+    assert active is not None
+    assert active.mesa_version == cfg.mesa_version
+    assert require_active_config().mesa_version == cfg.mesa_version
 
 
 def test_setup_uses_env_var(monkeypatch, tmp_path):

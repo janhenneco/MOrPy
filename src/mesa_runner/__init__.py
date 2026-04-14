@@ -1,4 +1,8 @@
-from .config import MesaConfig, MesaVersion
+from .config import (MesaConfig, 
+                     MesaVersion, 
+                     set_active_config, 
+                     get_active_config, 
+                     require_active_config)
 from .parser import (parse_defaults_file, 
                      parse_inlist, 
                      build_defaults_options,
@@ -22,5 +26,8 @@ __all__ = [
     "Inlist",
     "python_float_to_fortran_string",
     "fortran_float_string_to_float", 
-    "preview"
+    "preview", 
+    "set_active_config", 
+    "get_active_config", 
+    "require_active_config"
 ]

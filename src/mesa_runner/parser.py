@@ -196,7 +196,7 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
     if default_options is None:
         default_options = build_defaults_options_from_config(config)
     
-    il = Inlist(source_path = source_path, mesa_version = config.mesa_version)
+    il = Inlist(name = source_path.name, source_path = source_path, mesa_version = config.mesa_version)
 
     lines = source_path.read_text(encoding="utf-8").splitlines()
 

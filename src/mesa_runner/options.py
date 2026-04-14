@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Literal
 from pathlib import Path
-from .config import MesaVersion
+from .config import MesaVersion, require_active_config
 from .utils import (
     inlist_values_match,
     normalize_inlist_value_for_output,
@@ -216,6 +216,8 @@ class Inlist:
     """Class for a MESA inlist (Fortran namelist) file.
 
     Attributes:
+        name: Name for this inlist object, which will be the filename when writing 
+            out the Inlist object to a file.
         options: A dictionary containing the parsed contents (i.e. MesaOption objects) 
             of the inlist file at `source_path`
         mesa_version: The MESA version for which the inlist is parsed
@@ -223,10 +225,17 @@ class Inlist:
             None if this Inlist object was not initialised from a file.
         
     """
-    mesa_version: MesaVersion
+    name: str
+    mesa_version: MesaVersion | None = None
     options: dict[str, MesaOption] = field(default_factory=dict)
     additional_options: list[UnclassifiedNamelist] = field(default_factory=list)
-    source_path: Path | None
+    source_path: Path | None = None
+
+    def __post_init__(self) -> None:
+        """Method looking for mesa_version from active MesaConfig if mesa_version is not specified.
+        """
+        if self.mesa_version is None:
+            self.mesa_version = require_active_config().mesa_version
 
     def _add_option(self, opt: MesaOption) -> None:
         """Method to add an option to the options attribute.
@@ -251,7 +260,7 @@ class Inlist:
         """Method to remove an option from the options attribute.
 
         Agrs:
-            opt: name of the MesaOption object to be removed from the 
+            option_name: name of the MesaOption object to be removed from the 
                 options attribute
         Returns:
             Boolean, True if removed, false if not present and, therefore, not removed
@@ -260,17 +269,19 @@ class Inlist:
         return is_removed is not None
     
     @classmethod
-    def empty(cls, mesa_version: MesaVersion,  source_path: Path | None = None) -> "Inlist":
+    def empty(cls, name: str, mesa_version: MesaVersion | None = None,  source_path: Path | None = None) -> "Inlist":
         """Method to initiate and empty Inlist object which can be populated later.
 
         Args:
+            name: Name for this inlist object, which will be the filename when writing 
+                out the Inlist object to a file.
             mesa_version: MesaVersion of the Inlist object
             source_path: Optional Path to source file. Here for compatibility
                 with the class interface, but only set by parser.parse_inlist()
         Returns:
             Inlist object
         """
-        return cls(source_path=source_path, mesa_version=mesa_version)
+        return cls(name=name, source_path=source_path, mesa_version=mesa_version)
 
     def set_option(
         self,
@@ -395,7 +406,7 @@ class Inlist:
         """
         if output_path is None:
             raise ValueError("Output path to write the inlist file to is required.")
-        target = output_path
+        target = output_path / self.name
 
         def output_block_name(block: MesaNameList) -> str:
             if block == "pgbinary" and self.mesa_version < PGBINARY_SPLIT_VERSION:

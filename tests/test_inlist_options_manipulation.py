@@ -54,8 +54,8 @@ def test_find_option_ambiguous_name_requires_namelist(defaults_r24081):
 
 
 def test_set_option_bool_is_coerced_to_fortran_logical(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     logical_opt = pick_logical_option(defaults)
     new_opt = inlist.set_option(
@@ -70,8 +70,8 @@ def test_set_option_bool_is_coerced_to_fortran_logical(defaults_r24081):
 
 
 def test_set_option_float_coercion(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     # initial_mass is a well-known numeric controls option
     new_opt = inlist.set_option(
@@ -86,8 +86,8 @@ def test_set_option_float_coercion(defaults_r24081):
 
 
 def test_set_options_bulk_grouped_and_flat(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     inlist.set_options(
         defaults=defaults,
@@ -99,8 +99,8 @@ def test_set_options_bulk_grouped_and_flat(defaults_r24081):
 
 
 def test_set_options_flat_ambiguous_raises(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     with pytest.raises(ValueError, match="multiple namelists"):
         inlist.set_options(defaults=defaults, options={"history_interval": 5})
@@ -130,8 +130,8 @@ def test_set_option_overwrites_existing_option_when_same_name(defaults_r12778):
     assert before is not after
 
 def test_mesaoption_to_python_value_current(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     # set integer-valued option
     opt = inlist.set_option(
@@ -154,8 +154,8 @@ def test_mesaoption_to_python_value_default_when_no_current(defaults_r24081):
 
 
 def test_inlist_get_python_value(defaults_r24081):
-    config, defaults = defaults_r24081
-    inlist = Inlist.empty(source_path=Path("inlist_test"), mesa_version=config.mesa_version)
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
 
     inlist.set_option(
         name="change_net",

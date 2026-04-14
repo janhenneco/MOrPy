@@ -26,10 +26,7 @@ The `mesa-runner` package's main modules are:
 ##TODO:
 
 - Pandas should be added as an optional requirement. -> Done -> this should be clear in the README later!
+- It should be clear from the instructions that users should preferable always initiate the MesaConfig object, 
+    since this will allow the MesaVersion to be automatically passed to intialisations of Inlist and Model objects. 
 
-- There is currently a problem with inlist init and write:
-the source_path in Inlist seems to be a relic from the DefaultsFile implementation
-and is nonsensical. The empty and write methods treat this as a valid path. I need to remove source path, or make it optional and onpy set when an inlist was read. nevertheless, I should then make sure that the output_path in write() is not optional and does not use source path. if I want to overwrite inlists, I can still do 
 
-if Inlist.source_path is not None
-    write(output_path = source_path)
