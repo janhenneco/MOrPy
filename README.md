@@ -8,11 +8,13 @@ The `mesa-runner` package's main modules are:
 
 - `parser.py`: A module that parses (1) the `MESA` defaults files: `controls.defaults`, `star_job.defaults`, `binary_controls.defaults`, `binary_job.defaults`, `kap.defaults`, `eos.defaults`, `pgstar.defaults`, and `pgbinary.defaults` files to gather all the inlist options and (2) parses existing `MESA` inlists so that they can be used as templates. [DONE]
 
-- `options.py`: A module that holds the classes and methods related to store, manipulate, and write out `MESA` inlist options. [WIP]
+- `options.py`: A module that holds the classes and methods related to store, manipulate, and write out `MESA` inlist options. [DONE]
+
+- `model.py`: A module for the Model class, which keeps track of the model's status and holds its inlists.
 
 - `utils.py`: A collection of helper functions. [WIP] 
 
-- `work_setup.py`: A module to create `MESA` work directories based on inlist specifications. [PLANNED]
+- `work_setup.py`: A module to read and create `MESA` workdirs. Serves as a layer between the Model objects and the system storage. [WIP]
 
 - `runner.py`: A module to start a `MESA` run, collect its terminal output, and report any errors [PLANNED]
 

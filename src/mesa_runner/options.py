@@ -223,6 +223,7 @@ class Inlist:
         mesa_version: The MESA version for which the inlist is parsed
         source_path: Path to the inlist file from which this object was parsed,
             None if this Inlist object was not initialised from a file.
+        additional_options: UnclassifiedNamelist object
         
     """
     name: str
@@ -269,7 +270,7 @@ class Inlist:
         return is_removed is not None
     
     @classmethod
-    def empty(cls, name: str, mesa_version: MesaVersion | None = None,  source_path: Path | None = None) -> "Inlist":
+    def empty(cls, name: str, mesa_version: MesaVersion | None = None,  source_path: Path | str | None = None) -> "Inlist":
         """Method to initiate and empty Inlist object which can be populated later.
 
         Args:
@@ -281,6 +282,8 @@ class Inlist:
         Returns:
             Inlist object
         """
+        if source_path is not None:
+            source_path = Path(source_path)
         return cls(name=name, source_path=source_path, mesa_version=mesa_version)
 
     def set_option(
@@ -391,7 +394,7 @@ class Inlist:
         if not self._remove_option(name):
             raise KeyError(f"Option '{name}' is not present in this inlist.")
     
-    def write(self, output_path: Path, include_additional_options: bool = False) -> Path:
+    def write(self, output_path: Path | str, include_additional_options: bool = False) -> Path:
         """Method to write the contents of an Inlist object to an inlist file that
             can be read by MESA.
 
@@ -404,8 +407,10 @@ class Inlist:
         Raises: 
             ValueError when no output_path is specified
         """
+
         if output_path is None:
             raise ValueError("Output path to write the inlist file to is required.")
+        output_path = Path(output_path)
         target = output_path / self.name
 
         def output_block_name(block: MesaNameList) -> str:
@@ -609,3 +614,9 @@ def preview(options: list[MesaOption],
     out = [fmt_row({h: h for h in headers}), sep]
     out.extend(fmt_row(r) for r in rows)
     return "\n".join(out)
+
+
+# TODO: would be cool to create a function that automatically adds the cache directory options to all
+# star_job blocks and creates the cache directory structure if not present. 
+# The cache directory should probably created at the time of config if not present and optional, because not every 
+# project needs its own caches. 

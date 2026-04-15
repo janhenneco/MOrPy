@@ -24,7 +24,7 @@ KNOWN_NAMELISTS = {"controls",
                    "pgstar",
                    "pgbinary"}
 
-def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOptions:
+def build_defaults_options(defaults_dir: Path | str, config: MesaConfig) -> DefaultsOptions:
     """Method to parse all the available defaults files and store them into this class.
     Args:
         defaults_dir: Path to the base location of the defaults files, usually the MESA installation directory
@@ -37,6 +37,9 @@ def build_defaults_options(defaults_dir: Path, config: MesaConfig) -> DefaultsOp
     # Note to self: technically this implementation only works with a self-provided
     #   path to the defaults files directory if that directory has the same structure as in the
     #   MESA installation directory. If ever necessary, I should make his more flexible.
+
+    defaults_dir = Path(defaults_dir)
+
     controls = parse_defaults_file(
         namelist="controls",
         source_path=defaults_dir / "star" / "defaults" / "controls.defaults",
@@ -116,7 +119,7 @@ def build_defaults_options_from_config(config: MesaConfig) -> DefaultsOptions:
     return build_defaults_options(config.mesa_dir, config)
 
 
-def parse_defaults_file(namelist: MesaNameList, source_path: Path, config: MesaConfig) -> DefaultsFile:
+def parse_defaults_file(namelist: MesaNameList, source_path: Path | str, config: MesaConfig) -> DefaultsFile:
     """Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,
 
     Args:
@@ -127,6 +130,8 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path, config: MesaC
         A DefaultsFile instance containing the MesaOption objects with the names, default values and descriptions
             of the MESA defaults file.
     """
+    source_path = Path(source_path)
+
     df = DefaultsFile(namelist = namelist, 
                       source_path = source_path, 
                       mesa_version = config.mesa_version)
@@ -180,7 +185,7 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path, config: MesaC
     
     return df
 
-def parse_inlist(source_path: Path, config: MesaConfig, default_options: DefaultsOptions | None = None) -> Inlist:
+def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: DefaultsOptions | None = None) -> Inlist:
     """Read the contents of an inlist and store it inside an Inlist object.
 
     Args:
@@ -193,6 +198,9 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
     Returns:
         Inlist object with MesaOption instances.
     """
+
+    source_path = Path(source_path)
+
     if default_options is None:
         default_options = build_defaults_options_from_config(config)
     
@@ -298,5 +306,9 @@ def parse_inlist(source_path: Path, config: MesaConfig, default_options: Default
 
     return il
 
+# TODO: curently, empty namelist blocks will be skipped in inlits.write becasue there are no options in 
+# inlist.options with that namelist type. I should change the inlist parser and Inlist class 
+# so that empty blocks are added to an Inlist attribute and subsequently written as empty blocks if there
+# are still no options for that namelist at the time Inlist.write() is called.
 
 

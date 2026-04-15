@@ -31,11 +31,18 @@ class Model:
         started_at: Datetime object representing date and time at which this model started running.
         updated_at: Datetime object representing date and time at which the ModelState or Model attributes changed.
         finished_at: Datetime object representing the date and time at which the model finished running.
+        file_snapshot: Dictionary containing relative paths of files at model_path. 
+            Used to track changes between inlists at model_path and in Model.inlists
+            and only set when work_setup.create_modeldir is called with this instance
+            as an argument.
+        snapshot_at: datetime object to store at which moment a file_snapshot is taken. 
+            Only set when work_setup.create_modeldir is called with this instance
+            as an argument.
 
     """
 
     name: str
-    model_path: Path
+    model_path: Path | None = None
     mesa_version: MesaVersion | None = None
     model_id: str = field(default_factory=lambda: uuid.uuid4().hex)
     state: ModelState = field(default=ModelState.DRAFT)
@@ -44,6 +51,8 @@ class Model:
     started_at: datetime | None = None
     updated_at: datetime | None = None
     finished_at: datetime | None = None
+    file_snapshot: dict[str, str] = field(default_factory=dict)
+    snapshot_taken_at: datetime | None = None
 
     def __post_init__(self) -> None:
         """Method looking for mesa_version from active MesaConfig if mesa_version is not specified.
@@ -73,6 +82,35 @@ class Model:
         """
         is_removed = self.inlists.pop(inlist_name, None)
         return is_removed is not None
+    
+    @classmethod
+    def empty(cls, name: str, mesa_version: MesaVersion | None = None) -> "Model":
+        """Method to initiate and empty Model object which can be populated later.
 
-    # create a method that looks for all possible logs directories in the inlists and stores them in a dictionary.
-    # If the logs_directory option is not found in an inlist, default to the model_path + LOGS path.
+        Args:
+            name: Name for this Model object, which will be the directory name when writing 
+                out the Model object to the storage.
+            mesa_version: MesaVersion of the Model object
+            
+        Returns:
+            Model object
+        """
+        return cls(name=name, mesa_version=mesa_version)
+    
+    def return_log_directory_paths(self) -> dict:
+        '''Function that returns a dictionary containing all the LOGS directories specified in the inlists
+            that are part of Model.inlists.
+        Args:
+            self
+        Returns:
+            - Dictionary with locations to LOGS directories and the associated inlists
+            - Model.model_dir / LOGS or LOGS1 & LOGS 2 if no logs directories are specified in the inlists
+            - An empty dictionary is the Model.inlists dictionary is empty
+        '''
+        log_dirs = {}
+        if bool(self.inlists):
+            return log_dirs
+        #TODO
+    
+
+#TODO: Implement tests for this module.

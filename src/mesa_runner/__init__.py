@@ -14,6 +14,8 @@ from .options import (MesaOption,
                       DefaultsOptions, 
                       Inlist, 
                       preview)
+from .model import (Model)
+from .work_setup import (import_inlists_from_dir)
 
 __all__ = [
     "MesaConfig",
@@ -29,5 +31,6 @@ __all__ = [
     "preview", 
     "set_active_config", 
     "get_active_config", 
-    "require_active_config"
+    "require_active_config",
+    "Model", "import_inlists_from_dir"
 ]
