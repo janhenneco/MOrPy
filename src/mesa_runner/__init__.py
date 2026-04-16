@@ -15,7 +15,10 @@ from .options import (MesaOption,
                       Inlist, 
                       preview)
 from .model import (Model)
-from .work_setup import (import_inlists_from_dir)
+from .work_setup import (import_inlists_from_dir, 
+                         create_modeldir, 
+                         export_modeldir, 
+                         sync_model_with_disk)
 
 __all__ = [
     "MesaConfig",
@@ -32,5 +35,9 @@ __all__ = [
     "set_active_config", 
     "get_active_config", 
     "require_active_config",
-    "Model", "import_inlists_from_dir"
+    "Model", 
+    "import_inlists_from_dir",
+    "create_modeldir",
+    "export_modeldir",
+    "sync_model_with_disk"
 ]

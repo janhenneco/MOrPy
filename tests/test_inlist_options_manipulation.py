@@ -165,3 +165,151 @@ def test_inlist_get_python_value(defaults_r24081):
     )
 
     assert inlist.get_python_value("change_net") is True
+
+def test_options_equal_can_ignore_default_valued_presence(defaults_r24081):
+    _, defaults = defaults_r24081
+
+    a = Inlist.empty(name="a")
+    b = Inlist.empty(name="b")
+
+    # Same effective value, different representation:
+    # a omits option; b includes it at default value.
+    default_opt = defaults.controls.options["initial_mass"]
+    b.options["initial_mass"] = mrun.MesaOption(
+        name="initial_mass",
+        default_option=default_opt.default_option,
+        description=default_opt.description,
+        namelist="controls",
+        current_value=default_opt.default_option,
+    )
+
+    assert a._options_equal(b, ignore_default_valued=True) is True
+    assert a._options_equal(b, ignore_default_valued=False) is False
+
+
+def test_sync_with_source_ignores_removed_default_options_when_enabled(
+    tmp_path,
+    defaults_r24081,
+):
+    config, defaults = defaults_r24081
+
+    source = tmp_path / "inlist_test"
+    source.write_text(
+        "&controls\n"
+        "   initial_mass = 1 ! DEFAULT\n"
+        "/ ! end of controls namelist\n",
+        encoding="utf-8",
+    )
+
+    inlist = mrun.parse_inlist(source_path=source, config=config, default_options=defaults)
+
+    # Remove the whole block (do not leave an empty known block behind).
+    source.write_text("", encoding="utf-8")
+
+    changed = inlist.sync_with_source(
+        config=config,
+        default_options=defaults,
+        on_difference="decouple",
+        ignore_default_valued_options=True,
+    )
+
+    assert changed is False
+    assert inlist.source_path == source
+
+
+def test_parse_inlist_tracks_empty_known_namelists(tmp_path, defaults_r24081):
+    config, defaults = defaults_r24081
+
+    source = tmp_path / "inlist_empty_blocks"
+    source.write_text(
+        "&star_job\n"
+        "/ ! end of star_job namelist\n"
+        "\n"
+        "&eos\n"
+        "/ ! end of eos namelist\n"
+        "\n"
+        "&controls\n"
+        "   initial_mass = 1\n"
+        "/ ! end of controls namelist\n"
+        "\n"
+        "&unknown_block\n"
+        "/ ! end of unknown_block namelist\n",
+        encoding="utf-8",
+    )
+
+    inlist = mrun.parse_inlist(source_path=source, config=config, default_options=defaults)
+
+    assert "star_job" in inlist.empty_namelists
+    assert "eos" in inlist.empty_namelists
+    assert "controls" not in inlist.empty_namelists
+    assert len(inlist.additional_options) == 1
+    assert inlist.additional_options[0].name == "unknown_block"
+
+
+def test_write_preserves_empty_known_namelists_from_parsed_inlist(tmp_path, defaults_r24081):
+    config, defaults = defaults_r24081
+
+    source = tmp_path / "inlist_with_empty_known_blocks"
+    source.write_text(
+        "&star_job\n"
+        "/ ! end of star_job namelist\n"
+        "\n"
+        "&eos\n"
+        "/ ! end of eos namelist\n",
+        encoding="utf-8",
+    )
+
+    parsed = mrun.parse_inlist(source_path=source, config=config, default_options=defaults)
+    assert "star_job" in parsed.empty_namelists
+    assert "eos" in parsed.empty_namelists
+
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    written_path = parsed.write(output_path=out_dir)
+
+    written_text = written_path.read_text(encoding="utf-8")
+    assert "&star_job" in written_text
+    assert "/ ! end of star_job namelist" in written_text
+    assert "&eos" in written_text
+    assert "/ ! end of eos namelist" in written_text
+
+    reparsed = mrun.parse_inlist(source_path=written_path, config=config, default_options=defaults)
+    assert "star_job" in reparsed.empty_namelists
+    assert "eos" in reparsed.empty_namelists
+
+
+def test_sync_with_source_detects_empty_namelist_drift(tmp_path, defaults_r24081):
+    config, defaults = defaults_r24081
+
+    source = tmp_path / "inlist_empty_drift"
+    source.write_text(
+        "&star_job\n"
+        "/ ! end of star_job namelist\n"
+        "\n"
+        "&controls\n"
+        "   initial_mass = 1\n"
+        "/ ! end of controls namelist\n",
+        encoding="utf-8",
+    )
+
+    inlist = mrun.parse_inlist(source_path=source, config=config, default_options=defaults)
+    assert "star_job" in inlist.empty_namelists
+
+    # Remove only the empty known block; keep options identical.
+    source.write_text(
+        "&controls\n"
+        "   initial_mass = 1\n"
+        "/ ! end of controls namelist\n",
+        encoding="utf-8",
+    )
+
+    with pytest.warns(UserWarning, match="Only empty known namelist blocks changed on disk"):
+        changed = inlist.sync_with_source(
+            default_options=defaults,
+            config=config,
+            on_difference="decouple",
+        )
+
+    assert changed is True
+    assert inlist.source_path == source
+    assert "star_job" not in inlist.empty_namelists

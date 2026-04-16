@@ -30,5 +30,9 @@ The `mesa-runner` package's main modules are:
 - Pandas should be added as an optional requirement. -> Done -> this should be clear in the README later!
 - It should be clear from the instructions that users should preferable always initiate the MesaConfig object, 
     since this will allow the MesaVersion to be automatically passed to intialisations of Inlist and Model objects. 
+- There should be a general philosophy in the README:
+    - The user is ultimately responsible for creating and parsing sensible and correct inlists.
+    - The disk is the truth: any changes made to inlist files and their contents after their inception on the disk
+        will be synced upon runtime. 
 
 

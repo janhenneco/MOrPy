@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Literal
 from pathlib import Path
-from .config import MesaVersion, require_active_config
+import warnings
+from .config import MesaVersion, MesaConfig, require_active_config
 from .utils import (
     inlist_values_match,
     normalize_inlist_value_for_output,
@@ -224,12 +225,15 @@ class Inlist:
         source_path: Path to the inlist file from which this object was parsed,
             None if this Inlist object was not initialised from a file.
         additional_options: UnclassifiedNamelist object
+        empty_namelists: Known MESA namelist blocks that were present in the
+            source inlist but contained no options.
         
     """
     name: str
     mesa_version: MesaVersion | None = None
     options: dict[str, MesaOption] = field(default_factory=dict)
     additional_options: list[UnclassifiedNamelist] = field(default_factory=list)
+    empty_namelists: set[MesaNameList] = field(default_factory=set)
     source_path: Path | None = None
 
     def __post_init__(self) -> None:
@@ -394,6 +398,131 @@ class Inlist:
         if not self._remove_option(name):
             raise KeyError(f"Option '{name}' is not present in this inlist.")
     
+    def _option_snapshot(self, *, ignore_default_valued: bool = False) -> dict[str, tuple[MesaNameList, str]]:
+        """Build a normalized option snapshot for semantic comparisons between inlists.
+        Args:
+            ignore_default_valued: True if options that have the default value should not be 
+                included in the comparison.
+        Returns:
+            Dictionary with MesaOption.name as key and a tuple containing MesaOption.namelist and MesaOption.value
+        """
+        snapshot: dict[str, tuple[MesaNameList, str]] = {}
+        for name, opt in self.options.items():
+            value = opt.current_value if opt.current_value is not None else opt.default_option
+
+            # Semantic mode: omit options that are effectively at default.
+            if (
+                ignore_default_valued
+                and opt.default_option.strip() != ""
+                and inlist_values_match(value, opt.default_option)
+            ):
+                continue
+
+            snapshot[name] = (opt.namelist, value)
+        return snapshot
+
+
+    def _options_equal(self, other: "Inlist", *, ignore_default_valued: bool = False) -> bool:
+        """Function to see if two inlists have effectively the same options.
+        
+        Args:
+            other: Inlist object to compare to.
+        Returns:
+            True if two inlists are effectively the same, False if not.
+        """
+        mine = self._option_snapshot(ignore_default_valued=ignore_default_valued)
+        theirs = other._option_snapshot(ignore_default_valued=ignore_default_valued)
+
+        if mine.keys() != theirs.keys():
+            return False
+
+        for name, (my_namelist, my_value) in mine.items():
+            other_namelist, other_value = theirs[name]
+            if my_namelist != other_namelist:
+                return False
+            if not inlist_values_match(my_value, other_value):
+                return False
+
+        return True
+
+    def sync_with_source(self, 
+                         default_options: DefaultsOptions,
+                         config: MesaConfig | None = None, 
+                         *, 
+                         on_difference: Literal["decouple", "update"] = "decouple", 
+                         compare_additional_options: bool = True, 
+                         ignore_default_valued_options: bool = True
+                         ) -> bool:
+        """Compare this object with the current contents of source_path.
+
+        Args:
+            config: MesaConfig
+            default_options: DefaultsOptions
+
+        Returns:
+            True if a difference was detected, False otherwise.
+        Behaviour on difference:
+            - decouple: set source_path to None
+            - update: replace options/additional_options/mesa_version from disk
+        """
+        if self.source_path is None:
+            return False
+        
+        if config is None:
+            config = require_active_config()
+
+        # Local import avoids module-level circular import:
+        # parser imports Inlist from options.
+        from .parser import parse_inlist
+
+        parsed = parse_inlist(
+            source_path=self.source_path,
+            config=config,
+            default_options=default_options,
+        )
+
+        changed = not self._options_equal(
+            parsed,
+            ignore_default_valued=ignore_default_valued_options,
+        )
+
+        if compare_additional_options and not changed:
+            mine_extra = [(b.name, b.body) for b in self.additional_options]
+            parsed_extra = [(b.name, b.body) for b in parsed.additional_options]
+            changed = mine_extra != parsed_extra
+            
+        empty_drift = self.empty_namelists != parsed.empty_namelists
+        if not changed and empty_drift:
+            warnings.warn(
+                "Only empty known namelist blocks changed on disk; refreshing from source.",
+                UserWarning,
+                stacklevel=2,
+            )
+            self.options = parsed.options
+            self.additional_options = parsed.additional_options
+            self.empty_namelists = set(parsed.empty_namelists)
+            self.mesa_version = parsed.mesa_version
+            return True
+
+        if not changed:
+            changed = empty_drift
+
+        if not changed:
+            return False
+
+        if on_difference == "decouple":
+            self.source_path = None
+        elif on_difference == "update":
+            self.options = parsed.options
+            self.additional_options = parsed.additional_options
+            self.empty_namelists = set(parsed.empty_namelists)
+            self.mesa_version = parsed.mesa_version
+            # keep existing self.name unchanged intentionally
+        else:
+            raise ValueError("on_difference must be 'decouple' or 'update'.")
+
+        return True
+
     def write(self, output_path: Path | str, include_additional_options: bool = False) -> Path:
         """Method to write the contents of an Inlist object to an inlist file that
             can be read by MESA.
@@ -455,6 +584,9 @@ class Inlist:
         if has_binary_job:
             required_empty_blocks.add("pgbinary")
 
+        # Preserve known empty blocks from parsed source inlists.
+        explicit_empty_blocks: set[MesaNameList] = set(self.empty_namelists)
+
         lines: list[str] = []
 
         for block in block_order:
@@ -463,7 +595,7 @@ class Inlist:
                 continue
 
             opts = grouped[block]
-            must_emit = block in required_empty_blocks
+            must_emit = (block in required_empty_blocks) or (block in explicit_empty_blocks)
             if not opts and not must_emit:
                 continue
 

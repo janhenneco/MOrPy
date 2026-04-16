@@ -212,6 +212,7 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
     defaults_file: DefaultsFile | None = None
     active_unclassified_block_name: str | None = None
     active_unclassified_block_lines: list[str] = []
+    block_had_option = False # track if we're dealing with an empty block
 
     for i, line in enumerate(lines):
         stripped = line.strip()
@@ -248,6 +249,7 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
                 # Normnal behaviour for regular namelist
                 block_type = normalised_block_type
                 defaults_file = default_options[block_type]
+                block_had_option = False
             else:
                 # Start collecting unknown block body as raw text.
                 block_type = None
@@ -257,8 +259,11 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
             continue
         
         if stripped.startswith('/'):
+            if block_type is not None and not block_had_option:
+                il.empty_namelists.add(block_type)
             block_type = None
             defaults_file = None
+            block_had_option = False
             continue
         
         if "=" in line and not stripped.startswith("!"):
@@ -297,7 +302,8 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
                 current_value=value,
                 description=description,
                 namelist=block_type,
-            ) 
+            )
+            block_had_option = True 
     
     if active_unclassified_block_name is not None:
         raise ValueError(

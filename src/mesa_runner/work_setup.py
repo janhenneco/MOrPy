@@ -15,8 +15,9 @@ WorkdirMode = Literal["star", "binary"]
 
 def import_inlists_from_dir(model: Model, 
                             source_dir: Path | str, 
-                            config: MesaConfig | None = None, 
-                            default_options: DefaultsOptions | None = None) -> Model:
+                            default_options: DefaultsOptions,
+                            config: MesaConfig | None = None
+                            ) -> Model:
     """Function that looks for files with 'inlist' in their name in a given directory (non-recursively),
         parses them, and adds them to model.inlists.
     
@@ -32,9 +33,6 @@ def import_inlists_from_dir(model: Model,
     """
     if config is None:
         config = require_active_config()
-    
-    if default_options is None:
-        default_options = build_defaults_options_from_config(config)
 
     source_dir = Path(source_dir)
     if not source_dir.is_dir():
@@ -148,6 +146,73 @@ def _ensure_scripts_in_project_dir(projectdir_path: Path, mode: WorkdirMode, con
         
         # Copy to projectdir, preserving permissions
         shutil.copy2(src, script_path)
+
+def _hash_file(path: Path, *, chunk_size: int = 1024 * 1024) -> str:
+    """Return SHA-256 hash of a file."""
+    hasher = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(chunk_size), b""):
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+def _snapshot_model_inlists(model_dir: Path | str) -> dict[str, str]:
+    """Create a stable snapshot of inlist files in a model directory.
+
+    Snapshot format:
+        { "<filename>": "<sha256>" }
+    """
+    model_dir = Path(model_dir)
+    snapshot: dict[str, str] = {}
+
+    inlist_files = sorted(
+        p for p in model_dir.iterdir() if p.is_file() and "inlist" in p.name.lower()
+    )
+    for path in inlist_files:
+        snapshot[path.name] = _hash_file(path)
+
+    return snapshot
+
+def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config: MesaConfig | None = None) -> bool:
+    """Ensure model.inlists matches current files in model.model_path.
+
+    Disk is treated as source of truth. If drift is detected compared to the
+    stored model.file_snapshot, model.inlists is reloaded from disk.
+
+    Returns:
+        True if a reload was performed, False if model was already in sync.
+    """
+    if config is None:
+        config = require_active_config()
+
+    if model.model_path is None:
+        raise ValueError(
+            f"Model '{model.name}' has no model_path; cannot sync from disk."
+        )
+
+    model_dir = Path(model.model_path)
+    if not model_dir.is_dir():
+        raise FileNotFoundError(f"Model directory does not exist: {model_dir}")
+
+    current_snapshot = _snapshot_model_inlists(model_dir)
+
+    # Fast no-op path.
+    if model.file_snapshot == current_snapshot:
+        return False
+
+    # Rebuild in-memory inlists from disk so removals are handled as well.
+    model.inlists.clear()
+    import_inlists_from_dir(
+        model=model,
+        source_dir=model_dir,
+        default_options=default_options,
+        config=config,
+    )
+
+    now = datetime.now(timezone.utc)
+    model.file_snapshot = current_snapshot
+    model.snapshot_taken_at = now
+    model.updated_at = now
+    return True
 
 def create_modeldir(model: Model, 
                     projectdir_path: Path | str, 
@@ -264,6 +329,9 @@ def create_modeldir(model: Model,
 
         committed = True
         model.model_path = model_dir
+        now = datetime.now(timezone.utc)
+        model.file_snapshot = _snapshot_model_inlists(model_dir)
+        model.snapshot_taken_at = now
         return model_dir
 
     finally:
