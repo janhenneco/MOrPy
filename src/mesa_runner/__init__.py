@@ -19,6 +19,7 @@ from .work_setup import (import_inlists_from_dir,
                          create_modeldir, 
                          export_modeldir, 
                          sync_model_with_disk)
+from .project_setup import (create_projectdir)
 
 __all__ = [
     "MesaConfig",
@@ -39,5 +40,6 @@ __all__ = [
     "import_inlists_from_dir",
     "create_modeldir",
     "export_modeldir",
-    "sync_model_with_disk"
+    "sync_model_with_disk", 
+    "create_projectdir"
 ]

@@ -16,7 +16,9 @@ WorkdirMode = Literal["star", "binary"]
 def import_inlists_from_dir(model: Model, 
                             source_dir: Path | str, 
                             default_options: DefaultsOptions,
-                            config: MesaConfig | None = None
+                            config: MesaConfig | None = None,
+                            *,
+                            allow_unknown_options : bool = False
                             ) -> Model:
     """Function that looks for files with 'inlist' in their name in a given directory (non-recursively),
         parses them, and adds them to model.inlists.
@@ -41,7 +43,7 @@ def import_inlists_from_dir(model: Model,
     inlist_paths = sorted(p for p in source_dir.iterdir() if p.is_file() and "inlist" in p.name.lower())
 
     for path in inlist_paths:
-        model.add_inlist(parse_inlist(source_path=path, config=config, default_options=default_options))
+        model.add_inlist(parse_inlist(source_path=path, config=config, default_options=default_options, allow_unknown_options=allow_unknown_options))
 
     return model
 
@@ -113,7 +115,7 @@ def _detect_workdir_mode(model: Model) -> WorkdirMode:
         "No star or binary namelist options were found."
     )
 
-def _optional_assets_for_mode(mode: WorkdirMode) -> list[str]:
+def _columns_files_for_mode(mode: WorkdirMode) -> list[str]:
     """Return optional files always needed"""
     if mode == "binary":
         return [
@@ -172,7 +174,7 @@ def _snapshot_model_inlists(model_dir: Path | str) -> dict[str, str]:
 
     return snapshot
 
-def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config: MesaConfig | None = None) -> bool:
+def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config: MesaConfig | None = None, *, allow_unknown_options: bool = False) -> bool:
     """Ensure model.inlists matches current files in model.model_path.
 
     Disk is treated as source of truth. If drift is detected compared to the
@@ -205,7 +207,8 @@ def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config:
         model=model,
         source_dir=model_dir,
         default_options=default_options,
-        config=config,
+        config=config, 
+        allow_unknown_options=allow_unknown_options
     )
 
     now = datetime.now(timezone.utc)
@@ -284,7 +287,7 @@ def create_modeldir(model: Model,
         )
 
         # symlink optional assets if present
-        for asset in _optional_assets_for_mode(mode):
+        for asset in _columns_files_for_mode(mode):
             if (projectdir_path / asset).exists():
                 _link_into_model_dir(
                     model_dir=tmp_dir,
@@ -420,39 +423,7 @@ def export_modeldir(
             raise OSError(f"Unsupported scaffold path type: {src}")
 
     return export_dir
-        
 
-"""TODO: I need to create a way to create a file snapshot of model_dir upon creation and store it in model.
-        Then, when I run a model, I should quickly check if the current state of the files is identical 
-        to the original state. If not, I need to call import_inlists_from_dir again to update the Model object.
-        This is vital because we will make these Model objects persistent and use them for accounting.
-
-        This means:
-            creating a snapshot attribute in model
-            taking a snapshot at the end of create_modeldir
-            comparing the current state of model_dir and the snapshot attribute in the run module
-                and calling import_inlists_from_dir if necessary.
-        
-        --->
-        
-        "Better approach
-
-        After writing model_dir, store a snapshot on Model:
-        model_path
-        per-inlist file mtime or content hash
-        Before run, compare current disk snapshot with stored snapshot.
-        If drift is detected:
-        either auto-reload with import_inlists_from_dir from work_setup.py
-        or raise/warn and ask caller to reload explicitly
-        Update updated_at only when you actually refresh model.inlists in memory.
-        Recommended policy for your goal (user freedom to edit files)
-
-        Treat disk as source of truth at run time.
-        Add a small sync function in work_setup.py, for example ensure_model_synced_from_disk.
-        Call it right before launching run logic.
-        That gives users freedom to edit files manually, while keeping runs safe and predictable."
-    """
-#TODO: Implement tests for these functions
 
 
 

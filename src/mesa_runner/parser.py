@@ -24,6 +24,19 @@ KNOWN_NAMELISTS = {"controls",
                    "pgstar",
                    "pgbinary"}
 
+def _option_is_known_in_defaults(name: str, defaults_file: DefaultsFile) -> bool:
+    """Return True if option name is present in defaults, including array-style names."""
+    if name in defaults_file.options:
+        return True
+
+    if "(" in name:
+        array_name = name.partition("(")[0]
+        for opt in defaults_file.options.values():
+            if array_name == opt.name.partition("(")[0]:
+                return True
+
+    return False
+
 def build_defaults_options(defaults_dir: Path | str, config: MesaConfig) -> DefaultsOptions:
     """Method to parse all the available defaults files and store them into this class.
     Args:
@@ -185,7 +198,10 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path | str, config:
     
     return df
 
-def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: DefaultsOptions | None = None) -> Inlist:
+def parse_inlist(source_path: Path | str, 
+                 config: MesaConfig, 
+                 default_options: DefaultsOptions | None = None, 
+                 allow_unknown_options: bool = False) -> Inlist:
     """Read the contents of an inlist and store it inside an Inlist object.
 
     Args:
@@ -195,6 +211,8 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
             of the parsed inlist options. Will be created automatically based on MESA installation directory 
             if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
             provide it explicitly as an argument.
+        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
+            If False, raise an exception when inlist options are found that re not found in the defaults files
     Returns:
         Inlist object with MesaOption instances.
     """
@@ -214,6 +232,9 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
     active_unclassified_block_lines: list[str] = []
     block_had_option = False # track if we're dealing with an empty block
 
+    # Collector for unknown options
+    unknown_options: dict[str, set[str]] = {}
+    
     for i, line in enumerate(lines):
         stripped = line.strip()
 
@@ -280,6 +301,12 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
             if not (name and value):
                 continue
             
+            if defaults_file is not None:
+                known = _option_is_known_in_defaults(name, defaults_file)
+                if not known:
+                    unknown_options.setdefault(block_type, set()).add(name)
+                    if not allow_unknown_options:
+                         continue
             # find the corresponding name, default_value and description in the defaults
             description = ""
             default_value = ""
@@ -303,11 +330,31 @@ def parse_inlist(source_path: Path | str, config: MesaConfig, default_options: D
                 description=description,
                 namelist=block_type,
             )
-            block_had_option = True 
+            block_had_option = True
     
     if active_unclassified_block_name is not None:
         raise ValueError(
             f"Unclosed namelist block '&{active_unclassified_block_name}' in {source_path}."
+        )
+    
+    if not allow_unknown_options and unknown_options:
+        details = "; ".join(
+            f"{namelist}: {', '.join(sorted(names))}"
+            for namelist, names in sorted(unknown_options.items())
+        )
+        raise ValueError(
+            f"Unknown options found in {source_path} for loaded MESA defaults: {details}"
+        )
+
+    if allow_unknown_options and unknown_options:
+        details = "; ".join(
+            f"{namelist}: {', '.join(sorted(names))}"
+            for namelist, names in sorted(unknown_options.items())
+        )
+        warnings.warn(
+            f"Unknown inlist options found in {source_path} for loaded MESA defaults: {details}",
+            RuntimeWarning,
+            stacklevel=2,
         )
 
     return il
