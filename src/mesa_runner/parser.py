@@ -24,18 +24,44 @@ KNOWN_NAMELISTS = {"controls",
                    "pgstar",
                    "pgbinary"}
 
-def _option_is_known_in_defaults(name: str, defaults_file: DefaultsFile) -> bool:
-    """Return True if option name is present in defaults, including array-style names."""
+def _base_option_name(name: str) -> str:
+    return name.partition("(")[0].strip()
+
+def _resolve_defaults_option(name: str, defaults_file: DefaultsFile) -> MesaOption | None:
+    """Resolve an inlist option name against defaults, with array-aware matching."""
+
+    # Exact match first.
     if name in defaults_file.options:
-        return True
+        return defaults_file.options[name]
 
-    if "(" in name:
-        array_name = name.partition("(")[0]
-        for opt in defaults_file.options.values():
-            if array_name == opt.name.partition("(")[0]:
-                return True
+    base = _base_option_name(name)
+    matches = [
+        opt
+        for opt in defaults_file.options.values()
+        if _base_option_name(opt.name) == base
+    ]
 
-    return False
+    if not matches:
+        return None
+
+    # Prefer canonical array template if present.
+    for opt in matches:
+        if "(:)" in opt.name:
+            return opt
+
+    # If this is an indexed array option and defaults only have numbered entries,
+    # use the first match as metadata template instead of failing as ambiguous.
+    if "(" in name and ")" in name:
+        return matches[0]
+
+    # Non-array scalar ambiguity is still suspicious.
+    if len(matches) > 1:
+        raise ValueError(
+            f"Ambiguous defaults match for option '{name}' in namelist "
+            f"'{defaults_file.namelist}': {[m.name for m in matches]}"
+        )
+
+    return matches[0]
 
 def build_defaults_options(defaults_dir: Path | str, config: MesaConfig) -> DefaultsOptions:
     """Method to parse all the available defaults files and store them into this class.
@@ -301,27 +327,19 @@ def parse_inlist(source_path: Path | str,
             if not (name and value):
                 continue
             
+            resolved_default: MesaOption | None = None
             if defaults_file is not None:
-                known = _option_is_known_in_defaults(name, defaults_file)
-                if not known:
+                resolved_default = _resolve_defaults_option(name, defaults_file)
+                if resolved_default is None:
                     unknown_options.setdefault(block_type, set()).add(name)
                     if not allow_unknown_options:
-                         continue
-            # find the corresponding name, default_value and description in the defaults
+                        continue
+
             description = ""
             default_value = ""
-
-            if defaults_file is not None: # This is for the binary_pgstar blocks, which have no dedicated defaults file.
-                if "(" in name:
-                    array_name = name.partition("(")[0]
-                    for opt in defaults_file.options.values():
-                        if array_name == opt.name.partition("(")[0]:
-                            description = opt.description
-                            default_value = opt.default_option
-                            break
-                elif name in defaults_file.options:
-                    description = defaults_file.options[name].description
-                    default_value = defaults_file.options[name].default_option
+            if resolved_default is not None:
+                description = resolved_default.description
+                default_value = resolved_default.default_option
 
             il.options[name] = MesaOption(
                 name=name,

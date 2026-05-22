@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from typing import Literal
 from pathlib import Path
 import warnings
+from collections.abc import Mapping, Iterable
+from copy import deepcopy
 from .config import MesaVersion, MesaConfig, require_active_config
 from .utils import (
     inlist_values_match,
@@ -164,6 +166,48 @@ class DefaultsOptions:
             if defaults_file is not None:
                 files.append(defaults_file)
         return files
+    
+    def _base_option_name(self, option_name: str) -> str:
+        return option_name.partition("(")[0].strip()
+
+    def _resolve_option_in_defaults_file(
+        self,
+        *,
+        name: str,
+        defaults_file: DefaultsFile,
+    ) -> MesaOption | None:
+        # Exact match first.
+        if name in defaults_file.options:
+            return defaults_file.options[name]
+
+        base = self._base_option_name(name)
+        matches = [
+            opt
+            for opt in defaults_file.options.values()
+            if self._base_option_name(opt.name) == base
+        ]
+
+        if not matches:
+            return None
+
+        # Prefer canonical array template.
+        for opt in matches:
+            if "(:)" in opt.name:
+                return opt
+
+        # Indexed array request (e.g. foo(7)) with only numbered defaults.
+        if "(" in name and ")" in name:
+            return matches[0]
+
+        # Scalar ambiguity should still fail loudly.
+        if len(matches) > 1:
+            matching_names = ", ".join(sorted(opt.name for opt in matches))
+            raise ValueError(
+                f"Ambiguous option '{name}' in namelist '{defaults_file.namelist}': "
+                f"{matching_names}"
+            )
+
+        return matches[0]
 
     def find_option(
         self,
@@ -176,29 +220,37 @@ class DefaultsOptions:
                 raise ValueError(
                     f"Namelist '{namelist}' is not available for MESA version {self.mesa_version.version_name}."
                 )
-            try:
-                return defaults_file.options[name]
-            except KeyError as exc:
+
+            resolved = self._resolve_option_in_defaults_file(
+                name=name,
+                defaults_file=defaults_file,
+            )
+            if resolved is None:
                 raise KeyError(
                     f"Option '{name}' was not found in namelist '{namelist}'."
-                ) from exc
+                )
+            return resolved
 
-        matches = [
-            defaults_file.options[name]
-            for defaults_file in self.iter_files()
-            if name in defaults_file.options
-        ]
+        matches: list[MesaOption] = []
+        for defaults_file in self.iter_files():
+            resolved = self._resolve_option_in_defaults_file(
+                name=name,
+                defaults_file=defaults_file,
+            )
+            if resolved is not None:
+                matches.append(resolved)
 
         if not matches:
             raise KeyError(f"Option '{name}' was not found in the loaded defaults.")
 
-        if len(matches) > 1:
-            matching_namelists = ", ".join(sorted(opt.namelist for opt in matches))
+        unique_namelists = sorted({opt.namelist for opt in matches})
+        if len(unique_namelists) > 1:
+            matching_namelists = ", ".join(unique_namelists)
             raise ValueError(
                 f"Option '{name}' exists in multiple namelists: {matching_namelists}. "
                 "Please specify namelist explicitly."
             )
-        
+
         return matches[0]
 
 @dataclass
@@ -301,7 +353,7 @@ class Inlist:
 
         Args:
             name: Name of the MesaOption. The method will check if this name is 
-                part of any of the DefaultsFiles to ensure its valid
+                part of any of the DefaultsFiles to ensure it is valid
             value: Desired value for the MesaOption
             defaults: DefaultsOptions object that holds all information about
                 MESA defaults
@@ -317,7 +369,7 @@ class Inlist:
         template = defaults.find_option(name=name, namelist=namelist)
 
         new_option = MesaOption(
-            name=template.name,
+            name=name,
             default_option=template.default_option,
             description=template.description,
             namelist=template.namelist,
@@ -385,7 +437,7 @@ class Inlist:
                     namelist=namelist,
                 )
 
-    def remove_option(self, name: str) -> None:
+    def remove_option(self, name: str) -> bool:
         """Public method to remove an option from the Inlist.
 
         Args:
@@ -396,7 +448,13 @@ class Inlist:
             Raises Key Error if the specified option is not part of the Inlist object.
         """
         if not self._remove_option(name):
-            raise KeyError(f"Option '{name}' is not present in this inlist.")
+            warnings.warn(
+                f"Option '{name}' is not present in this inlist; nothing was removed.",
+                UserWarning,
+                stacklevel=2,
+            )
+            return False
+        return True
     
     def _option_snapshot(self, *, ignore_default_valued: bool = False) -> dict[str, tuple[MesaNameList, str]]:
         """Build a normalized option snapshot for semantic comparisons between inlists.
@@ -689,8 +747,33 @@ class Inlist:
     
     def get_python_value(self, name: str, use_current: bool = True) -> bool | int | float | str:
         return self.options[name].to_python_value(use_current=use_current)
+    
+    def copy(
+        self,
+        name: str | None = None,
+        *,
+        deep_copy: bool = True,
+    ) -> "Inlist":
+        new_name = name or self.name
 
-def preview(options: list[MesaOption], 
+        copied = Inlist.empty(
+            name=new_name,
+            mesa_version=self.mesa_version,
+            source_path=self.source_path,
+        )
+
+        if deep_copy:
+            copied.options = deepcopy(self.options)
+            copied.additional_options = deepcopy(self.additional_options)
+            copied.empty_namelists = set(self.empty_namelists)
+        else:
+            copied.options = dict(self.options)
+            copied.additional_options = list(self.additional_options)
+            copied.empty_namelists = set(self.empty_namelists)
+
+        return copied
+
+def preview(options: list[MesaOption] | dict[str, MesaOption] | Iterable[MesaOption],
             max_desc: int = 100, 
             prefer_pandas: bool = True):
     """Method to display a table of MesaOption objects.
@@ -698,7 +781,10 @@ def preview(options: list[MesaOption],
         uses plain text output if not.
     
     Args:
-        options: List of MesaOption objects
+        options: MesaOption collection. Accepted:
+            - list[MesaOption]
+            - dict[str, MesaOption] (e.g. DefaultsFile.options, Inlist.options)
+            - any iterable of MesaOption
         max_desc: Maxiumum number of charachters used to print the 
             MesaOption.description attribute
         prefer_pandas: Use pandas if available. Default = True
@@ -707,8 +793,13 @@ def preview(options: list[MesaOption],
 
     """
     # Preview MesaOptions as pandas DataFrame (if available) or text table.
+    if isinstance(options, Mapping):
+        option_items = list(options.values())
+    else:
+        option_items = list(options)
+
     rows: list[dict[str, str]] = []
-    for o in options:
+    for o in option_items:
         desc = " ".join(o.description.split())
         if len(desc) > max_desc:
             desc = desc[: max_desc - 3] + "..."
@@ -724,8 +815,11 @@ def preview(options: list[MesaOption],
 
     if prefer_pandas:
         try:
-            import pandas as pd  # optional dependency
-            return pd.DataFrame(rows, columns=["name", "namelist", "default", "current", "description"])
+            import pandas as pd
+            return pd.DataFrame(
+                rows,
+                columns=["namelist", "name", "default", "current", "description"],
+            )
         except ImportError:
             pass
 

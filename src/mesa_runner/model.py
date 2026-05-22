@@ -111,6 +111,27 @@ class Model:
         if bool(self.inlists):
             return log_dirs
         #TODO
-    
 
+    def copy(
+        self,
+        model_copy_name: str | None = None,
+        *,
+        deep_copy: bool = True,
+    ) -> "Model":
+        new_name = model_copy_name or f"{self.name}_copy"
+
+        new_model = Model.empty(
+            name=new_name,
+            mesa_version=self.mesa_version,
+        )
+
+        if deep_copy:
+            new_model.inlists = {
+                inlist_name: inlist.copy(deep_copy=True)
+                for inlist_name, inlist in self.inlists.items()
+            }
+        else:
+            new_model.inlists = dict(self.inlists)
+
+        return new_model
 #TODO: Implement tests for this module.

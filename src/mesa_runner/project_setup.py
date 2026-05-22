@@ -76,6 +76,7 @@ def create_projectdir(
 
     projectdir_path = Path(projectdir_path)
     work_template = config.mesa_dir / mode / "work"
+    defaults_template = config.mesa_dir / mode / "defaults"
 
     if not work_template.is_dir():
         raise FileNotFoundError(f"Template work directory does not exist: {work_template}")
@@ -128,7 +129,7 @@ def create_projectdir(
         # Optional assets
         if include_columns_files:
             for name in _columns_files_for_mode(mode):
-                src = work_template / name
+                src = defaults_template / name
                 if src.exists():
                     _copy_entry(src, tmp_dir / name)
 
