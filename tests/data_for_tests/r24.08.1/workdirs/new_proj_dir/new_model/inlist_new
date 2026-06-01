@@ -1,0 +1,22 @@
+&star_job
+   use_suzuki_weak_rates = .true.
+   show_net_species_info = .true.
+/ ! end of star_job namelist
+
+&eos
+
+/ ! end of eos namelist
+
+&kap
+
+/ ! end of kap namelist
+
+&controls
+   initial_mass = 15.4d0
+   overshoot_f(1) = 0.05d0
+   overshoot_f0(1) = 0.005d0
+/ ! end of controls namelist
+
+&pgstar
+
+/ ! end of pgstar namelist

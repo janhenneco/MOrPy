@@ -2,7 +2,8 @@ from .config import (MesaConfig,
                      MesaVersion, 
                      set_active_config, 
                      get_active_config, 
-                     require_active_config)
+                     require_active_config, 
+                     setup_mesa_env)
 from .parser import (parse_defaults_file, 
                      parse_inlist, 
                      build_defaults_options,
@@ -20,6 +21,9 @@ from .work_setup import (import_inlists_from_dir,
                          export_modeldir, 
                          sync_model_with_disk)
 from .project_setup import (create_projectdir)
+from .compile import(compile_project, 
+                     CommandResult, 
+                     CompileResult)
 
 __all__ = [
     "MesaConfig",
@@ -41,5 +45,8 @@ __all__ = [
     "create_modeldir",
     "export_modeldir",
     "sync_model_with_disk", 
-    "create_projectdir"
+    "create_projectdir", 
+    "CommandResult", 
+    "CompileResult", 
+    "setup_mesa_env"
 ]

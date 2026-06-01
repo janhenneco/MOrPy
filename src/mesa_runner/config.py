@@ -3,7 +3,9 @@ from functools import total_ordering
 import re
 from pathlib import Path
 import os
-from typing import Self
+from typing import Self, Mapping
+import shlex
+import subprocess
 from contextvars import ContextVar
 
 # This bit is here to make the active MesaConfig available by all modules
@@ -188,3 +190,133 @@ class MesaConfig:
         )
         set_active_config(cfg)
         return cfg
+    
+    def set_mesa_env(
+        self,
+        *,
+        mesasdk_root: Path | str,
+        omp_num_threads: int | None = None,
+        apply_to_process: bool = True,
+        shell_executable: Path | str = "/bin/bash",
+        base_env: Mapping[str, str] | None = None
+        ) -> dict[str, str]:
+        """Set the MESA_DIR and MESASDK_ROOT variables and execute the initialisation scripts.
+
+        Args:
+            mesasdk_root: Location of the MESA SDK directory (MESASDK_ROOT)
+            omp_num_threads: Number of CPU threads to use for a single MESA run (OMP_NUM_THREADS).
+        apply_to_process: If True, update the current Python process environment (os.environ) 
+            with the resolved MESA/MESASDK variables, so later code in this process automatically 
+            sees them. If False, do not modify os.environ; the method still returns the environment 
+            dictionary, which you can pass explicitly to subprocess calls.
+        shell_executable: Path to the shell used to run the MESASDK init script. 
+            Most users should keep the default "/bin/bash".
+            Change this only if your system requires a different shell executable.
+        base_env:
+            Optional starting environment mapping. If None, the current process environment (os.environ) is used.
+            Provide this when you want a controlled or reproducible environment (for example in tests, CI, or isolated runs).
+            Values from MESA setup always override base_env for MESA_DIR, MESASDK_ROOT, and OMP_NUM_THREADS.
+
+        Returns:
+            env: The returned dict is the final runtime environment after sourcing MESASDK and applying 
+            explicit MESA variables. If apply_to_process is True, this final environment is also written to os.environ.
+
+        """
+        sdk_root = Path(mesasdk_root).expanduser().resolve()
+        if not sdk_root.is_dir():
+            raise FileNotFoundError(f"MESASDK root does not exist: {sdk_root}")
+
+        init_script = sdk_root / "bin" / "mesasdk_init.sh"
+        if not init_script.is_file():
+            raise FileNotFoundError(f"MESASDK init script not found: {init_script}")
+
+        threads = omp_num_threads
+        if threads is None:
+            threads = max(1, os.cpu_count() or 1)
+        if threads < 1:
+            raise ValueError(f"omp_num_threads must be >= 1, got: {threads}")
+
+        env = dict(os.environ if base_env is None else base_env)
+        explicit = {
+            "MESA_DIR": str(self.mesa_dir),
+            "MESASDK_ROOT": str(sdk_root),
+            "OMP_NUM_THREADS": str(threads),
+        }
+        env.update(explicit)
+
+        quoted_script = shlex.quote(str(init_script))
+        cmd = f"source {quoted_script} >/dev/null 2>&1 && env -0"
+
+        completed = subprocess.run(
+            [str(shell_executable), "-lc", cmd],
+            env=env,
+            capture_output=True,
+            check=False,
+        )
+
+        if completed.returncode != 0:
+            stderr_text = completed.stderr.decode("utf-8", errors="replace")
+            raise RuntimeError(
+                "Failed to source MESASDK init script. "
+                f"Script: {init_script} | stderr: {stderr_text.strip()}"
+            )
+
+        sourced_env: dict[str, str] = {}
+        for entry in completed.stdout.split(b"\x00"):
+            if not entry:
+                continue
+            key, sep, value = entry.partition(b"=")
+            if not sep:
+                continue
+            sourced_env[key.decode("utf-8", errors="replace")] = value.decode(
+                "utf-8", errors="replace"
+            )
+
+        # Keep explicit user-requested values authoritative.
+        sourced_env.update(explicit)
+        env = sourced_env
+
+        if apply_to_process:
+            os.environ.update(env)
+
+        return env
+    
+def setup_mesa_env(
+    *,
+    mesa_dir: Path | str,
+    mesasdk_root: Path | str,
+    version_name: str | None = None,
+    omp_num_threads: int | None = None,
+    apply_to_process: bool = True,
+    shell_executable: Path | str = "/bin/bash"
+    ) -> MesaConfig:
+    """Wrapper function to initialise a MesaConfig object (MesaConfig.setup) and
+        set the MESA environment variables to be able to compile and run MESA 
+        (as usually done in .*rc scripts or module files)
+    
+    Args:
+        mesa_dir: Location of the MESA installation directory (MESA_DIR)
+        mesasdk_root: Location of the MESA SDK directory (MESASDK_ROOT)
+        version_name: Optional manual version override. Required when automatic
+            detection yields a git hash.
+        omp_num_threads: Number of CPU threads to use for a single MESA run (OMP_NUM_THREADS).
+        apply_to_process: If True, update the current Python process environment (os.environ) 
+            with the resolved MESA/MESASDK variables, so later code in this process automatically 
+            sees them. If False, do not modify os.environ; the method still returns the environment 
+            dictionary, which you can pass explicitly to subprocess calls.
+        shell_executable: Path to the shell used to run the MESASDK init script. 
+            Most users should keep the default "/bin/bash".
+            Change this only if your system requires a different shell executable.
+    Returns:
+        cfg: MesaConfig object.
+
+    """
+    cfg = MesaConfig.setup(
+    mesa_dir=mesa_dir,
+    version_name=version_name)
+    cfg.set_mesa_env(
+        mesasdk_root=mesasdk_root,
+        omp_num_threads=omp_num_threads,
+        apply_to_process=apply_to_process,
+        shell_executable=shell_executable)
+    return cfg
