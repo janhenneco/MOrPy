@@ -4,35 +4,32 @@ A `Python` package to serve as an interface for the stellar structure and evolut
 
 The `mesa-runner` package's main modules are:
 
-- `config.py`: A module that gets and holds information about the `MESA` version. [DONE]
+- `config.py`: Configuration and environment utilities. [DONE]
 
-- `parser.py`: A module that parses (1) the `MESA` defaults files: `controls.defaults`, `star_job.defaults`, `binary_controls.defaults`, `binary_job.defaults`, `kap.defaults`, `eos.defaults`, `pgstar.defaults`, and `pgbinary.defaults` files to gather all the inlist options and (2) parses existing `MESA` inlists so that they can be used as templates. [DONE]
+- `parser.py`: Parsing utilities for MESA defaults files and inlists. [DONE]
 
-- `options.py`: A module that holds the classes and methods related to store, manipulate, and write out `MESA` inlist options. [DONE]
+- `options.py`: Data model and utilities for MESA defaults/inlist options. [DONE]
 
-- `model.py`: A module for the Model class, which keeps track of the model's status and holds its inlists.
+- `utils.py`: Low-level utility helpers for MESA value normalization and conversion. [WIP]
 
-- `utils.py`: A collection of helper functions. [WIP] 
+- `model.py`: Model objects and lifecycle state for individual MESA runs. [DONE]
 
-- `work_setup.py`: A module to read and create `MESA` workdirs. Serves as a layer between the Model objects and the system storage. [WIP]
+- `work_setup.py`: Work-directory setup, synchronization, and export utilities for models. [DONE]
 
-- `runner.py`: A module to start a `MESA` run, collect its terminal output, and report any errors [PLANNED]
+- `project_setup.py`: Project-directory creation utilities for MESA runs. [DONE]
 
-- `status.py`: A module to provide status information on currently running models and models waiting in the queue. This module provides a method to get the current status and a method to display an automatically updating status panel. [PLANNED]
+- `compile.py`: Compilation helpers for project-level MESA executables. [DONE]
 
-- `grid_run.py`: A module to run multiple models in parallel using `MPI` or `multiprocessing` when `MPI` is not available. [PLANNED]
+- `run.py`: Single-model run orchestration for foreground and background execution. [DONE]
 
-- `compile.py`: A module to compile the `Fortran` executable. [PLANNED]
+- `run_types.py`: Shared runtime data types for model execution workflows. [DONE]
 
+- `errors.py`: Shared exception hierarchy for run, orchestration, and persistence layers. [WIP]
 
-##TODO:
+- `grid_run.py`: Grid orchestration contracts for multi-model execution. [WIP]
 
-- Pandas should be added as an optional requirement. -> Done -> this should be clear in the README later!
-- It should be clear from the instructions that users should preferable always initiate the MesaConfig object, 
-    since this will allow the MesaVersion to be automatically passed to intialisations of Inlist and Model objects. 
-- There should be a general philosophy in the README:
-    - The user is ultimately responsible for creating and parsing sensible and correct inlists.
-    - The disk is the truth: any changes made to inlist files and their contents after their inception on the disk
-        will be synced upon runtime. 
+- `repository.py`: Persistence abstraction and adapter hooks for run metadata. [WIP]
+
+- `status.py`: Status view contracts for live and persisted model execution state. [WIP]
 
 

@@ -1,3 +1,15 @@
+"""Compilation helpers for project-level MESA executables.
+
+This module runs clean and mk scripts to create the Fortran executables
+for a project directory and reports structured compile outcomes.
+
+- CommandResult for individual script executions.
+- CompileResult for overall compile status.
+- compile_project as the main compile entrypoint.
+
+It also ensures relevant scripts and produced executables are executable.
+"""
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Mapping

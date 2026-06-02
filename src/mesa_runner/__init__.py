@@ -1,3 +1,9 @@
+"""Public package exports for mesa-runner.
+
+This module re-exports the primary user-facing classes and functions from
+submodules so common workflows can be accessed from a single import point.
+"""
+
 from .config import (MesaConfig, 
                      MesaVersion, 
                      set_active_config, 
@@ -19,11 +25,15 @@ from .model import (Model)
 from .work_setup import (import_inlists_from_dir, 
                          create_modeldir, 
                          export_modeldir, 
-                         sync_model_with_disk)
+                         sync_model_with_disk, 
+                         detect_workdir_mode)
 from .project_setup import (create_projectdir)
 from .compile import(compile_project, 
                      CommandResult, 
                      CompileResult)
+from .run import(run_model, 
+                 launch_model_process, 
+                 wait_for_model_process)
 
 __all__ = [
     "MesaConfig",
@@ -48,5 +58,9 @@ __all__ = [
     "create_projectdir", 
     "CommandResult", 
     "CompileResult", 
-    "setup_mesa_env"
+    "setup_mesa_env", 
+    "detect_workdir_mode", 
+    "run_model", 
+    "launch_model_process", 
+    "wait_for_model_process"
 ]

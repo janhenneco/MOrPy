@@ -1,3 +1,16 @@
+"""Work-directory setup, synchronization, and export utilities for models.
+
+This module handles disk-facing model directory operations.
+
+- importing inlists from disk into Model objects,
+- creating model work directories with links/scripts/assets,
+- syncing in-memory Model inlists with on-disk files,
+- exporting self-contained runnable work directories.
+
+It forms the bridge between in-memory model objects and MESA-compatible
+directory layouts on disk.
+"""
+
 from pathlib import Path
 import shutil
 import os
@@ -28,6 +41,8 @@ def import_inlists_from_dir(model: Model,
         source_dir: path to the directory in which the function will look for inlists
         config: MesaConfig object
         default_options: DefaultsOptions object
+        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
+            If False, raise an exception when inlist options are found that re not found in the defaults files.
     Returns:
         Model object
     Raises:
@@ -83,7 +98,7 @@ def _link_into_model_dir(
     dst.symlink_to(rel_target, target_is_directory=src.is_dir())
     return dst
 
-def _detect_workdir_mode(model: Model) -> WorkdirMode:
+def detect_workdir_mode(model: Model) -> WorkdirMode:
     """Function that looks in all inlists to determine if this is a star or binary model.
     Args:
         model: Model object
@@ -259,7 +274,7 @@ def create_modeldir(model: Model,
         raise FileExistsError(
             f"Cannot create model directory because path exists and is not a directory: {model_dir}")
 
-    mode = _detect_workdir_mode(model)
+    mode = detect_workdir_mode(model)
 
     # Ensure rn/re exist in project dir; if missing, copy from MESA_DIR work template
     _ensure_scripts_in_project_dir(projectdir_path=projectdir_path, mode=mode, config=config)

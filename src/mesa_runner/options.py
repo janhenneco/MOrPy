@@ -1,3 +1,21 @@
+"""Data model and utilities for MESA defaults/inlist options.
+
+This module defines the core in-memory representation of MESA namelist content:
+
+- MesaOption: one option (name, default value, current value, description, namelist)
+- DefaultsFile: all options parsed from one defaults file
+- DefaultsOptions: version-aware collection of DefaultsFile objects
+- Inlist: editable model inlist with validation, search, sync, and write support
+- UnclassifiedNamelist: unknown namelist blocks preserved during parse/write
+
+The design separates parsing from data manipulation:
+parser.py creates these objects from files, while this module provides methods
+to inspect, set, remove, compare, synchronize, and write options.
+
+Version-aware behavior is built in (for example kap/eos and pgbinary support),
+so option availability and output format follow the configured MESA version.
+"""
+
 from dataclasses import dataclass, field
 from typing import Literal
 from pathlib import Path
@@ -7,7 +25,6 @@ from copy import deepcopy
 from .config import MesaVersion, MesaConfig, require_active_config
 from .utils import (
     inlist_values_match,
-    normalize_inlist_value_for_output,
     python_value_to_inlist_value, 
     fortran_value_to_python_value
 )
@@ -666,7 +683,7 @@ class Inlist:
                     if raw_value is None or raw_value.strip() == "":
                         continue
 
-                    out_value = normalize_inlist_value_for_output(raw_value)
+                    out_value = python_value_to_inlist_value(raw_value,default_option=opt.default_option)
                     is_default = inlist_values_match(raw_value, opt.default_option)
                     suffix = " ! DEFAULT" if is_default else ""
                     lines.append(f"   {opt.name} = {out_value}{suffix}")

@@ -1,3 +1,10 @@
+"""Low-level utility helpers for MESA value normalization and conversion.
+
+This module provides conversion and comparison functions for Python and
+Fortran-style inlist values, including canonical formatting for output and
+robust semantic comparison for synchronization and equality checks.
+"""
+
 import math
 
 def python_float_to_fortran_string(value: float, sig: int = 15) -> str:
@@ -85,6 +92,44 @@ def _looks_like_float_default(text: str | None) -> bool:
         return False
     return any(ch in stripped for ch in (".", "d", "e"))
 
+def _looks_like_integer_default(text: str | None) -> bool:
+    if text is None:
+        return False
+    stripped = text.strip().lower()
+    if stripped in {"", ".true.", ".false."}:
+        return False
+    # quoted defaults are strings, not integers
+    if len(stripped) >= 2 and stripped[0] == stripped[-1] and stripped[0] in {"'", '"'}:
+        return False
+    s = stripped.lstrip("+-")
+    return s.isdigit()
+
+
+def _normalize_string_for_default(
+    text: str, default_option: str | None, sig: int = 15) -> str:
+    # Integer-typed option: coerce integral values to integer output.
+    # If not integral, fall back to float formatting (do not raise),
+    # because some MESA defaults use sentinel integer-looking values.
+    if _looks_like_integer_default(default_option):
+        try:
+            number = fortran_float_string_to_float(text)
+        except ValueError:
+            return text
+
+        if number.is_integer():
+            return str(int(number))
+        return python_float_to_fortran_string(number, sig=sig)
+
+    # Float-typed option: keep Fortran double formatting.
+    if _looks_like_float_default(default_option):
+        try:
+            number = fortran_float_string_to_float(text)
+        except ValueError:
+            return text
+        return python_float_to_fortran_string(number, sig=sig)
+
+    # Fallback behavior for unknown/defaultless typing.
+    return normalize_inlist_value_for_output(text, sig=sig)
 
 def _quote_fortran_string(text: str) -> str:
     escaped = text.replace("'", "''")
@@ -105,6 +150,8 @@ def python_value_to_inlist_value(value: object, default_option: str | None = Non
         return str(value)
 
     if isinstance(value, float):
+        if _looks_like_integer_default(default_option) and value.is_integer():
+            return str(int(value))
         return python_float_to_fortran_string(value)
 
     if isinstance(value, str):
@@ -122,7 +169,7 @@ def python_value_to_inlist_value(value: object, default_option: str | None = Non
                 return text
             return _quote_fortran_string(text)
 
-        return normalize_inlist_value_for_output(text)
+        return _normalize_string_for_default(text, default_option)
 
     raise TypeError(
         "Unsupported value type for inlist option. "

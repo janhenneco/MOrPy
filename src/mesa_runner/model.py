@@ -1,3 +1,15 @@
+"""Model objects and lifecycle state for individual MESA runs.
+
+This module defines:
+
+- ModelState, the run lifecycle enum.
+- Model, the in-memory representation of one model, including inlists,
+  timestamps, identifiers, and disk snapshot metadata.
+
+Model instances are the central objects passed between setup, run, grid,
+and persistence/status layers.
+"""
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path

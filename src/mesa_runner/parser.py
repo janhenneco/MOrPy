@@ -1,3 +1,18 @@
+"""Parsing utilities for MESA defaults files and inlists.
+
+This module converts on-disk MESA text files into the in-memory option models
+defined in options.py:
+
+- parse_defaults_file() -> DefaultsFile
+- build_defaults_options() / build_defaults_options_from_config() -> DefaultsOptions
+- parse_inlist() -> Inlist
+
+The parser is version-aware and normalizes known MESA format differences
+(for example kap/eos split defaults and legacy binary_pgstar vs pgbinary naming).
+It also supports strict/lenient handling of unknown inlist options and preserves
+unrecognized namelist blocks for round-trip safety.
+"""
+
 from pathlib import Path
 import warnings
 from .config import MesaConfig, MesaVersion
@@ -238,7 +253,7 @@ def parse_inlist(source_path: Path | str,
             if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
             provide it explicitly as an argument.
         allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
-            If False, raise an exception when inlist options are found that re not found in the defaults files
+            If False, raise an exception when inlist options are found that re not found in the defaults files.
     Returns:
         Inlist object with MesaOption instances.
     """

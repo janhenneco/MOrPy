@@ -1,3 +1,15 @@
+"""Configuration and environment utilities.
+
+This module resolves MESA installation metadata and runtime shell environment.
+
+- MesaVersion parses and compares MESA version strings.
+- MesaConfig stores resolved MESA directory and version information.
+- setup_mesa_env configures MESA_DIR and MESASDK runtime variables for Python runs.
+
+It also provides active-config helpers so other modules can use a shared
+MesaConfig context without repeatedly passing it through every call.
+"""
+
 from dataclasses import dataclass
 from functools import total_ordering
 import re

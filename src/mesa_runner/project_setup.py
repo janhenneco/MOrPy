@@ -1,3 +1,12 @@
+"""Project-directory creation utilities for MESA runs.
+
+This module creates and validates project directories from MESA work templates,
+including required build/run scripts and optional columns-list assets.
+
+The goal is to provide an idempotent, reproducible project layout that can
+be used by create_modeldir, compile, and run workflows.
+"""
+
 from pathlib import Path
 from typing import Literal
 import shutil
