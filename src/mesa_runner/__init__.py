@@ -34,6 +34,24 @@ from .compile import(compile_project,
 from .run import(run_model, 
                  launch_model_process, 
                  wait_for_model_process)
+from .grid_run import(GridRunItem, 
+                      GridRunResult, 
+                      run_grid, 
+                      run_models_local, 
+                      run_models_mpi, 
+                      launch_grid, 
+                      wait_for_grid, 
+                      GridRunHandle)
+from .repository import(SQLiteRunRepository, 
+                        LiveProcessRegistry, 
+                        RepositoryObserver)
+from .status import(ModelStatusView, 
+                    get_model_status, 
+                    list_active_status, 
+                    live_status, 
+                    stream_models_status, 
+                    list_models_status_snapshot, 
+                    reconcile_stale_runs)
 
 __all__ = [
     "MesaConfig",
@@ -62,5 +80,23 @@ __all__ = [
     "detect_workdir_mode", 
     "run_model", 
     "launch_model_process", 
-    "wait_for_model_process"
+    "wait_for_model_process",
+    "GridRunItem",
+    "GridRunResult",
+    "run_grid",
+    "run_models_local",
+    "run_models_mpi",
+    "SQLiteRunRepository",
+    "LiveProcessRegistry",
+    "RepositoryObserver",
+    "ModelStatusView",
+    "get_model_status",
+    "list_active_status", 
+    "live_status", 
+    "stream_models_status", 
+    "list_models_status_snapshot", 
+    "reconcile_stale_runs", 
+    "launch_grid", 
+    "wait_for_grid", 
+    "GridRunHandle"
 ]

@@ -30,6 +30,7 @@ from .run_types import RunHandle, RunObserver, RunResult, StateTransition
 from .work_setup import sync_model_with_disk, WorkdirMode, detect_workdir_mode
 from .options import DefaultsOptions
 from .config import MesaConfig
+from .repository import LiveProcessRegistry
 
 def _set_model_state(
     model: Model,
@@ -147,7 +148,8 @@ def launch_model_process(
     allow_unknown_options: bool = False,
     command_name: str = "rn",
     log_file_name: str = "log.out",
-    observer: RunObserver | None = None
+    observer: RunObserver | None = None,
+    live_registry: LiveProcessRegistry | None = None,
 ) -> tuple[RunHandle, subprocess.Popen]:
     """Function to launch a single model in a non-blocking way. 
         The function performs preflight checks, starts the MESA model run and
@@ -167,7 +169,8 @@ def launch_model_process(
         allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults
             files when syncing Model.inlists with inlists in the model directory. If False, raise an exception 
             when inlist options are found that are not found in the defaults files.
-        command_name: Name of the "rn" script. Can be changed to custom "rn" script names.
+        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"
+            or can be used for custom-named "rn" scripts.
         log_file_name: Name of the terminal log file that will be placed inside the model directory.
             Default is "log.out"
         observer: RunObserver object that observes StateTransitions for status and repository admin.
@@ -243,6 +246,9 @@ def launch_model_process(
 
     if observer is not None:
         observer.on_process_started(handle)
+    
+    if live_registry is not None:
+        live_registry.register(handle, process)
 
     return handle, process
 
@@ -253,7 +259,8 @@ def wait_for_model_process(
     *,
     timeout: float | None = None,
     capture_output: bool = True,
-    observer: RunObserver | None = None
+    observer: RunObserver | None = None,
+    live_registry: LiveProcessRegistry | None = None,
 ) -> RunResult:
     """Wait for a launched model process to finish and return its final run result.
 
@@ -302,6 +309,8 @@ def wait_for_model_process(
             reason=f"Timeout after {timeout}s",
             run_id=handle.run_id,
         )
+        if live_registry is not None:
+            live_registry.unregister(model.model_id)
         raise RunTimeoutError(
             f"Run timed out for model '{model.name}' after {timeout} seconds."
         ) from exc
@@ -336,6 +345,9 @@ def wait_for_model_process(
         )
         if observer is not None:
             observer.on_process_finished(result)
+        if live_registry is not None:
+            live_registry.unregister(model.model_id)
+
         return result
 
     return_code = int(process.returncode or 0)
@@ -382,7 +394,9 @@ def wait_for_model_process(
 
     if observer is not None:
         observer.on_process_finished(result)
-
+    if live_registry is not None:
+        live_registry.unregister(model.model_id)
+    
     return result
 
 def run_model(
@@ -397,7 +411,8 @@ def run_model(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None
+    observer: RunObserver | None = None,
+    live_registry: LiveProcessRegistry | None = None,
 ) -> RunResult:
     
     """Function to launch a single model in a blocking way. 
@@ -420,7 +435,8 @@ def run_model(
         allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults
             files when syncing Model.inlists with inlists in the model directory. If False, raise an exception 
             when inlist options are found that are not found in the defaults files.
-        command_name: Name of the "rn" script. Can be changed to custom "rn" script names.
+        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"
+            or can be used for custom-named "rn" scripts.
         capture_output: If True, capture stdout/stderr and include them in RunResult.
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         timeout: Maximum time in seconds to wait before aborting.
@@ -438,7 +454,8 @@ def run_model(
         allow_unknown_options=allow_unknown_options,
         command_name=command_name,
         log_file_name=log_file_name,
-        observer=observer
+        observer=observer,
+        live_registry=live_registry
     )
 
     result = wait_for_model_process(
@@ -447,7 +464,8 @@ def run_model(
         process=process,
         timeout=timeout,
         capture_output=capture_output,
-        observer=observer
+        observer=observer, 
+        live_registry=live_registry
     )
 
     result.sync_performed = sync_before_run

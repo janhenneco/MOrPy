@@ -224,15 +224,24 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path | str, config:
             name, _, value_part = line.partition("=")
             name = name.strip()
 
+            inline_comment = ""
             if "!" in value_part:
-                value_part = value_part.split("!", 1)[0]
+                value_part, inline_comment = value_part.split("!", 1)
+                inline_comment = inline_comment.strip()
+
             value = value_part.strip()
 
             if name and value:
+                desc = "\n".join(pending_description).strip("\n")
+
+                # Append inline comment to existing block description.
+                if inline_comment:
+                    desc = f"{desc}\n{inline_comment}" if desc else inline_comment
+
                 df.options[name] = MesaOption(
                     name=name,
                     default_option=value,
-                    description="\n".join(pending_description).strip("\n"),
+                    description=desc,
                     namelist=namelist,
                 )
                 pending_description = []
