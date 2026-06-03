@@ -1,0 +1,686 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>mesa_runner.config module - mesa-runner 0.1.0.dev0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">mesa_runner (API - Modules)</a><input aria-label="Toggle navigation of mesa_runner (API - Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api/config.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="module-mesa_runner.config">
+<span id="mesa-runner-config-module"></span><h1>mesa_runner.config module<a class="headerlink" href="#module-mesa_runner.config" title="Link to this heading">¶</a></h1>
+<p>Configuration and environment utilities.</p>
+<p>This module resolves MESA installation metadata and runtime shell environment.</p>
+<ul class="simple">
+<li><p>MesaVersion parses and compares MESA version strings.</p></li>
+<li><p>MesaConfig stores resolved MESA directory and version information.</p></li>
+<li><p>setup_mesa_env configures MESA_DIR and MESASDK runtime variables for Python runs.</p></li>
+</ul>
+<p>It also provides active-config helpers so other modules can use a shared
+MesaConfig context without repeatedly passing it through every call.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">MesaConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesa_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesa_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version_raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#MesaConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.MesaConfig" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that holds the configuration related to the used MESA version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesa_dir</strong> (<em>Path</em>)</p></li>
+<li><p><strong>mesa_version</strong> (<a class="reference internal" href="#mesa_runner.config.MesaVersion" title="mesa_runner.config.MesaVersion"><em>MesaVersion</em></a>)</p></li>
+<li><p><strong>version_raw</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig.mesa_dir">
+<span class="sig-name descname"><span class="pre">mesa_dir</span></span><a class="headerlink" href="#mesa_runner.config.MesaConfig.mesa_dir" title="Link to this definition">¶</a></dt>
+<dd><p>Path to the MESA source directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig.mesa_version">
+<span class="sig-name descname"><span class="pre">mesa_version</span></span><a class="headerlink" href="#mesa_runner.config.MesaConfig.mesa_version" title="Link to this definition">¶</a></dt>
+<dd><p>MesaVersion object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mesa_runner.config.MesaVersion" title="mesa_runner.config.MesaVersion">mesa_runner.config.MesaVersion</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig.version_raw">
+<span class="sig-name descname"><span class="pre">version_raw</span></span><a class="headerlink" href="#mesa_runner.config.MesaConfig.version_raw" title="Link to this definition">¶</a></dt>
+<dd><p>Optional attribute with the raw MESA version name.
+Only needed when the MESA version cannot be recovered from the MESA directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">mesa_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">mesa_version</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#mesa_runner.config.MesaVersion" title="mesa_runner.config.MesaVersion"><span class="pre">MesaVersion</span></a></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig.set_mesa_env">
+<span class="sig-name descname"><span class="pre">set_mesa_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesasdk_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omp_num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_to_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shell_executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/bin/bash'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#MesaConfig.set_mesa_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.MesaConfig.set_mesa_env" title="Link to this definition">¶</a></dt>
+<dd><p>Set the MESA_DIR and MESASDK_ROOT variables and execute the initialisation scripts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesasdk_root</strong> (<em>Path</em><em> | </em><em>str</em>) – Location of the MESA SDK directory (MESASDK_ROOT)</p></li>
+<li><p><strong>omp_num_threads</strong> (<em>int</em><em> | </em><em>None</em>) – Number of CPU threads to use for a single MESA run (OMP_NUM_THREADS).</p></li>
+<li><p><strong>apply_to_process</strong> (<em>bool</em>)</p></li>
+<li><p><strong>shell_executable</strong> (<em>Path</em><em> | </em><em>str</em>)</p></li>
+<li><p><strong>base_env</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, str]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>apply_to_process: If True, update the current Python process environment (os.environ)</dt><dd><p>with the resolved MESA/MESASDK variables, so later code in this process automatically
+sees them. If False, do not modify os.environ; the method still returns the environment
+dictionary, which you can pass explicitly to subprocess calls.</p>
+</dd>
+<dt>shell_executable: Path to the shell used to run the MESASDK init script.</dt><dd><p>Most users should keep the default “/bin/bash”.
+Change this only if your system requires a different shell executable.</p>
+</dd>
+<dt>base_env:</dt><dd><p>Optional starting environment mapping. If None, the current process environment (os.environ) is used.
+Provide this when you want a controlled or reproducible environment (for example in tests, CI, or isolated runs).
+Values from MESA setup always override base_env for MESA_DIR, MESASDK_ROOT, and OMP_NUM_THREADS.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The returned dict is the final runtime environment after sourcing MESASDK and applying
+explicit MESA variables. If apply_to_process is True, this final environment is also written to os.environ.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="grid_run.html#id0" title="mesa_runner.grid_run.GridRunItem.env">env</a></p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesasdk_root</strong> (<em>Path</em><em> | </em><em>str</em>)</p></li>
+<li><p><strong>omp_num_threads</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>apply_to_process</strong> (<em>bool</em>)</p></li>
+<li><p><strong>shell_executable</strong> (<em>Path</em><em> | </em><em>str</em>)</p></li>
+<li><p><strong>base_env</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaConfig.setup">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesa_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#MesaConfig.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.MesaConfig.setup" title="Link to this definition">¶</a></dt>
+<dd><p>Create a MesaConfig from a MESA source directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesa_dir</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Optional path to the MESA source directory. If omitted, uses
+the <cite>MESA_DIR</cite> environment variable.</p></li>
+<li><p><strong>version_name</strong> (<em>str</em><em> | </em><em>None</em>) – Optional manual version override. Required when automatic
+detection yields a git hash.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A MesaConfig instance with resolved path and parsed version.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>EnvironmentError</strong> – If <cite>MESA_DIR</cite> is not set and <cite>mesa_dir</cite> is not provided.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the resolved MESA directory does not exist.</p></li>
+<li><p><strong>ValueError</strong> – If version parsing fails or a git hash requires manual input.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Self</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">version_raw</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">MesaVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">month</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#MesaVersion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.MesaVersion" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that holds and sets the MESA version in raw and normalised numeric format to allow comparisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>version_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>scheme</strong> (<em>str</em>)</p></li>
+<li><p><strong>revision</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>year</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>month</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>patch</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.version_name">
+<span class="sig-name descname"><span class="pre">version_name</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.version_name" title="Link to this definition">¶</a></dt>
+<dd><p>Raw format of the MESA version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.scheme">
+<span class="sig-name descname"><span class="pre">scheme</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.scheme" title="Link to this definition">¶</a></dt>
+<dd><p>revision (rXXXXX), release (rXX.XX.X), or git hash (XXXXX) scheme</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.revision">
+<span class="sig-name descname"><span class="pre">revision</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.revision" title="Link to this definition">¶</a></dt>
+<dd><p>Optional attribute set in case <cite>version_name</cite> is in revision format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.year" title="Link to this definition">¶</a></dt>
+<dd><p>Optional attribute set in case <cite>version_name</cite> is in release format.
+Represents the first pair of digits of rXX.XX.X</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.month">
+<span class="sig-name descname"><span class="pre">month</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.month" title="Link to this definition">¶</a></dt>
+<dd><p>Optional attribute set in case <cite>version_name</cite> is in release format.
+Represents the second pair of digits of rXX.XX.X</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.patch">
+<span class="sig-name descname"><span class="pre">patch</span></span><a class="headerlink" href="#mesa_runner.config.MesaVersion.patch" title="Link to this definition">¶</a></dt>
+<dd><p>Optional attribute set in case <cite>version_name</cite> is in release format.
+Represents the last digit of rXX.XX.X</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">month</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mesa_runner.config.MesaVersion.parse_mesa_version">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">parse_mesa_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#MesaVersion.parse_mesa_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.MesaVersion.parse_mesa_version" title="Link to this definition">¶</a></dt>
+<dd><p>Parse the raw MESA version string into a normalised MesaVersion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>version_name</strong> (<em>str</em>) – Raw MESA version string, for example <cite>r23.05.1</cite>, <cite>12786</cite>,
+or a git hash.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A MesaVersion instance with detected scheme and parsed numeric fields.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>version_name</cite> does not match a supported format.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Self</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">patch</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">revision</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">scheme</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id6" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">version_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">year</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mesa_runner.config.get_active_config">
+<span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">get_active_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#get_active_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.get_active_config" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mesa_runner.config.MesaConfig" title="mesa_runner.config.MesaConfig"><em>MesaConfig</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mesa_runner.config.require_active_config">
+<span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">require_active_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#require_active_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.require_active_config" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mesa_runner.config.MesaConfig" title="mesa_runner.config.MesaConfig"><em>MesaConfig</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mesa_runner.config.set_active_config">
+<span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">set_active_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#set_active_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.set_active_config" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#mesa_runner.config.MesaConfig" title="mesa_runner.config.MesaConfig"><em>MesaConfig</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mesa_runner.config.setup_mesa_env">
+<span class="sig-prename descclassname"><span class="pre">mesa_runner.config.</span></span><span class="sig-name descname"><span class="pre">setup_mesa_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesa_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesasdk_root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omp_num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_to_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shell_executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/bin/bash'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/config.html#setup_mesa_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mesa_runner.config.setup_mesa_env" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Wrapper function to initialise a MesaConfig object (MesaConfig.setup) and</dt><dd><p>set the MESA environment variables to be able to compile and run MESA
+(as usually done in .*rc scripts or module files)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesa_dir</strong> (<em>Path</em><em> | </em><em>str</em>) – Location of the MESA installation directory (MESA_DIR)</p></li>
+<li><p><strong>mesasdk_root</strong> (<em>Path</em><em> | </em><em>str</em>) – Location of the MESA SDK directory (MESASDK_ROOT)</p></li>
+<li><p><strong>version_name</strong> (<em>str</em><em> | </em><em>None</em>) – Optional manual version override. Required when automatic
+detection yields a git hash.</p></li>
+<li><p><strong>omp_num_threads</strong> (<em>int</em><em> | </em><em>None</em>) – Number of CPU threads to use for a single MESA run (OMP_NUM_THREADS).</p></li>
+<li><p><strong>apply_to_process</strong> (<em>bool</em>) – If True, update the current Python process environment (os.environ)
+with the resolved MESA/MESASDK variables, so later code in this process automatically
+sees them. If False, do not modify os.environ; the method still returns the environment
+dictionary, which you can pass explicitly to subprocess calls.</p></li>
+<li><p><strong>shell_executable</strong> (<em>Path</em><em> | </em><em>str</em>) – Path to the shell used to run the MESASDK init script.
+Most users should keep the default “/bin/bash”.
+Change this only if your system requires a different shell executable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>MesaConfig object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cfg</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Jan Henneco
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">mesa_runner.config module</a><ul>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig"><code class="docutils literal notranslate"><span class="pre">MesaConfig</span></code></a><ul>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig.mesa_dir"><code class="docutils literal notranslate"><span class="pre">MesaConfig.mesa_dir</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig.mesa_version"><code class="docutils literal notranslate"><span class="pre">MesaConfig.mesa_version</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig.version_raw"><code class="docutils literal notranslate"><span class="pre">MesaConfig.version_raw</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">MesaConfig.mesa_dir</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">MesaConfig.mesa_version</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig.set_mesa_env"><code class="docutils literal notranslate"><span class="pre">MesaConfig.set_mesa_env()</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaConfig.setup"><code class="docutils literal notranslate"><span class="pre">MesaConfig.setup()</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">MesaConfig.version_raw</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion"><code class="docutils literal notranslate"><span class="pre">MesaVersion</span></code></a><ul>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.version_name"><code class="docutils literal notranslate"><span class="pre">MesaVersion.version_name</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.scheme"><code class="docutils literal notranslate"><span class="pre">MesaVersion.scheme</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.revision"><code class="docutils literal notranslate"><span class="pre">MesaVersion.revision</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.year"><code class="docutils literal notranslate"><span class="pre">MesaVersion.year</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.month"><code class="docutils literal notranslate"><span class="pre">MesaVersion.month</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.patch"><code class="docutils literal notranslate"><span class="pre">MesaVersion.patch</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">MesaVersion.month</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.MesaVersion.parse_mesa_version"><code class="docutils literal notranslate"><span class="pre">MesaVersion.parse_mesa_version()</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">MesaVersion.patch</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">MesaVersion.revision</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">MesaVersion.scheme</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">MesaVersion.version_name</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">MesaVersion.year</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mesa_runner.config.get_active_config"><code class="docutils literal notranslate"><span class="pre">get_active_config()</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.require_active_config"><code class="docutils literal notranslate"><span class="pre">require_active_config()</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.set_active_config"><code class="docutils literal notranslate"><span class="pre">set_active_config()</span></code></a></li>
+<li><a class="reference internal" href="#mesa_runner.config.setup_mesa_env"><code class="docutils literal notranslate"><span class="pre">setup_mesa_env()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=965fac30"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

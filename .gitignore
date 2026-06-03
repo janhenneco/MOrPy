@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+/build/
 develop-eggs/
 dist/
 downloads/
@@ -218,3 +218,8 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .vscode/
+
+# Explicitly include:
+!docs/build/
+!docs/build/**
+!docs/examples/**

@@ -1,0 +1,1205 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>mesa_runner.options - mesa-runner 0.1.0.dev0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">mesa_runner</a><input aria-label="Toggle navigation of mesa_runner" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/mesa_runner.html">mesa_runner package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for mesa_runner.options</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Data model and utilities for MESA defaults/inlist options.</span>
+
+<span class="sd">This module defines the core in-memory representation of MESA namelist content:</span>
+
+<span class="sd">- MesaOption: one option (name, default value, current value, description, namelist)</span>
+<span class="sd">- DefaultsFile: all options parsed from one defaults file</span>
+<span class="sd">- DefaultsOptions: version-aware collection of DefaultsFile objects</span>
+<span class="sd">- Inlist: editable model inlist with validation, search, sync, and write support</span>
+<span class="sd">- UnclassifiedNamelist: unknown namelist blocks preserved during parse/write</span>
+
+<span class="sd">The design separates parsing from data manipulation:</span>
+<span class="sd">parser.py creates these objects from files, while this module provides methods</span>
+<span class="sd">to inspect, set, remove, compare, synchronize, and write options.</span>
+
+<span class="sd">Version-aware behavior is built in (for example kap/eos and pgbinary support),</span>
+<span class="sd">so option availability and output format follow the configured MESA version.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MesaVersion</span><span class="p">,</span> <span class="n">MesaConfig</span><span class="p">,</span> <span class="n">require_active_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">inlist_values_match</span><span class="p">,</span>
+    <span class="n">python_value_to_inlist_value</span><span class="p">,</span> 
+    <span class="n">fortran_value_to_python_value</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Custom type for the MESA defaults namelist files</span>
+<span class="n">MesaNameList</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;controls&#39;</span><span class="p">,</span> <span class="s1">&#39;star_job&#39;</span><span class="p">,</span> <span class="s1">&#39;binary_controls&#39;</span><span class="p">,</span> <span class="s1">&#39;binary_job&#39;</span><span class="p">,</span> <span class="s1">&#39;kap&#39;</span><span class="p">,</span> <span class="s1">&#39;eos&#39;</span><span class="p">,</span> <span class="s1">&#39;pgstar&#39;</span><span class="p">,</span> <span class="s1">&#39;pgbinary&#39;</span><span class="p">]</span>
+
+<span class="c1"># MESA version at which separate pgbinary defaults inlist and the pgbinary block become a thing</span>
+<span class="n">PGBINARY_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">&quot;r23.05.1&quot;</span><span class="p">)</span>
+
+<span class="c1"># MESA version at which kap and eos get separate defaults namelists</span>
+<span class="n">KAP_EOS_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">&quot;r15140&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MesaOption">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.MesaOption">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MesaOption</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;Represents a single MESA inlist option parsed from a defaults file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: The option name as it appears in the MESA defaults file (e.g. `initial_mass`).</span>
+<span class="sd">        default_option: The raw default value string as defined in the defaults</span>
+<span class="sd">            file, preserving Fortran notation (e.g. `1d0`).</span>
+<span class="sd">        description: The description comment from the defaults file (`!` lines).</span>
+<span class="sd">        namelist: The type of the defaults file this option belongs to (e.g. controls.defaults)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+   <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+   <span class="n">default_option</span><span class="p">:</span> <span class="nb">str</span>
+   <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+   <span class="n">namelist</span><span class="p">:</span> <span class="n">MesaNameList</span>
+   <span class="n">current_value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MesaOption.to_python_value">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.MesaOption.to_python_value">[docs]</a>
+   <span class="k">def</span><span class="w"> </span><span class="nf">to_python_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_current</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_value</span> <span class="k">if</span> <span class="n">use_current</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_option</span>
+        <span class="k">return</span> <span class="n">fortran_value_to_python_value</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DefaultsFile">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsFile">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DefaultsFile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for a MESA defaults file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        namelist: The type of default namelist file this instance belongs to</span>
+<span class="sd">        source_path: Path to the defaults file from which this object was parsed.</span>
+<span class="sd">        options: A dictionary containing the parsed contents (i.e. MesaOption objects) </span>
+<span class="sd">            of the namelist file at `source_path`</span>
+<span class="sd">        mesa_version: The MESA version for which the default options are parsed</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">namelist</span><span class="p">:</span> <span class="n">MesaNameList</span>
+    <span class="n">source_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span>
+    <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MesaOption</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DefaultsFile.option_names">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsFile.option_names">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">option_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to list all MesaOptions in the DefaultsFile that have certain</span>
+<span class="sd">            pattern in their name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pattern: string containing the pattern to look for. If None, all</span>
+<span class="sd">                names in the DefaultsFile will be returned.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list of strings with the MesaOption names that match the pattern.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">names</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="DefaultsFile.search">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsFile.search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">in_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to look for a pattern inside the names and descriptions of </span>
+<span class="sd">            the MesaOption objects in the DefaultsFile.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            query: string with pattern to look for in the MesaOption names and descriptions.</span>
+<span class="sd">            in_description: If True, look for pattern in descriptions, if False,</span>
+<span class="sd">                only look for pattern in names.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List of MesaOptions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">hit_name</span> <span class="o">=</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">hit_desc</span> <span class="o">=</span> <span class="n">in_description</span> <span class="ow">and</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">hit_name</span> <span class="ow">or</span> <span class="n">hit_desc</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="DefaultsFile.describe">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsFile.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to print out the default &amp; current value, and the description of a</span>
+<span class="sd">            MesaOption with the given name.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: string containing the name of the MesaOption</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Structured string with information about the MesaOption corresponding to</span>
+<span class="sd">            the provided name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">current: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">current_value</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;namelist: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;default: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;description:</span><span class="se">\n</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="DefaultsOptions">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsOptions">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DefaultsOptions</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that holds all DefaultsFiles.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mesa_version: The MESA version for which the default options are parsed</span>
+<span class="sd">        controls: the `controls` DefaultsFile</span>
+<span class="sd">        star_job: the `star_job` DefaultsFile</span>
+<span class="sd">        kap: the `kap` DefaultsFile</span>
+<span class="sd">        eos: the `eos` DefaultsFile</span>
+<span class="sd">        binary_controls: the `binary_controls` DefaultsFile</span>
+<span class="sd">        binary_job: the `binary_job` DefaultsFile</span>
+<span class="sd">        pgstar: the `pgstar` DefaultsFile</span>
+<span class="sd">        pgbinary: the `pgbinary` DefaultsFile</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span>
+    <span class="n">controls</span><span class="p">:</span> <span class="n">DefaultsFile</span>
+    <span class="n">star_job</span><span class="p">:</span> <span class="n">DefaultsFile</span>
+    <span class="n">binary_controls</span><span class="p">:</span> <span class="n">DefaultsFile</span>
+    <span class="n">binary_job</span><span class="p">:</span> <span class="n">DefaultsFile</span>
+    <span class="n">pgstar</span><span class="p">:</span> <span class="n">DefaultsFile</span>
+    <span class="n">kap</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">eos</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pgbinary</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># These are two functions allowing the MesaNameList types to be linked to the attributes of this class.</span>
+<div class="viewcode-block" id="DefaultsOptions.get_file">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsOptions.get_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist_type</span><span class="p">:</span> <span class="n">MesaNameList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist_type</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namelist_type</span><span class="p">:</span> <span class="n">MesaNameList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">namelist_type</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="DefaultsOptions.iter_files">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsOptions.iter_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iter_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DefaultsFile</span><span class="p">]:</span>
+        <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DefaultsFile</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="s2">&quot;controls&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;star_job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;binary_controls&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;binary_job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eos&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pgstar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pgbinary&quot;</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">defaults_file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">defaults_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defaults_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">files</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_base_option_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">option_name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_option_in_defaults_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">defaults_file</span><span class="p">:</span> <span class="n">DefaultsFile</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MesaOption</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Exact match first.</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">defaults_file</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">defaults_file</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_option_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">opt</span>
+            <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">defaults_file</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_option_name</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="n">base</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Prefer canonical array template.</span>
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;(:)&quot;</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">opt</span>
+
+        <span class="c1"># Indexed array request (e.g. foo(7)) with only numbered defaults.</span>
+        <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="s2">&quot;)&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Scalar ambiguity should still fail loudly.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">matching_names</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ambiguous option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; in namelist &#39;</span><span class="si">{</span><span class="n">defaults_file</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">matching_names</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<div class="viewcode-block" id="DefaultsOptions.find_option">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.DefaultsOptions.find_option">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_option</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="p">:</span> <span class="n">MesaNameList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MesaOption</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">namelist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">defaults_file</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">namelist</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">defaults_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Namelist &#39;</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">&#39; is not available for MESA version </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span><span class="o">.</span><span class="n">version_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">resolved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_option_in_defaults_file</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">defaults_file</span><span class="o">=</span><span class="n">defaults_file</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">resolved</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; was not found in namelist &#39;</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">resolved</span>
+
+        <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">defaults_file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_files</span><span class="p">():</span>
+            <span class="n">resolved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_option_in_defaults_file</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">defaults_file</span><span class="o">=</span><span class="n">defaults_file</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">resolved</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; was not found in the loaded defaults.&quot;</span><span class="p">)</span>
+
+        <span class="n">unique_namelists</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">})</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_namelists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">matching_namelists</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_namelists</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; exists in multiple namelists: </span><span class="si">{</span><span class="n">matching_namelists</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;Please specify namelist explicitly.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="UnclassifiedNamelist">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.UnclassifiedNamelist">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnclassifiedNamelist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class that holds (currently) unrecognised namelist blocks in a MESA inlist.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: name of the unrecognised inlist block</span>
+<span class="sd">        body: contents of the unrecognised inlist block </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">body</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="Inlist">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Inlist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for a MESA inlist (Fortran namelist) file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Name for this inlist object, which will be the filename when writing </span>
+<span class="sd">            out the Inlist object to a file.</span>
+<span class="sd">        options: A dictionary containing the parsed contents (i.e. MesaOption objects) </span>
+<span class="sd">            of the inlist file at `source_path`</span>
+<span class="sd">        mesa_version: The MESA version for which the inlist is parsed</span>
+<span class="sd">        source_path: Path to the inlist file from which this object was parsed,</span>
+<span class="sd">            None if this Inlist object was not initialised from a file.</span>
+<span class="sd">        additional_options: UnclassifiedNamelist object</span>
+<span class="sd">        empty_namelists: Known MESA namelist blocks that were present in the</span>
+<span class="sd">            source inlist but contained no options.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MesaOption</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">additional_options</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnclassifiedNamelist</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">empty_namelists</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">source_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method looking for mesa_version from active MesaConfig if mesa_version is not specified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span><span class="o">.</span><span class="n">mesa_version</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">:</span> <span class="n">MesaOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to add an option to the options attribute.</span>
+
+<span class="sd">        Agrs:</span>
+<span class="sd">            opt: MesaOption to be added</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">namelist</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;kap&quot;</span><span class="p">,</span> <span class="s2">&quot;eos&quot;</span><span class="p">}</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&lt;</span> <span class="n">KAP_EOS_SPLIT_VERSION</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="s2"> options are not supported for MESA version &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to remove an option from the options attribute.</span>
+
+<span class="sd">        Agrs:</span>
+<span class="sd">            option_name: name of the MesaOption object to be removed from the </span>
+<span class="sd">                options attribute</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean, True if removed, false if not present and, therefore, not removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">option_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">is_removed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    
+<div class="viewcode-block" id="Inlist.empty">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.empty">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="n">source_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Inlist&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to initiate and empty Inlist object which can be populated later.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name for this inlist object, which will be the filename when writing </span>
+<span class="sd">                out the Inlist object to a file.</span>
+<span class="sd">            mesa_version: MesaVersion of the Inlist object</span>
+<span class="sd">            source_path: Optional Path to source file. Here for compatibility</span>
+<span class="sd">                with the class interface, but only set by parser.parse_inlist()</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Inlist object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">source_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">source_path</span><span class="o">=</span><span class="n">source_path</span><span class="p">,</span> <span class="n">mesa_version</span><span class="o">=</span><span class="n">mesa_version</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Inlist.set_option">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.set_option">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_option</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span>
+        <span class="n">defaults</span><span class="p">:</span> <span class="n">DefaultsOptions</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="p">:</span> <span class="n">MesaNameList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MesaOption</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to set a specific MesaOption for the Inlist object in question.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the MesaOption. The method will check if this name is </span>
+<span class="sd">                part of any of the DefaultsFiles to ensure it is valid</span>
+<span class="sd">            value: Desired value for the MesaOption</span>
+<span class="sd">            defaults: DefaultsOptions object that holds all information about</span>
+<span class="sd">                MESA defaults</span>
+<span class="sd">            namelist: Optional attribute that specifies to which </span>
+<span class="sd">                MESA namelist (MesaNamelist type) the specified option belongs.</span>
+<span class="sd">                Will be required for MesaOptions that occur in multiple namelists.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            MesaOption object that was set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># This method will verify whether the specified option is valid and return </span>
+        <span class="c1"># the MesaOption template if so</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">.</span><span class="n">find_option</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
+
+        <span class="n">new_option</span> <span class="o">=</span> <span class="n">MesaOption</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">default_option</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">default_option</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">namelist</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">namelist</span><span class="p">,</span>
+            <span class="n">current_value</span><span class="o">=</span><span class="n">python_value_to_inlist_value</span><span class="p">(</span>
+                <span class="n">value</span><span class="p">,</span>
+                <span class="n">default_option</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">default_option</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_option</span><span class="p">(</span><span class="n">new_option</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_option</span></div>
+
+    
+<div class="viewcode-block" id="Inlist.set_options">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.set_options">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_options</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">defaults</span><span class="p">:</span> <span class="n">DefaultsOptions</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">controls</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">star_job</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">binary_controls</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">binary_job</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kap</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eos</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pgstar</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pgbinary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method that allows for MESA options to be set in bulk and optionally</span>
+<span class="sd">            ordered based on the MESA namelist they belong to.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            defaults: DefaultsOptions object that holds all information about</span>
+<span class="sd">                MESA defaults</span>
+<span class="sd">            options: Dictionary with all specified options to be added to the </span>
+<span class="sd">                Inlist object. Allows options from all namelists to be mixed,</span>
+<span class="sd">                but will throw an error if one or more of the options is part</span>
+<span class="sd">                of more than one MESA namelist. In that case, the</span>
+<span class="sd">                namelist-specific dictionaries should be used.</span>
+<span class="sd">            controls, star_job, binary_controls, binary_job, kap, eos, pgstar, </span>
+<span class="sd">            pgbinary: Namelist specific dictionaries for setting MesaOptions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="p">)</span>
+
+        <span class="n">named_groups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;controls&quot;</span><span class="p">:</span> <span class="n">controls</span><span class="p">,</span>
+            <span class="s2">&quot;star_job&quot;</span><span class="p">:</span> <span class="n">star_job</span><span class="p">,</span>
+            <span class="s2">&quot;binary_controls&quot;</span><span class="p">:</span> <span class="n">binary_controls</span><span class="p">,</span>
+            <span class="s2">&quot;binary_job&quot;</span><span class="p">:</span> <span class="n">binary_job</span><span class="p">,</span>
+            <span class="s2">&quot;kap&quot;</span><span class="p">:</span> <span class="n">kap</span><span class="p">,</span>
+            <span class="s2">&quot;eos&quot;</span><span class="p">:</span> <span class="n">eos</span><span class="p">,</span>
+            <span class="s2">&quot;pgstar&quot;</span><span class="p">:</span> <span class="n">pgstar</span><span class="p">,</span>
+            <span class="s2">&quot;pgbinary&quot;</span><span class="p">:</span> <span class="n">pgbinary</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">named_groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="p">,</span>
+                    <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">,</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Inlist.remove_option">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.remove_option">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Public method to remove an option from the Inlist.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the MesaOption to be removed.</span>
+<span class="sd">        Retruns:</span>
+<span class="sd">            None</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            Raises Key Error if the specified option is not part of the Inlist object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_option</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not present in this inlist; nothing was removed.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_option_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ignore_default_valued</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a normalized option snapshot for semantic comparisons between inlists.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            ignore_default_valued: True if options that have the default value should not be </span>
+<span class="sd">                included in the comparison.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with MesaOption.name as key and a tuple containing MesaOption.namelist and MesaOption.value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snapshot</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">opt</span><span class="o">.</span><span class="n">default_option</span>
+
+            <span class="c1"># Semantic mode: omit options that are effectively at default.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">ignore_default_valued</span>
+                <span class="ow">and</span> <span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+                <span class="ow">and</span> <span class="n">inlist_values_match</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">snapshot</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">snapshot</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_options_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Inlist&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ignore_default_valued</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to see if two inlists have effectively the same options.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            other: Inlist object to compare to.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if two inlists are effectively the same, False if not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option_snapshot</span><span class="p">(</span><span class="n">ignore_default_valued</span><span class="o">=</span><span class="n">ignore_default_valued</span><span class="p">)</span>
+        <span class="n">theirs</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">_option_snapshot</span><span class="p">(</span><span class="n">ignore_default_valued</span><span class="o">=</span><span class="n">ignore_default_valued</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mine</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">!=</span> <span class="n">theirs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">my_namelist</span><span class="p">,</span> <span class="n">my_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">mine</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">other_namelist</span><span class="p">,</span> <span class="n">other_value</span> <span class="o">=</span> <span class="n">theirs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">my_namelist</span> <span class="o">!=</span> <span class="n">other_namelist</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inlist_values_match</span><span class="p">(</span><span class="n">my_value</span><span class="p">,</span> <span class="n">other_value</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Inlist.sync_with_source">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.sync_with_source">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sync_with_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                         <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span><span class="p">,</span>
+                         <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                         <span class="o">*</span><span class="p">,</span> 
+                         <span class="n">on_difference</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;decouple&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;decouple&quot;</span><span class="p">,</span> 
+                         <span class="n">compare_additional_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                         <span class="n">ignore_default_valued_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare this object with the current contents of source_path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: MesaConfig</span>
+<span class="sd">            default_options: DefaultsOptions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if a difference was detected, False otherwise.</span>
+<span class="sd">        Behaviour on difference:</span>
+<span class="sd">            - decouple: set source_path to None</span>
+<span class="sd">            - update: replace options/additional_options/mesa_version from disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span>
+
+        <span class="c1"># Local import avoids module-level circular import:</span>
+        <span class="c1"># parser imports Inlist from options.</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_inlist</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_inlist</span><span class="p">(</span>
+            <span class="n">source_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_path</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">default_options</span><span class="o">=</span><span class="n">default_options</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">changed</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options_equal</span><span class="p">(</span>
+            <span class="n">parsed</span><span class="p">,</span>
+            <span class="n">ignore_default_valued</span><span class="o">=</span><span class="n">ignore_default_valued_options</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">compare_additional_options</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">mine_extra</span> <span class="o">=</span> <span class="p">[(</span><span class="n">b</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span><span class="p">]</span>
+            <span class="n">parsed_extra</span> <span class="o">=</span> <span class="p">[(</span><span class="n">b</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">additional_options</span><span class="p">]</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="n">mine_extra</span> <span class="o">!=</span> <span class="n">parsed_extra</span>
+            
+        <span class="n">empty_drift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span> <span class="o">!=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">empty_namelists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span> <span class="ow">and</span> <span class="n">empty_drift</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Only empty known namelist blocks changed on disk; refreshing from source.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">options</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">additional_options</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">empty_namelists</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">mesa_version</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="n">empty_drift</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">on_difference</span> <span class="o">==</span> <span class="s2">&quot;decouple&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">on_difference</span> <span class="o">==</span> <span class="s2">&quot;update&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">options</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">additional_options</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">empty_namelists</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">mesa_version</span>
+            <span class="c1"># keep existing self.name unchanged intentionally</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;on_difference must be &#39;decouple&#39; or &#39;update&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Inlist.write">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">include_additional_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to write the contents of an Inlist object to an inlist file that</span>
+<span class="sd">            can be read by MESA.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_path: Path object for the location and filename of the inlist file.</span>
+<span class="sd">            include_additional_options: Optional argument to write any additional</span>
+<span class="sd">                UnclassifiedNamelist objects to the inlist. Default = False</span>
+<span class="sd">        Returns: </span>
+<span class="sd">            Path object pointing to location of written inlist file.</span>
+<span class="sd">        Raises: </span>
+<span class="sd">            ValueError when no output_path is specified</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Output path to write the inlist file to is required.&quot;</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">output_block_name</span><span class="p">(</span><span class="n">block</span><span class="p">:</span> <span class="n">MesaNameList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;pgbinary&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&lt;</span> <span class="n">PGBINARY_SPLIT_VERSION</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;binary_pgstar&quot;</span>
+            <span class="k">return</span> <span class="n">block</span>
+
+        <span class="n">block_order</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;star_job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eos&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;controls&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pgstar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;binary_job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;binary_controls&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pgbinary&quot;</span>  
+        <span class="p">)</span>
+
+        <span class="n">grouped</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">block_order</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">grouped</span><span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="n">has_star_job</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">[</span><span class="s2">&quot;star_job&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">has_binary_job</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">[</span><span class="s2">&quot;binary_job&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">has_kap_or_eos_options</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">[</span><span class="s2">&quot;kap&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">[</span><span class="s2">&quot;eos&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="c1"># If binary_job is present, kap/eos options must not be present.</span>
+        <span class="k">if</span> <span class="n">has_binary_job</span> <span class="ow">and</span> <span class="n">has_kap_or_eos_options</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;binary_job options present, so kap/eos options must not be present.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Avoid ambiguous mixed star and binary mode in one inlist object.</span>
+        <span class="k">if</span> <span class="n">has_star_job</span> <span class="ow">and</span> <span class="n">has_binary_job</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both star_job and binary_job options are present; cannot infer kap/eos policy.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If star_job is present, kap and eos blocks are required (even if empty),</span>
+        <span class="c1"># but only for newer MESA versions.</span>
+        <span class="n">required_empty_blocks</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">has_star_job</span><span class="p">:</span>
+            <span class="n">required_empty_blocks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;pgstar&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&gt;=</span> <span class="n">KAP_EOS_SPLIT_VERSION</span><span class="p">:</span>
+                <span class="n">required_empty_blocks</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;kap&quot;</span><span class="p">,</span> <span class="s2">&quot;eos&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">has_binary_job</span><span class="p">:</span>
+            <span class="n">required_empty_blocks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;pgbinary&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Preserve known empty blocks from parsed source inlists.</span>
+        <span class="n">explicit_empty_blocks</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">MesaNameList</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span><span class="p">)</span>
+
+        <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">block_order</span><span class="p">:</span>
+            <span class="c1"># In binary mode, do not write kap/eos blocks at all.</span>
+            <span class="k">if</span> <span class="n">has_binary_job</span> <span class="ow">and</span> <span class="n">block</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;kap&quot;</span><span class="p">,</span> <span class="s2">&quot;eos&quot;</span><span class="p">}:</span>
+                <span class="k">continue</span>
+
+            <span class="n">opts</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="n">block</span><span class="p">]</span>
+            <span class="n">must_emit</span> <span class="o">=</span> <span class="p">(</span><span class="n">block</span> <span class="ow">in</span> <span class="n">required_empty_blocks</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">block</span> <span class="ow">in</span> <span class="n">explicit_empty_blocks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">opts</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">must_emit</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">out_block</span> <span class="o">=</span> <span class="n">output_block_name</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">out_block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">opts</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+                    <span class="n">raw_value</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">opt</span><span class="o">.</span><span class="n">default_option</span>
+                    <span class="k">if</span> <span class="n">raw_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">raw_value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">out_value</span> <span class="o">=</span> <span class="n">python_value_to_inlist_value</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span><span class="n">default_option</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="p">)</span>
+                    <span class="n">is_default</span> <span class="o">=</span> <span class="n">inlist_values_match</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="p">)</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot; ! DEFAULT&quot;</span> <span class="k">if</span> <span class="n">is_default</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">out_value</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># readability spacer for intentionally empty required blocks</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/ ! end of </span><span class="si">{</span><span class="n">out_block</span><span class="si">}</span><span class="s2"> namelist&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">include_additional_options</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/ ! end of </span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> namelist&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">target</span></div>
+
+    
+<div class="viewcode-block" id="Inlist.option_names">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.option_names">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">option_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to list all MesaOptions in the Inlist that have certain</span>
+<span class="sd">            pattern in their name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pattern: string containing the pattern to look for. If None, all</span>
+<span class="sd">                names in the Inlist will be returned.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list of strings with the MesaOption names that match the pattern.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">names</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="Inlist.search">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">in_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to look for a pattern inside the names and descriptions of </span>
+<span class="sd">            the MesaOption objects in the Inlist.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            query: string with pattern to look for in the MesaOption names and descriptions.</span>
+<span class="sd">            in_description: If True, look for pattern in descriptions, if False,</span>
+<span class="sd">                only look for pattern in names.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List of MesaOptions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">hit_name</span> <span class="o">=</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">hit_desc</span> <span class="o">=</span> <span class="n">in_description</span> <span class="ow">and</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">hit_name</span> <span class="ow">or</span> <span class="n">hit_desc</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Inlist.describe">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function to print out the default &amp; current value, and the description of a</span>
+<span class="sd">            MesaOption with the given name.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name: string containing the name of the MesaOption</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Structured string with information about the MesaOption corresponding to</span>
+<span class="sd">            the provided name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">current: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">current_value</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;namelist: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;default: </span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">default_option</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;description:</span><span class="se">\n</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Inlist.get_python_value">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.get_python_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_python_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">use_current</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">to_python_value</span><span class="p">(</span><span class="n">use_current</span><span class="o">=</span><span class="n">use_current</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Inlist.copy">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.Inlist.copy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">deep_copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Inlist&quot;</span><span class="p">:</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="n">copied</span> <span class="o">=</span> <span class="n">Inlist</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">mesa_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span><span class="p">,</span>
+            <span class="n">source_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source_path</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">deep_copy</span><span class="p">:</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">additional_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span><span class="p">)</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">empty_namelists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">additional_options</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">additional_options</span><span class="p">)</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">empty_namelists</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_namelists</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">copied</span></div>
+</div>
+
+
+<div class="viewcode-block" id="preview">
+<a class="viewcode-back" href="../../api/mesa_runner.html#mesa_runner.preview">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">preview</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MesaOption</span><span class="p">]</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">MesaOption</span><span class="p">],</span>
+            <span class="n">max_desc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> 
+            <span class="n">prefer_pandas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Method to display a table of MesaOption objects.</span>
+<span class="sd">        Uses a pandas DataFrame if pandas is available (optional dependency),</span>
+<span class="sd">        uses plain text output if not.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        options: MesaOption collection. Accepted:</span>
+<span class="sd">            - list[MesaOption]</span>
+<span class="sd">            - dict[str, MesaOption] (e.g. DefaultsFile.options, Inlist.options)</span>
+<span class="sd">            - any iterable of MesaOption</span>
+<span class="sd">        max_desc: Maxiumum number of charachters used to print the </span>
+<span class="sd">            MesaOption.description attribute</span>
+<span class="sd">        prefer_pandas: Use pandas if available. Default = True</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Preview MesaOptions as pandas DataFrame (if available) or text table.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">option_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">option_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">option_items</span><span class="p">:</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_desc</span><span class="p">:</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span><span class="p">[:</span> <span class="n">max_desc</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;namelist&quot;</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">namelist</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">default_option</span><span class="p">,</span>
+                <span class="s2">&quot;current&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">current_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">o</span><span class="o">.</span><span class="n">current_value</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">desc</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prefer_pandas</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="n">rows</span><span class="p">,</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;namelist&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;current&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># Plain-text fallback</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;(no options)&quot;</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;namelist&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;current&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">]</span>
+    <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="n">h</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">widths</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">[</span><span class="n">h</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">h</span><span class="p">]))),</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fmt_row</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">h</span><span class="p">])</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">widths</span><span class="p">[</span><span class="n">h</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">)</span>
+
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;-+-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="n">widths</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">fmt_row</span><span class="p">({</span><span class="n">h</span><span class="p">:</span> <span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">}),</span> <span class="n">sep</span><span class="p">]</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">fmt_row</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># TODO: would be cool to create a function that automatically adds the cache directory options to all</span>
+<span class="c1"># star_job blocks and creates the cache directory structure if not present. </span>
+<span class="c1"># The cache directory should probably created at the time of config if not present and optional, because not every </span>
+<span class="c1"># project needs its own caches. </span>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Jan Henneco
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
