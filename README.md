@@ -1,6 +1,6 @@
 # MESA Runner (`mesa-runner`)
 
-A `Python` package to serve as an interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `MPI` and/or `multiprocessing`.
+A `Python` package to serve as an interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `MPI` or `subprocessing`.
 
 The `mesa-runner` package's main modules are:
 
@@ -24,12 +24,12 @@ The `mesa-runner` package's main modules are:
 
 - `run_types.py`: Shared runtime data types for model execution workflows. [DONE]
 
-- `errors.py`: Shared exception hierarchy for run, orchestration, and persistence layers. [WIP]
+- `errors.py`: Shared exception hierarchy for run, orchestration, and persistence layers. [DONE]
 
-- `grid_run.py`: Grid orchestration contracts for multi-model execution. [WIP]
+- `grid_run.py`: Grid orchestration contracts for multi-model execution. [DONE]
 
-- `repository.py`: Persistence abstraction and adapter hooks for run metadata. [WIP]
+- `repository.py`: Persistence abstraction and adapter hooks for run metadata. [DONE]
 
-- `status.py`: Status view contracts for live and persisted model execution state. [WIP]
+- `status.py`: Status view contracts for live and persisted model execution state. [DONE]
 
 
