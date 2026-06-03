@@ -10,7 +10,7 @@ The `mesa-runner` package's main modules are:
 
 - `options.py`: Data model and utilities for MESA defaults/inlist options. [DONE]
 
-- `utils.py`: Low-level utility helpers for MESA value normalization and conversion. [WIP]
+- `utils.py`: Low-level utility helpers for MESA value normalization and conversion. [DONE]
 
 - `model.py`: Model objects and lifecycle state for individual MESA runs. [DONE]
 
