@@ -44,7 +44,10 @@ from .grid_run import(GridRunItem,
                       GridRunHandle)
 from .repository import(SQLiteRunRepository, 
                         LiveProcessRegistry, 
-                        RepositoryObserver)
+                        RepositoryObserver, 
+                        LiveModelTracker, 
+                        ModelRepository, 
+                        ModelRunScribe)
 from .status import(ModelStatusView, 
                     get_model_status, 
                     list_active_status, 
@@ -98,5 +101,8 @@ __all__ = [
     "reconcile_stale_runs", 
     "launch_grid", 
     "wait_for_grid", 
-    "GridRunHandle"
+    "GridRunHandle", 
+    "LiveModelTracker", 
+    "ModelRepository", 
+    "ModelRunScribe"
 ]
