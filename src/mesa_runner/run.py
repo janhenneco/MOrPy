@@ -82,7 +82,7 @@ def _resolve_model_dir(model: Model) -> Path:
     if model.model_path is None:
         raise ModelPathMissingError(
             f"Model '{model.name}' has no model_path. "
-            "Create/export a model directory first."
+            "Create a model directory first with create_modeldir()."
         )
     model_dir = Path(model.model_path)
     if not model_dir.is_dir():
@@ -239,7 +239,8 @@ def launch_model_process(
         cwd=model_dir,
         start_time=datetime.now(timezone.utc),
         pid=process.pid,
-        log_file_name=log_file_name
+        log_file_name=log_file_name,
+        sync_performed=sync_before_run
     )
 
     _emit_transition(model, ModelState.RUNNING, observer=observer, run_id=run_id)
@@ -340,7 +341,7 @@ def wait_for_model_process(
             end_time=end_time,
             stdout="",
             stderr="Interrupted by user",
-            sync_performed=False,  # caller can override if needed later
+            sync_performed=handle.sync_performed,
             metadata={"run_id": handle.run_id, "pid": str(handle.pid)},
         )
         if observer is not None:
@@ -388,7 +389,7 @@ def wait_for_model_process(
         end_time=end_time,
         stdout=stdout,
         stderr=stderr,
-        sync_performed=False,  # set by run_model wrapper
+        sync_performed=handle.sync_performed,
         metadata={"run_id": handle.run_id, "pid": str(handle.pid)},
     )
 
@@ -468,5 +469,4 @@ def run_model(
         live_registry=live_registry
     )
 
-    result.sync_performed = sync_before_run
     return result

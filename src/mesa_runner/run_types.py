@@ -74,6 +74,7 @@ class RunHandle:
         start_time: UTC timestamp when execution started.
         pid: Operating-system process ID of the launched run.
         log_file_name: Name of the terminal log file.
+        sync_performed: True if sync of inlist was performed with disk
     """
     run_id: str
     model_id: str
@@ -84,6 +85,7 @@ class RunHandle:
     start_time: datetime
     pid: int
     log_file_name: str
+    sync_performed: bool
 
 @dataclass
 class StateTransition:

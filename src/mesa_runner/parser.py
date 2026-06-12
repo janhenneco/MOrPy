@@ -249,7 +249,8 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path | str, config:
     return df
 
 def parse_inlist(source_path: Path | str, 
-                 config: MesaConfig, 
+                 config: MesaConfig,
+                 new_name: str | None = None, 
                  default_options: DefaultsOptions | None = None, 
                  allow_unknown_options: bool = False) -> Inlist:
     """Read the contents of an inlist and store it inside an Inlist object.
@@ -257,6 +258,8 @@ def parse_inlist(source_path: Path | str,
     Args:
         source_path: The Path object pointing to the location of the inlist file
         config: The MesaConfig instance
+        new_name: By default, Inlist.name will be the name of the inlist file. This can be changed
+            to a new custom name by passing it to new_name.
         default_options: The DefaultsOptions object required to look up descriptions and default values
             of the parsed inlist options. Will be created automatically based on MESA installation directory 
             if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
@@ -271,8 +274,13 @@ def parse_inlist(source_path: Path | str,
 
     if default_options is None:
         default_options = build_defaults_options_from_config(config)
+
+    if new_name is None:
+        inlist_name = source_path.name
+    else:
+        inlist_name = new_name
     
-    il = Inlist(name = source_path.name, source_path = source_path, mesa_version = config.mesa_version)
+    il = Inlist(name = inlist_name, source_path = source_path, mesa_version = config.mesa_version)
 
     lines = source_path.read_text(encoding="utf-8").splitlines()
 

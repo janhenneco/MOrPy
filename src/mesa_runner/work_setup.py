@@ -245,6 +245,7 @@ def create_modeldir(model: Model,
         projectdir_path: path to the project directory in which this model directory will be placed.
             This can technically be any path, but in order to run the run the model, the mdoel directory should
             be placed inside a project directory containing the /src folder and Fortran executable.
+        overwrite: Overwrite the model directory if it already exists in the project directory.
         include_additional_options: If present, include unclassified namelist blocks in all inlists written to storage
             (see options.Inlist and options.Unclassifiednamelist documentation)
         config: MesaConfig object. Automatically detected from active config if None.
@@ -363,6 +364,7 @@ def export_modeldir(
     projectdir_path: Path | str,
     *,
     keep_executable_symlinks: bool = False,
+    overwrite: bool = False
 ) -> Path:
     """Function that creates a self-contained MESA work directory for a given model
         directory and project directory. This function creates a copy of the model
@@ -379,6 +381,7 @@ def export_modeldir(
             into the exported workdir. Only recommended if you plan to run the model
             again locally, not recommended when moving the model elsewhere and/or
             sharing it.
+        overwite: If True, overwrite export_dir if it exists already.
     Returns:
         Path to the exported workdir.
     """
@@ -391,51 +394,93 @@ def export_modeldir(
         raise FileNotFoundError(f"Model directory does not exist: {model_dir}")
     if not projectdir_path.is_dir():
         raise FileNotFoundError(f"Project directory does not exist: {projectdir_path}")
-    if export_dir.exists():
+    
+    if not overwrite and  export_dir.exists():
         raise FileExistsError(f"Export directory already exists: {export_dir}")
+    
+    # To allow for overwriting, we're using the same tmp dir structre
+    # as in create_modeldir.
+    # First, check if the export_dir's parent is a valid directory
+    # (we need to place the tmp dir there)
+    export_parent = export_dir.parent
+    if not export_parent.exists():
+        raise FileNotFoundError(f"Export directory parent does not exist: {export_parent}")
+    if not export_parent.is_dir():
+        raise FileNotFoundError(f"Export directory parent is not a directory: {export_parent}")
 
-    export_dir.mkdir(parents=True, exist_ok=False)
+    # Chech that tmp_dir does not exist yet
+    tmp_dir = export_parent / f".{export_dir.name}.tmp-{uuid.uuid4().hex}"
+    committed = False
+    backup_dir = export_parent / f".{export_dir.name}.bak-{uuid.uuid4().hex}"
 
-    executable_names = {"star", "binary"}
+    try:
+        tmp_dir.mkdir(parents=False, exist_ok=False)
+        
+        executable_names = {"star", "binary"}
 
-    # 1) Copy model_dir content; dereference non-executable symlinks
-    for src in model_dir.iterdir():
-        dst = export_dir / src.name
+        # 1) Copy model_dir content; dereference non-executable symlinks
+        for src in model_dir.iterdir():
+            dst = tmp_dir / src.name
 
-        if src.is_symlink():
-            if src.name in executable_names:
-                if keep_executable_symlinks:
-                    dst.symlink_to(src.readlink())
+            if src.is_symlink():
+                if src.name in executable_names:
+                    if keep_executable_symlinks:
+                        dst.symlink_to(src.readlink())
+                    continue
+
+                resolved = src.resolve(strict=True)
+                if resolved.is_dir():
+                    shutil.copytree(resolved, dst, symlinks=False)
+                else:
+                    shutil.copy2(resolved, dst)
                 continue
 
-            resolved = src.resolve(strict=True)
-            if resolved.is_dir():
-                shutil.copytree(resolved, dst, symlinks=False)
+            if src.is_dir():
+                shutil.copytree(src, dst, symlinks=False)
+            elif src.is_file():
+                shutil.copy2(src, dst)
+
+        # 2) Always copy required build scaffold from projectdir (mandatory)
+        for name in ("src", "mk", "make", "clean"):
+            src = projectdir_path / name
+            dst = tmp_dir / name
+
+            if not src.exists():
+                raise FileNotFoundError(
+                    f"Required build scaffold entry is missing in project directory: {src}"
+                )
+
+            if src.is_dir():
+                shutil.copytree(src, dst, symlinks=False)
+            elif src.is_file():
+                shutil.copy2(src, dst)
             else:
-                shutil.copy2(resolved, dst)
-            continue
-
-        if src.is_dir():
-            shutil.copytree(src, dst, symlinks=False)
-        elif src.is_file():
-            shutil.copy2(src, dst)
-
-    # 2) Always copy required build scaffold from projectdir (mandatory)
-    for name in ("src", "mk", "make", "clean"):
-        src = projectdir_path / name
-        dst = export_dir / name
-
-        if not src.exists():
-            raise FileNotFoundError(
-                f"Required build scaffold entry is missing in project directory: {src}"
-            )
-
-        if src.is_dir():
-            shutil.copytree(src, dst, symlinks=False)
-        elif src.is_file():
-            shutil.copy2(src, dst)
+                raise OSError(f"Unsupported scaffold path type: {src}")
+        
+        if overwrite:
+            if export_dir.exists():
+                export_dir.replace(backup_dir)
+            try:
+                tmp_dir.replace(export_dir)
+            except Exception:
+                # Rollback if export_dir wasn't created successfully
+                if backup_dir.exists() and not export_dir.exists():
+                    backup_dir.replace(export_dir)
+                raise
+            else:
+                if backup_dir.exists():
+                    shutil.rmtree(backup_dir)
         else:
-            raise OSError(f"Unsupported scaffold path type: {src}")
+            # overwrite = False --> export_dir should not exists, as checked at beginning
+            tmp_dir.replace(export_dir)
+        
+        committed = True
+        return export_dir
+    
+    finally:
+        # If we failed before promotion of tmp_dir, clean up tmp_dir
+        if not committed and tmp_dir.exists():
+            shutil.rmtree(tmp_dir)
 
     return export_dir
 

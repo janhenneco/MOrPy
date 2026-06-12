@@ -57,7 +57,14 @@ class MesaOption:
    current_value: str | None = field(default=None)
 
    def to_python_value(self, use_current: bool = True) -> bool | int | float | str:
-        raw = self.current_value if use_current and self.current_value is not None else self.default_option
+        if use_current:
+            if self.current_value is None:
+                warnings.warn("use_current = True (default) but self.current_value is None. Passed self.default_option instead.", UserWarning)
+                raw = self.default_option
+            else:
+                raw = self.current_value
+        else:
+            raw = self.default_option
         return fortran_value_to_python_value(raw)
 
 
@@ -307,6 +314,7 @@ class Inlist:
 
     def __post_init__(self) -> None:
         """Method looking for mesa_version from active MesaConfig if mesa_version is not specified.
+        Since Inlist is a dataclass, the __post_init__ method is called automatically.
         """
         if self.mesa_version is None:
             self.mesa_version = require_active_config().mesa_version
@@ -822,8 +830,8 @@ def preview(options: list[MesaOption] | dict[str, MesaOption] | Iterable[MesaOpt
             desc = desc[: max_desc - 3] + "..."
         rows.append(
             {
-                "name": o.name,
                 "namelist": o.namelist,
+                "name": o.name,
                 "default": o.default_option,
                 "current": "" if o.current_value is None else o.current_value,
                 "description": desc,
@@ -844,7 +852,7 @@ def preview(options: list[MesaOption] | dict[str, MesaOption] | Iterable[MesaOpt
     if not rows:
         return "(no options)"
 
-    headers = ["name", "namelist", "default", "current", "description"]
+    headers = ["namelist", "name", "default", "current", "description"]
     widths = {h: len(h) for h in headers}
     for r in rows:
         for h in headers:
@@ -857,7 +865,6 @@ def preview(options: list[MesaOption] | dict[str, MesaOption] | Iterable[MesaOpt
     out = [fmt_row({h: h for h in headers}), sep]
     out.extend(fmt_row(r) for r in rows)
     return "\n".join(out)
-
 
 # TODO: would be cool to create a function that automatically adds the cache directory options to all
 # star_job blocks and creates the cache directory structure if not present. 
