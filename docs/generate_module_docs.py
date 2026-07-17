@@ -7,7 +7,7 @@ import pkgutil
 from pathlib import Path
 from typing import Iterable
 
-PACKAGE_NAME = "mesa_runner"          # <-- change
+PACKAGE_NAME = "morpy"          # <-- change
 OUT_DIR = Path("docs/source/api")    # <-- change if needed
 
 # You can tweak how module pages are named:

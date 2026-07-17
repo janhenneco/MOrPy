@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import pytest
-import mesa_runner as mrun
-import mesa_runner.project_setup as ps
+import morpy as mrun
+import morpy.project_setup as ps
 
 
 def make_fake_mesa_dir(tmp_path, version_raw: str = "r24.08.1") -> Path:

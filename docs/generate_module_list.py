@@ -19,7 +19,7 @@ MODULE_ORDER = [
     "status",
 ]
 
-src = Path(__file__).parent.parent / "src" / "mesa_runner"
+src = Path(__file__).parent.parent / "src" / "morpy"
 
 for name in MODULE_ORDER:
     path = src / f"{name}.py"

@@ -1,7 +1,7 @@
 import math
 import pytest
 
-from mesa_runner.utils import (
+from morpy.utils import (
     python_float_to_fortran_string,
     fortran_float_string_to_float,
     fortran_value_to_python_value

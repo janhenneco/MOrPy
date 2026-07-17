@@ -1,6 +1,6 @@
 import pytest
 
-from mesa_runner.config import MesaConfig, MesaVersion
+from morpy.config import MesaConfig, MesaVersion
 
 
 # --- helpers ---

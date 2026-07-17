@@ -1,8 +1,8 @@
 import pytest
 
-from mesa_runner.config import MesaVersion
-from mesa_runner.model import Model
-from mesa_runner.options import Inlist, MesaOption
+from morpy.config import MesaVersion
+from morpy.model import Model
+from morpy.options import Inlist, MesaOption
 
 
 def make_version():

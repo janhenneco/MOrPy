@@ -1,5 +1,5 @@
 from pathlib import Path
-import mesa_runner as mr
+import morpy as mr
 
 inlist_path = Path("/Users/janhenneco/work/mesa/projects/project_Joey/base_mesadir/inlist")
 

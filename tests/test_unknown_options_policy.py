@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-import mesa_runner as mrun
+import morpy as mrun
 
 
 DATA_DIR = Path(__file__).parent / "data_for_tests"

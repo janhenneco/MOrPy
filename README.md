@@ -1,4 +1,8 @@
-# MESA Runner (`mesa-runner`)
+# MESA Orchestrator in Python (MOrPy)
+
+<div align="center">
+  <img src="docs/images/MOrPy_logo.svg" alt="MOrPy Diagram" width="500" style="background-color: white; padding: 20px; border-radius: 6px;" />
+</div>
 
 A `Python` package to serve as a modular interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `concurrent.futures` or `mpi4py`.
 

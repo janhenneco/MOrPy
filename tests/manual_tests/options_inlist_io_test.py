@@ -1,4 +1,4 @@
-import mesa_runner as mrun
+import morpy as mrun
 from pathlib import Path
 from tempfile import TemporaryDirectory
 

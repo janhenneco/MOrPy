@@ -223,3 +223,16 @@ __marimo__/
 !docs/build/
 !docs/build/**
 !docs/examples/**
+
+# tests
+tests/data_for_tests/
+tests/manual_tests/output_tests/
+
+# notes
+notes.md
+
+# VS code
+.code-workspace
+
+# docs output
+docs/examples/example_output/

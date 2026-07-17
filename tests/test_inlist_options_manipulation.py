@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-import mesa_runner as mrun
-from mesa_runner.options import Inlist
+import morpy as mrun
+from morpy.options import Inlist
 
 
 DATA_DIR = Path(__file__).parent / "data_for_tests"
