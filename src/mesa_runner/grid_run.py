@@ -18,7 +18,7 @@ from concurrent.futures import Future, ThreadPoolExecutor, TimeoutError as Futur
 
 import subprocess
 import time
-from collections import deque
+from collections import deque # double-ended queue --> for efficiency
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,7 +27,7 @@ from typing import Iterable, Literal, Mapping
 from .config import MesaConfig
 from .model import Model
 from .options import DefaultsOptions
-from .run import launch_model_process, run_model, wait_for_model_process
+from .run import launch_model, run_model, wait_for_model
 from .run_types import RunHandle, RunObserver, RunResult
 from .repository import LiveProcessRegistry
 
@@ -151,17 +151,17 @@ def run_models_local(
     capture_output: bool = True,
     timeout: float | None = None,
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> GridRunResult:
     """Run many models locally with limit on parallel runs.
 
-    Uses launch_model_process + wait_for_model_process so model lifecycle and
-    observer behavior remains aligned with single-model runs.
+    Uses launch_model + wait_for_model so model lifecycle and
+    observer behaviour remains aligned with single-model runs.
 
     Args:
         items: list of GridRunItem objects containing the models to run.
-        queue_policy: QueyePolicy type. Currently only 'fifo' (=First In, First Out) available.
-        max_workers: Maximun number of models to run in parallel.
+        queue_policy: QueyePolicy type. Currently only 'fifo' (= First In, First Out) available.
+        max_workers: Maximum number of models to run in parallel.
             WARNING: make sure that OMP_NUM_THREADS x max_workers does not exceed
             your machine's number of available threads.
         sync_before_run: If True (default), the function calls work_setup.sync_model_with_disk
@@ -181,7 +181,7 @@ def run_models_local(
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
         observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_registry: LiveProcessRegistry object that serves as an 
+        live_tracker: LiveProcessRegistry object that serves as an 
             in-memory registry for currently running models.
     Returns:
         GridRunResult
@@ -200,7 +200,7 @@ def run_models_local(
         while pending and len(running) < max_workers:
             item = pending.popleft()
             try:
-                handle, process = launch_model_process(
+                handle, process = launch_model(
                     model=item.model,
                     env=item.env,
                     sync_before_run=sync_before_run,
@@ -210,7 +210,7 @@ def run_models_local(
                     command_name=command_name,
                     log_file_name=log_file_name,
                     observer=observer,
-                    live_registry=live_registry
+                    live_tracker=live_tracker
                 )
                 running.append((item, handle, process, time.monotonic()))
             except Exception as exc:
@@ -245,14 +245,14 @@ def run_models_local(
             if timed_out:
                 try:
                     # timeout=0 forces immediate timeout path if still alive.
-                    result = wait_for_model_process(
+                    result = wait_for_model(
                         model=item.model,
                         handle=handle,
                         process=process,
                         timeout=0.0,
                         capture_output=capture_output,
                         observer=observer,
-                        live_registry=live_registry
+                        live_tracker=live_tracker
                     )
                 except Exception as exc:
                     result = _exception_result(
@@ -275,14 +275,14 @@ def run_models_local(
                 continue
 
             try:
-                result = wait_for_model_process(
+                result = wait_for_model(
                     model=item.model,
                     handle=handle,
                     process=process,
                     timeout=None,
                     capture_output=capture_output,
                     observer=observer,
-                    live_registry=live_registry
+                    live_tracker=live_tracker
                 )
             except Exception as exc:
                 result = _exception_result(
@@ -323,7 +323,7 @@ def run_models_mpi(
     capture_output: bool = True,
     timeout: float | None = None,
     observer: RunObserver | None = None, 
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> GridRunResult:
     """Run many models distributed across MPI ranks.
 
@@ -353,7 +353,7 @@ def run_models_mpi(
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
         observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_registry: LiveProcessRegistry object that serves as an 
+        live_tracker: LiveProcessRegistry object that serves as an 
             in-memory registry for currently running models.
     Returns:
         GridRunResult
@@ -390,7 +390,7 @@ def run_models_mpi(
                 capture_output=capture_output,
                 timeout=timeout,
                 observer=observer,
-                live_registry=live_registry
+                live_tracker=live_tracker
             )
         except Exception as exc:
             result = _exception_result(
@@ -445,14 +445,14 @@ def run_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> GridRunResult:
     """Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).
      This fuction dispatches either the run_models_local or run_models_mpi functions.
      
      Args:
         items: list of GridRunItem objects containing the models to run.
-        backend: "local" for subroutines (default), "mpi" for mpi4py.
+        backend: "local" for concurrent.futures (default), "mpi" for mpi4py.
         queue_policy: QueyePolicy type. Currently only 'fifo' (=First In, First Out) available.
         max_workers: Maximun number of models to run in parallel. Only used when backend = "local".
             See run_models_mpi documentation for setting number of MPI workers.
@@ -475,7 +475,7 @@ def run_grid(
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
         observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_registry: LiveProcessRegistry object that serves as an 
+        live_tracker: LiveProcessRegistry object that serves as an 
             in-memory registry for currently running models.
     Returns:
         GridRunResult
@@ -497,7 +497,7 @@ def run_grid(
             capture_output=capture_output,
             timeout=timeout,
             observer=observer,
-            live_registry=live_registry
+            live_tracker=live_tracker
         )
 
     if backend == "mpi":
@@ -513,7 +513,7 @@ def run_grid(
             capture_output=capture_output,
             timeout=timeout,
             observer=observer,
-            live_registry=live_registry
+            live_tracker=live_tracker
         )
 
     raise ValueError(f"Unsupported backend: {backend}")
@@ -533,7 +533,7 @@ def launch_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> GridRunHandle:
     """Launch a grid run in the background and return immediately."""
     item_list = list(items)
@@ -554,7 +554,7 @@ def launch_grid(
         capture_output=capture_output,
         timeout=timeout,
         observer=observer,
-        live_registry=live_registry,
+        live_tracker=live_tracker,
     )
 
     return GridRunHandle(
@@ -583,3 +583,31 @@ def wait_for_grid(
     finally:
         if shutdown_executor and handle.future.done():
             handle._executor.shutdown(wait=False)
+
+def stop_grid(
+    handle: GridRunHandle,
+    *,
+    live_tracker: LiveProcessRegistry | None = None,
+    force: bool = True,
+) -> dict[str, object]:
+    """Function to stop a grid that was launched by the launch_grid() function.
+        Will attempt to kill the executor, cancel the grid future and hunt down
+        and kill the MESA processes registered in the live tracker. 
+    """
+    cancelled_future = handle.future.cancel()
+
+    # Prevent new tasks from starting in this executor.
+    handle._executor.shutdown(wait=False, cancel_futures=True)
+
+    terminated_model_ids: list[str] = []
+    if live_tracker is not None:
+        for model_id in live_tracker.list_running_model_ids():
+            if live_tracker.terminate(model_id, force=force):
+                terminated_model_ids.append(model_id)
+
+    return {
+        "grid_id": handle.grid_id,
+        "future_cancelled": cancelled_future,
+        "future_done": handle.future.done(),
+        "terminated_model_ids": terminated_model_ids,
+    }

@@ -32,8 +32,8 @@ from .compile import(compile_project,
                      CommandResult, 
                      CompileResult)
 from .run import(run_model, 
-                 launch_model_process, 
-                 wait_for_model_process)
+                 launch_model, 
+                 wait_for_model)
 from .grid_run import(GridRunItem, 
                       GridRunResult, 
                       run_grid, 
@@ -41,20 +41,15 @@ from .grid_run import(GridRunItem,
                       run_models_mpi, 
                       launch_grid, 
                       wait_for_grid, 
-                      GridRunHandle)
+                      GridRunHandle, 
+                      stop_grid)
 from .repository import(SQLiteRunRepository, 
                         LiveProcessRegistry, 
                         RepositoryObserver, 
                         LiveModelTracker, 
                         ModelRepository, 
-                        ModelRunScribe)
-from .status import(ModelStatusView, 
-                    get_model_status, 
-                    list_active_status, 
-                    live_status, 
-                    stream_models_status, 
-                    list_models_status_snapshot, 
-                    reconcile_stale_runs)
+                        ModelObserver)
+from .status import(print_grid_status)
 
 __all__ = [
     "MesaConfig",
@@ -78,12 +73,13 @@ __all__ = [
     "sync_model_with_disk", 
     "create_projectdir", 
     "CommandResult", 
-    "CompileResult", 
+    "CompileResult",
+    "compile_project", 
     "setup_mesa_env", 
     "detect_workdir_mode", 
     "run_model", 
-    "launch_model_process", 
-    "wait_for_model_process",
+    "launch_model", 
+    "wait_for_model",
     "GridRunItem",
     "GridRunResult",
     "run_grid",
@@ -92,17 +88,12 @@ __all__ = [
     "SQLiteRunRepository",
     "LiveProcessRegistry",
     "RepositoryObserver",
-    "ModelStatusView",
-    "get_model_status",
-    "list_active_status", 
-    "live_status", 
-    "stream_models_status", 
-    "list_models_status_snapshot", 
-    "reconcile_stale_runs", 
+    "print_grid_status",
     "launch_grid", 
     "wait_for_grid", 
     "GridRunHandle", 
     "LiveModelTracker", 
     "ModelRepository", 
-    "ModelRunScribe"
+    "ModelObserver", 
+    "stop_grid"
 ]

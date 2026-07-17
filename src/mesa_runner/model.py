@@ -109,20 +109,6 @@ class Model:
         """
         return cls(name=name, mesa_version=mesa_version)
     
-    def return_log_directory_paths(self) -> dict:
-        '''Function that returns a dictionary containing all the LOGS directories specified in the inlists
-            that are part of Model.inlists.
-        Args:
-            self
-        Returns:
-            - Dictionary with locations to LOGS directories and the associated inlists
-            - Model.model_dir / LOGS or LOGS1 & LOGS 2 if no logs directories are specified in the inlists
-            - An empty dictionary is the Model.inlists dictionary is empty
-        '''
-        log_dirs = {}
-        if bool(self.inlists):
-            return log_dirs
-        #TODO
 
     def copy(
         self,
@@ -146,4 +132,3 @@ class Model:
             new_model.inlists = dict(self.inlists)
 
         return new_model
-#TODO: Implement tests for this module.

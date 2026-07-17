@@ -2,8 +2,8 @@
 
 This module provides:
 
-- launch_model_process for non-blocking process launch.
-- wait_for_model_process for completion and result finalization.
+- launch_model for non-blocking process launch.
+- wait_for_model for completion and result finalization.
 - run_model as the blocking convenience wrapper.
 
 It performs preflight checks, optional model/inlist sync, lifecycle state
@@ -138,7 +138,7 @@ def _emit_transition(
         observer.on_state_transition(transition)
     return transition
 
-def launch_model_process(
+def launch_model(
     model: Model,
     *,
     env: Mapping[str, str] | None = None,
@@ -149,7 +149,7 @@ def launch_model_process(
     command_name: str = "rn",
     log_file_name: str = "log.out",
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> tuple[RunHandle, subprocess.Popen]:
     """Function to launch a single model in a non-blocking way. 
         The function performs preflight checks, starts the MESA model run and
@@ -248,12 +248,12 @@ def launch_model_process(
     if observer is not None:
         observer.on_process_started(handle)
     
-    if live_registry is not None:
-        live_registry.register(handle, process)
+    if live_tracker is not None:
+        live_tracker.register(handle, process)
 
     return handle, process
 
-def wait_for_model_process(
+def wait_for_model(
     model: Model,
     handle: RunHandle,
     process: subprocess.Popen,
@@ -261,15 +261,15 @@ def wait_for_model_process(
     timeout: float | None = None,
     capture_output: bool = True,
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> RunResult:
     """Wait for a launched model process to finish and return its final run result.
 
     This function is the completion step of the non-blocking workflow:
 
-    1. launch_model_process() starts the run and returns immediately
+    1. launch_model() starts the run and returns immediately
        with (RunHandle, process).
-    2. wait_for_model_process() blocks until that process exits
+    2. wait_for_model() blocks until that process exits
        (or times out), finalizes model state, and builds a RunResult.
 
     Behavior:
@@ -281,14 +281,13 @@ def wait_for_model_process(
 
     Args:
         model: Model associated with this run.
-        handle: RunHandle returned by launch_model_process; contains run_id and launch metadata.
-        process: Subprocess object returned by launch_model_process.
+        handle: RunHandle returned by launch_model; contains run_id and launch metadata.
+        process: Subprocess object returned by launch_model.
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
         capture_output: If True, capture stdout/stderr and include them in RunResult.
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         observer: Optional RunObserver receiving state-transition and process-finished events.
-
     Returns:
         RunResult describing the terminal outcome of the run.
 
@@ -310,8 +309,8 @@ def wait_for_model_process(
             reason=f"Timeout after {timeout}s",
             run_id=handle.run_id,
         )
-        if live_registry is not None:
-            live_registry.unregister(model.model_id)
+        if live_tracker is not None:
+            live_tracker.unregister(model.model_id)
         raise RunTimeoutError(
             f"Run timed out for model '{model.name}' after {timeout} seconds."
         ) from exc
@@ -346,8 +345,8 @@ def wait_for_model_process(
         )
         if observer is not None:
             observer.on_process_finished(result)
-        if live_registry is not None:
-            live_registry.unregister(model.model_id)
+        if live_tracker is not None:
+            live_tracker.unregister(model.model_id)
 
         return result
 
@@ -395,8 +394,8 @@ def wait_for_model_process(
 
     if observer is not None:
         observer.on_process_finished(result)
-    if live_registry is not None:
-        live_registry.unregister(model.model_id)
+    if live_tracker is not None:
+        live_tracker.unregister(model.model_id)
     
     return result
 
@@ -413,12 +412,12 @@ def run_model(
     capture_output: bool = True,
     timeout: float | None = None,
     observer: RunObserver | None = None,
-    live_registry: LiveProcessRegistry | None = None,
+    live_tracker: LiveProcessRegistry | None = None,
 ) -> RunResult:
     
     """Function to launch a single model in a blocking way. 
-        The function calls launch_model_process and 
-        wait_for_model_process immediately afterwards.
+        The function calls launch_model and 
+        wait_for_model immediately afterwards.
         It will only return once the model has finished running.
         Use this to run a MESA model "on the foreground" as you
         would do with a regular MESA "./rn" call in the terminal.
@@ -446,7 +445,7 @@ def run_model(
     Returns:
         RunResult object containing information about the run after finishing.
     """
-    handle, process = launch_model_process(
+    handle, process = launch_model(
         model=model,
         env=env,
         sync_before_run=sync_before_run,
@@ -456,17 +455,17 @@ def run_model(
         command_name=command_name,
         log_file_name=log_file_name,
         observer=observer,
-        live_registry=live_registry
+        live_tracker=live_tracker
     )
 
-    result = wait_for_model_process(
+    result = wait_for_model(
         model=model,
         handle=handle,
         process=process,
         timeout=timeout,
         capture_output=capture_output,
         observer=observer, 
-        live_registry=live_registry
+        live_tracker=live_tracker
     )
 
     return result

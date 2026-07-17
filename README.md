@@ -1,6 +1,6 @@
 # MESA Runner (`mesa-runner`)
 
-A `Python` package to serve as a modular interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `MPI` or `subprocessing`.
+A `Python` package to serve as a modular interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `concurrent.futures` or `mpi4py`.
 
 The `mesa-runner` package's main modules are:
 

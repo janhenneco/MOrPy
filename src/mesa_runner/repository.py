@@ -163,6 +163,10 @@ class SQLiteRunRepository:
             row.snapshot_taken_at = getattr(model, "snapshot_taken_at", None)
             row.file_snapshot_json = _dump_json(getattr(model, "file_snapshot", {}))
 
+    def add_models_to_repo(self, models) -> None:
+        for item in models:
+            self.upsert_model(item)
+
     def record_state_transition(self, transition: StateTransition) -> None:
         with self.SessionLocal.begin() as session:
             session.add(
@@ -218,6 +222,17 @@ class SQLiteRunRepository:
                 row.start_time = handle.start_time
                 row.pid = handle.pid
                 row.log_file_name = handle.log_file_name
+            
+            model_row = session.get(ModelRow, handle.model_id)
+            if model_row is None:
+                model_row = ModelRow(model_id=handle.model_id, model_name=handle.model_name)
+                session.add(model_row)
+
+            model_row.model_name = handle.model_name
+            model_row.model_path = str(handle.model_path)
+            model_row.state = "running"
+            model_row.started_at = handle.start_time if model_row.started_at is None else model_row.started_at
+            model_row.updated_at = handle.start_time
 
     def record_run_finished(self, result: RunResult) -> None:
         run_id = result.metadata.get("run_id")
@@ -471,7 +486,7 @@ class ModelRepository(SQLiteRunRepository):
 
     Usage:
     ```
-    repo = ModelRepo(db_path=DB_PATH)
+    repo = ModelRepository(db_path=DB_PATH)
     ```
     (Call before model/grid launch/run calls.)
     """
@@ -498,9 +513,9 @@ class LiveModelTracker(LiveProcessRegistry):
     """
     pass
 
-class ModelRunScribe(RepositoryObserver):
-    """A "scribe" that records the lifecycles of model runs
-    in the model repository (the SQL database file).
+class ModelObserver(RepositoryObserver):
+    """An observer that detects and records the lifecycles of 
+    model runs in the model repository (the SQL database file).
 
     This class is a wrapper for the internally used
     RepositoryObserver class.
@@ -508,7 +523,7 @@ class ModelRunScribe(RepositoryObserver):
 
     Usage:
     ```
-    scribe = ModelRunScribe(repo=repo)
+    observer = ModelObserver(repo=repo)
     ```
     with repo a ModelRepository object.
     (Call before model/grid launch/run calls.)

@@ -6,6 +6,7 @@ robust semantic comparison for synchronization and equality checks.
 """
 
 import math
+import numpy as np
 
 def python_float_to_fortran_string(value: float, sig: int = 15) -> str:
     """Convert Python float to compact Fortran double notation."""
@@ -141,18 +142,20 @@ def python_value_to_inlist_value(value: object, default_option: str | None = Non
 
     The default value is used as a hint for how to serialize the input.
     """
-    if isinstance(value, bool):
-        return ".true." if value else ".false."
+    if isinstance(value, (bool, np.bool_)):
+        return ".true." if bool(value) else ".false."
 
-    if isinstance(value, int) and not isinstance(value, bool):
+    if isinstance(value, (int, np.integer)) and not isinstance(value, (bool, np.bool_)):
+        int_value = int(value)
         if _looks_like_float_default(default_option):
-            return python_float_to_fortran_string(float(value))
-        return str(value)
+            return python_float_to_fortran_string(float(int_value))
+        return str(int_value)
 
-    if isinstance(value, float):
-        if _looks_like_integer_default(default_option) and value.is_integer():
-            return str(int(value))
-        return python_float_to_fortran_string(value)
+    if isinstance(value, (float, np.floating)):
+        float_value = float(value)
+        if _looks_like_integer_default(default_option) and float_value.is_integer():
+            return str(int(float_value))
+        return python_float_to_fortran_string(float_value)
 
     if isinstance(value, str):
         text = value.strip()
