@@ -4,7 +4,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from .repository import LiveProcessRegistry, RunRepository
+from .repository import LiveProcessRegistry, RunRepository, Tracker
 
 
 @dataclass
@@ -167,20 +167,16 @@ def _resolve_model_status(
         last_error=last_error,
     )
 
-def grid_status(
-    repo: RunRepository,
-    *,
-    live_tracker: LiveProcessRegistry | None = None
-    ) -> list[ModelStatus]:
+def grid_status(tracker: Tracker) -> list[ModelStatus]:
     """Return a list of ModelStatus objects."""
+    repo = tracker.repo
+    live_tracker = tracker.live_tracker
     rows = [_resolve_model_status(model_row.model_id, repo, live_tracker=live_tracker) for model_row in repo.list_model_rows()]
     rows.sort(key=lambda row: (row.model_name.lower(), row.model_id))
     return rows
 
 def print_grid_status(
-    repo: RunRepository,
-    *,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker,
     refresh_seconds: float | None = None,
     notebook: bool = False,
     clear_screen: bool = True,
@@ -188,13 +184,13 @@ def print_grid_status(
     """Print the status of all grid models once or as a refreshing view.
 
     Args:
-        repo: Model repository.
-        live_tracker: Optional live tracker for in-memory status.
+        tracker: Tracker object with Model repo and live tracker.
         refresh_seconds: If None, print once (snapshot). If >0 , refresh
             with specified interval
         notebook: Set to True for clear screen functionality in Jupyter notebooks
         clear_screen: If True (and not notebook), clear terminal between refreshes.
     """
+    
     if refresh_seconds is not None and refresh_seconds <= 0:
         raise ValueError("refresh_seconds must be > 0")
 
@@ -218,7 +214,7 @@ def print_grid_status(
             print("\033[2J\033[H", end="")
 
     def _render_once() -> None:
-        rows = grid_status(repo, live_tracker=live_tracker)
+        rows = grid_status(tracker)
 
         if not rows:
             print("No models found.", flush=True)

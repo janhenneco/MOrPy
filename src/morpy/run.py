@@ -30,7 +30,7 @@ from .run_types import RunHandle, RunObserver, RunResult, StateTransition
 from .work_setup import sync_model_with_disk, WorkdirMode, detect_workdir_mode
 from .options import DefaultsOptions
 from .config import MesaConfig
-from .repository import LiveProcessRegistry
+from .repository import Tracker
 
 def _set_model_state(
     model: Model,
@@ -148,8 +148,7 @@ def launch_model(
     allow_unknown_options: bool = False,
     command_name: str = "rn",
     log_file_name: str = "log.out",
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> tuple[RunHandle, subprocess.Popen]:
     """Function to launch a single model in a non-blocking way. 
         The function performs preflight checks, starts the MESA model run and
@@ -173,7 +172,8 @@ def launch_model(
             or can be used for custom-named "rn" scripts.
         log_file_name: Name of the terminal log file that will be placed inside the model directory.
             Default is "log.out"
-        observer: RunObserver object that observes StateTransitions for status and repository admin.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         Tuple containing RunHandle and subprocess ID.
     Raises:
@@ -185,6 +185,9 @@ def launch_model(
     script_path = _resolve_run_script(model_dir, command_name)
     mode = detect_workdir_mode(model)
     _resolve_executable(model_dir, mode)
+
+    observer = tracker.observer if tracker is not None else None
+    live_tracker = tracker.live_tracker if tracker is not None else None
 
     _emit_transition(model, ModelState.PREPARING, observer=observer)
 
@@ -260,8 +263,7 @@ def wait_for_model(
     *,
     timeout: float | None = None,
     capture_output: bool = True,
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> RunResult:
     """Wait for a launched model process to finish and return its final run result.
 
@@ -287,7 +289,8 @@ def wait_for_model(
             If exceeded, the process is killed and RunTimeoutError is raised.
         capture_output: If True, capture stdout/stderr and include them in RunResult.
             If False, wait without collecting output (stdout/stderr in result are empty strings).
-        observer: Optional RunObserver receiving state-transition and process-finished events.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         RunResult describing the terminal outcome of the run.
 
@@ -296,6 +299,9 @@ def wait_for_model(
     """
     
     start_perf = time.perf_counter()
+
+    observer = tracker.observer if tracker is not None else None
+    live_tracker = tracker.live_tracker if tracker is not None else None
 
     try:
         process.wait(timeout=timeout)
@@ -411,8 +417,7 @@ def run_model(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> RunResult:
     
     """Function to launch a single model in a blocking way. 
@@ -441,10 +446,12 @@ def run_model(
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
-        observer: RunObserver object that observes StateTransitions for status and repository admin.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         RunResult object containing information about the run after finishing.
     """
+
     handle, process = launch_model(
         model=model,
         env=env,
@@ -454,8 +461,7 @@ def run_model(
         allow_unknown_options=allow_unknown_options,
         command_name=command_name,
         log_file_name=log_file_name,
-        observer=observer,
-        live_tracker=live_tracker
+        tracker = tracker
     )
 
     result = wait_for_model(
@@ -464,8 +470,7 @@ def run_model(
         process=process,
         timeout=timeout,
         capture_output=capture_output,
-        observer=observer, 
-        live_tracker=live_tracker
+        tracker = tracker
     )
 
     return result

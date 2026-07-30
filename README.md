@@ -36,7 +36,7 @@ The `morpy` package's main modules are:
 
 - `status.py`: Status view contracts for live and persisted model execution state.
 
-## Installation instructions
+## Installation Instructions
 
 [TODO]
 

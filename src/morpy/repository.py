@@ -452,80 +452,111 @@ class RepositoryObserver:
     def on_process_finished(self, result: RunResult) -> None:
         self.repo.record_run_finished(result)
 
+@dataclass
+class Tracker:
+    """Tracker object that holds the SQL repository (SQLiteRunRepository)
+    instance that keeps track of the running models, the 
+    live_tracker (LiveProcessRegistry) that tracks additional in-memory
+    information about the models (only available if initiated in same Python
+    session) and the observer object (RunObserver) that registers state changes.
 
-class ModelRepository(SQLiteRunRepository):
-    """Repository to keep track of initiated, running, and
-    finished MESA models written on the disk as a SQL database
-    file for persistence.
-
-    This class is a wrapper for the internally used 
-    SQLiteRunRepository class.
-
-    When a RepositoryObserver is active, changed to the state 
-    (running, completed, ...) of models will be recorded in the
-    repository.
-
-    Since the repository is persistent, re-initialising the same
-    SQL database file (db_path) will append new models. To create
-    a completely new database file (e.g. when you rerun a grid
-    because sonething was wrong with the models and you don't
-    want to keep info about the old models), simply remove the 
-    database file:
-    ```
-    if DB_PATH.exists():
-        DB_PATH.unlink()
-    ```
-    if DB_PATH is a pathlib.Path object, or
-    ```
-    if os.path.exists(DB_PATH):
-        os.unlink(DB_PATH)
-    ```
-    if DB_PATH is a regular string. 
-    DB_PATH holds the location of the SQL database file passed
-    to ModelRepo(db_path=DB_PATH).
-
-    Usage:
-    ```
-    repo = ModelRepository(db_path=DB_PATH)
-    ```
-    (Call before model/grid launch/run calls.)
+    Attributes:
+        repo: SQLiteRunRepository object
+        live_tracker: LiveProcessRegistry object
+        overver: RunObserver object
     """
-    pass
+    repo: SQLiteRunRepository
+    live_tracker: LiveProcessRegistry
+    observer: RepositoryObserver
 
-class LiveModelTracker(LiveProcessRegistry):
-    """Live tracker for currently running models.
+    @classmethod
+    def create(cls, db_path: str | Path) -> "Tracker":
+        """Method to initialise the Tracker object. 
 
-    This object tracks live process handles for model objects 
-    currently in the RAM and loses its function if the 
-    Python session is closed.
+        Args:
+            db_path: Path to the location where the SQL database file
+            should be written to.
+        """
+        repo = SQLiteRunRepository(db_path=db_path)
+        return cls(
+            repo = repo,
+            observer = RepositoryObserver(repo),
+            live_tracker = LiveProcessRegistry()
+        )
 
-    It should be run alongside any model or grid launch/run 
-    functions.
+# class ModelRepository(SQLiteRunRepository):
+#     """Repository to keep track of initiated, running, and
+#     finished MESA models written on the disk as a SQL database
+#     file for persistence.
 
-    This class is a wrapper for the internally used
-    LiveProcessRegistry class.
+#     This class is a wrapper for the internally used 
+#     SQLiteRunRepository class.
 
-    Usage:
-    ```
-    live_tracker = LiveModelTracker()
-    ```
-    (Call before model/grid launch/run calls.)
-    """
-    pass
+#     When a RepositoryObserver is active, changed to the state 
+#     (running, completed, ...) of models will be recorded in the
+#     repository.
 
-class ModelObserver(RepositoryObserver):
-    """An observer that detects and records the lifecycles of 
-    model runs in the model repository (the SQL database file).
+#     Since the repository is persistent, re-initialising the same
+#     SQL database file (db_path) will append new models. To create
+#     a completely new database file (e.g. when you rerun a grid
+#     because sonething was wrong with the models and you don't
+#     want to keep info about the old models), simply remove the 
+#     database file:
+#     ```
+#     if DB_PATH.exists():
+#         DB_PATH.unlink()
+#     ```
+#     if DB_PATH is a pathlib.Path object, or
+#     ```
+#     if os.path.exists(DB_PATH):
+#         os.unlink(DB_PATH)
+#     ```
+#     if DB_PATH is a regular string. 
+#     DB_PATH holds the location of the SQL database file passed
+#     to ModelRepo(db_path=DB_PATH).
 
-    This class is a wrapper for the internally used
-    RepositoryObserver class.
+#     Usage:
+#     ```
+#     repo = ModelRepository(db_path=DB_PATH)
+#     ```
+#     (Call before model/grid launch/run calls.)
+#     """
+#     pass
+
+# class LiveModelTracker(LiveProcessRegistry):
+#     """Live tracker for currently running models.
+
+#     This object tracks live process handles for model objects 
+#     currently in the RAM and loses its function if the 
+#     Python session is closed.
+
+#     It should be run alongside any model or grid launch/run 
+#     functions.
+
+#     This class is a wrapper for the internally used
+#     LiveProcessRegistry class.
+
+#     Usage:
+#     ```
+#     live_tracker = LiveModelTracker()
+#     ```
+#     (Call before model/grid launch/run calls.)
+#     """
+#     pass
+
+# class ModelObserver(RepositoryObserver):
+#     """An observer that detects and records the lifecycles of 
+#     model runs in the model repository (the SQL database file).
+
+#     This class is a wrapper for the internally used
+#     RepositoryObserver class.
 
 
-    Usage:
-    ```
-    observer = ModelObserver(repo=repo)
-    ```
-    with repo a ModelRepository object.
-    (Call before model/grid launch/run calls.)
-    """
-    pass
+#     Usage:
+#     ```
+#     observer = ModelObserver(repo=repo)
+#     ```
+#     with repo a ModelRepository object.
+#     (Call before model/grid launch/run calls.)
+#     """
+#     pass

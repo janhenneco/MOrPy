@@ -28,8 +28,8 @@ from .config import MesaConfig
 from .model import Model
 from .options import DefaultsOptions
 from .run import launch_model, run_model, wait_for_model
-from .run_types import RunHandle, RunObserver, RunResult
-from .repository import LiveProcessRegistry
+from .run_types import RunHandle, RunResult
+from .repository import Tracker
 
 QueuePolicy = Literal["fifo"] # First In, First Out
 GridBackend = Literal["local", "mpi"]
@@ -150,8 +150,7 @@ def run_models_local(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> GridRunResult:
     """Run many models locally with limit on parallel runs.
 
@@ -180,9 +179,8 @@ def run_models_local(
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
-        observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_tracker: LiveProcessRegistry object that serves as an 
-            in-memory registry for currently running models.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         GridRunResult
     """
@@ -195,6 +193,8 @@ def run_models_local(
     pending = deque(items)
     running: list[tuple[GridRunItem, RunHandle, subprocess.Popen, float]] = []
     results: list[RunResult] = []
+
+    observer = tracker.observer if tracker is not None else None
 
     while pending or running:
         while pending and len(running) < max_workers:
@@ -209,8 +209,7 @@ def run_models_local(
                     allow_unknown_options=allow_unknown_options,
                     command_name=command_name,
                     log_file_name=log_file_name,
-                    observer=observer,
-                    live_tracker=live_tracker
+                    tracker=tracker
                 )
                 running.append((item, handle, process, time.monotonic()))
             except Exception as exc:
@@ -251,8 +250,7 @@ def run_models_local(
                         process=process,
                         timeout=0.0,
                         capture_output=capture_output,
-                        observer=observer,
-                        live_tracker=live_tracker
+                        tracker=tracker
                     )
                 except Exception as exc:
                     result = _exception_result(
@@ -281,8 +279,7 @@ def run_models_local(
                     process=process,
                     timeout=None,
                     capture_output=capture_output,
-                    observer=observer,
-                    live_tracker=live_tracker
+                    tracker=tracker
                 )
             except Exception as exc:
                 result = _exception_result(
@@ -322,8 +319,7 @@ def run_models_mpi(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None, 
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> GridRunResult:
     """Run many models distributed across MPI ranks.
 
@@ -352,9 +348,8 @@ def run_models_mpi(
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
-        observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_tracker: LiveProcessRegistry object that serves as an 
-            in-memory registry for currently running models.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         GridRunResult
     """
@@ -376,6 +371,8 @@ def run_models_mpi(
     local_items = items[rank::size]
     local_results: list[RunResult] = []
 
+    observer = tracker.observer if tracker is not None else None
+
     for item in local_items:
         try:
             result = run_model(
@@ -389,8 +386,7 @@ def run_models_mpi(
                 log_file_name=log_file_name,
                 capture_output=capture_output,
                 timeout=timeout,
-                observer=observer,
-                live_tracker=live_tracker
+                tracker=tracker
             )
         except Exception as exc:
             result = _exception_result(
@@ -444,8 +440,7 @@ def run_grid(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> GridRunResult:
     """Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).
      This fuction dispatches either the run_models_local or run_models_mpi functions.
@@ -474,9 +469,8 @@ def run_grid(
             If False, wait without collecting output (stdout/stderr in result are empty strings).
         timeout: Maximum time in seconds to wait before aborting.
             If exceeded, the process is killed and RunTimeoutError is raised.
-        observer: RunObserver object that observes StateTransitions for status and repository admin.
-        live_tracker: LiveProcessRegistry object that serves as an 
-            in-memory registry for currently running models.
+        tracker: Optional Tracker object for in-memory information through
+            tracker.live_tracker and StateTransitions via the tracker.observer
     Returns:
         GridRunResult
 
@@ -496,8 +490,7 @@ def run_grid(
             log_file_name=log_file_name,
             capture_output=capture_output,
             timeout=timeout,
-            observer=observer,
-            live_tracker=live_tracker
+            tracker=tracker
         )
 
     if backend == "mpi":
@@ -512,8 +505,7 @@ def run_grid(
             log_file_name=log_file_name,
             capture_output=capture_output,
             timeout=timeout,
-            observer=observer,
-            live_tracker=live_tracker
+            tracker=tracker
         )
 
     raise ValueError(f"Unsupported backend: {backend}")
@@ -532,8 +524,7 @@ def launch_grid(
     log_file_name: str = "log.out",
     capture_output: bool = True,
     timeout: float | None = None,
-    observer: RunObserver | None = None,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
 ) -> GridRunHandle:
     """Launch a grid run in the background and return immediately."""
     item_list = list(items)
@@ -553,8 +544,7 @@ def launch_grid(
         log_file_name=log_file_name,
         capture_output=capture_output,
         timeout=timeout,
-        observer=observer,
-        live_tracker=live_tracker,
+        tracker=tracker
     )
 
     return GridRunHandle(
@@ -587,7 +577,7 @@ def wait_for_grid(
 def stop_grid(
     handle: GridRunHandle,
     *,
-    live_tracker: LiveProcessRegistry | None = None,
+    tracker: Tracker | None = None,
     force: bool = True,
 ) -> dict[str, object]:
     """Function to stop a grid that was launched by the launch_grid() function.
@@ -595,6 +585,8 @@ def stop_grid(
         and kill the MESA processes registered in the live tracker. 
     """
     cancelled_future = handle.future.cancel()
+
+    live_tracker = tracker.live_tracker if tracker is not None else None
 
     # Prevent new tasks from starting in this executor.
     handle._executor.shutdown(wait=False, cancel_futures=True)
