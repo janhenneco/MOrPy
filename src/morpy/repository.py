@@ -20,6 +20,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol
+import threading
 
 from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
@@ -52,6 +53,13 @@ def _load_json_list(text: str | None) -> list[str]:
         return [str(v) for v in loaded]
     return []
 
+
+def _ensure_utc(value: datetime | None) -> datetime | None:
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
 
 class Base(DeclarativeBase):
     """Base class that is required for SQL database interaction."""
@@ -111,6 +119,15 @@ class StateTransitionRow(Base):
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_json: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+class GridControlRow(Base):
+    """Single-row control table for project-scoped grid stop requests."""
+    __tablename__ = "grid_control"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    stop_requested: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    requested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+
 
 class RunRepository(Protocol):
     def upsert_model(self, model) -> None: ...
@@ -123,6 +140,10 @@ class RunRepository(Protocol):
     def list_model_rows(self) -> list[ModelRow]: ...
     def get_latest_run(self, model_id: str) -> RunResult | None: ...
     def get_latest_transition(self, model_id: str) -> StateTransition | None: ...
+    def ensure_grid_control_row(self) -> None: ...
+    def request_grid_stop(self, *, reason: str | None = None) -> None: ...
+    def clear_grid_stop_request(self) -> None: ...
+    def is_grid_stop_requested(self) -> bool: ...
 
 
 class SQLiteRunRepository:
@@ -166,6 +187,45 @@ class SQLiteRunRepository:
     def add_models_to_repo(self, models) -> None:
         for item in models:
             self.upsert_model(item)
+
+    def ensure_grid_control_row(self) -> None:
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            if row is None:
+                row = GridControlRow(
+                    id=1,
+                    stop_requested=False,
+                    requested_at=None,
+                    reason=None,
+                )
+                session.add(row)
+
+    def request_grid_stop(self, *, reason: str | None = None) -> None:
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            if row is None:
+                row = GridControlRow(id=1)
+                session.add(row)
+            row.stop_requested = True
+            row.requested_at = _utc_now()
+            row.reason = reason
+
+    def clear_grid_stop_request(self) -> None:
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            if row is None:
+                row = GridControlRow(id=1)
+                session.add(row)
+            row.stop_requested = False
+            row.requested_at = None
+            row.reason = None
+
+    def is_grid_stop_requested(self) -> bool:
+        with self.SessionLocal() as session:
+            row = session.get(GridControlRow, 1)
+            if row is None:
+                return False
+            return bool(row.stop_requested)
 
     def record_state_transition(self, transition: StateTransition) -> None:
         with self.SessionLocal.begin() as session:
@@ -328,7 +388,7 @@ class SQLiteRunRepository:
                 model_id=row.model_id,
                 from_state=row.from_state,
                 to_state=row.to_state,
-                at=row.at,
+                at=_ensure_utc(row.at) or _utc_now(),
                 reason=row.reason,
                 run_id=row.run_id,
                 metadata=_load_json_dict(row.metadata_json),
@@ -345,8 +405,8 @@ class SQLiteRunRepository:
             model_path=Path(row.model_path),
             command=_load_json_list(row.command_json),
             cwd=Path(row.cwd),
-            start_time=row.start_time,
-            end_time=row.end_time or row.start_time,
+            start_time=_ensure_utc(row.start_time) or _utc_now(),
+            end_time=_ensure_utc(row.end_time) or _ensure_utc(row.start_time) or _utc_now(),
             stdout=row.stdout or "",
             stderr=row.stderr or "",
             sync_performed=bool(row.sync_performed) if row.sync_performed is not None else False,
@@ -378,31 +438,36 @@ class LiveProcessRegistry:
 
     def __init__(self) -> None:
         self._entries: dict[str, LiveProcessEntry] = {}
+        self._lock = threading.RLock()
 
     def register(self, handle: RunHandle, process: subprocess.Popen) -> None:
-        self._entries[handle.model_id] = LiveProcessEntry(handle=handle, process=process)
+        with self._lock:
+            self._entries[handle.model_id] = LiveProcessEntry(handle=handle, process=process)
 
     def unregister(self, model_id: str) -> None:
-        self._entries.pop(model_id, None)
+        with self._lock:
+            self._entries.pop(model_id, None)
 
     def get(self, model_id: str) -> LiveProcessEntry | None:
-        entry = self._entries.get(model_id)
-        if entry is None:
-            return None
-        if entry.process.poll() is not None:
-            self._entries.pop(model_id, None)
-            return None
-        return entry
+        with self._lock:
+            entry = self._entries.get(model_id)
+            if entry is None:
+                return None
+            if entry.process.poll() is not None:
+                self._entries.pop(model_id, None)
+                return None
+            return entry
 
     def is_running(self, model_id: str) -> bool:
         return self.get(model_id) is not None
 
     def list_running_model_ids(self) -> list[str]:
-        model_ids: list[str] = []
-        for model_id in list(self._entries.keys()):
-            if self.get(model_id) is not None:
-                model_ids.append(model_id)
-        return model_ids
+        with self._lock:
+            model_ids: list[str] = []
+            for model_id in list(self._entries.keys()):
+                if self.get(model_id) is not None:
+                    model_ids.append(model_id)
+            return model_ids
 
     def terminate(self, model_id: str, *, force: bool = False, grace_seconds: float = 3.0) -> bool:
         entry = self.get(model_id)

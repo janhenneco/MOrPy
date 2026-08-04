@@ -1,1 +1,2 @@
 tests/data_for_tests/** linguist-vendored
+docs/**/*.ipynb linguist-generated=true

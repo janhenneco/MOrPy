@@ -14,6 +14,7 @@ import os
 import subprocess
 import time
 import uuid
+import signal
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Mapping
@@ -138,6 +139,56 @@ def _emit_transition(
         observer.on_state_transition(transition)
     return transition
 
+
+def _terminate_process_posix(process: subprocess.Popen, *, force: bool) -> None:
+    """Terminate or kill a process group on POSIX."""
+    try:
+        pgid = os.getpgid(process.pid)
+    except ProcessLookupError:
+        return
+    except Exception:
+        # Fallback to direct signaling if process-group lookup fails.
+        if force:
+            process.kill()
+        else:
+            process.terminate()
+        return
+
+    sig = signal.SIGKILL if force else signal.SIGTERM
+    try:
+        os.killpg(pgid, sig)
+    except ProcessLookupError:
+        return
+    except Exception:
+        if force:
+            process.kill()
+        else:
+            process.terminate()
+
+def terminate_run_process(
+    process: subprocess.Popen,
+    *,
+    force: bool = False,
+    grace_seconds: float = 3.0
+) -> bool:
+    """Terminate a launched run process and descendants when possible."""
+    if process.poll() is not None:
+        return True
+
+    _terminate_process_posix(process, force=force)
+
+    try:
+        process.wait(timeout=grace_seconds)
+        return True
+    except subprocess.TimeoutExpired:
+        pass
+
+    # Escalate to force kill.
+    _terminate_process_posix(process, force=True)
+
+    process.wait()
+    return True
+
 def launch_model(
     model: Model,
     *,
@@ -213,14 +264,22 @@ def launch_model(
     log_file = log_path.open("w", encoding="utf-8", buffering=1)
 
     try:
-        process = subprocess.Popen(
-            [str(script_path)],
-            cwd=model_dir,
-            env=merged_env,
-            stdout=log_file,
-            stderr=subprocess.STDOUT,
-            text=True,
-        )
+        popen_kwargs = {
+            "args": [str(script_path)],
+            "cwd": model_dir,
+            "env": merged_env,
+            "stdout": log_file,
+            "stderr": subprocess.STDOUT,
+            "text": True,
+        }
+
+        # Ensure each run has its own process group/session for reliable stop.
+        if os.name == "posix":
+            popen_kwargs["start_new_session"] = True
+        elif os.name == "nt":
+            popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+
+        process = subprocess.Popen(**popen_kwargs)
     except OSError as exc:
         _emit_transition(
             model,
@@ -264,6 +323,8 @@ def wait_for_model(
     timeout: float | None = None,
     capture_output: bool = True,
     tracker: Tracker | None = None,
+    cancel_requested: bool = False,
+    cancel_reason: str | None = None
 ) -> RunResult:
     """Wait for a launched model process to finish and return its final run result.
 
@@ -360,9 +421,21 @@ def wait_for_model(
     end_time = datetime.now(timezone.utc)
     duration = time.perf_counter() - start_perf
 
-    if return_code == 0:
+    if cancel_requested:
+        terminal_state = "cancelled"
+        _emit_transition(
+            model,
+            ModelState.CANCELLED,
+            observer=observer,
+            reason=cancel_reason or "Cancelled by request",
+            run_id=handle.run_id,
+        )
+    elif return_code == 0:
         terminal_state = "completed"
-        _emit_transition(model, ModelState.COMPLETED, observer=observer, run_id=handle.run_id)
+        _emit_transition(model, 
+                         ModelState.COMPLETED, 
+                         observer=observer, 
+                         run_id=handle.run_id)
     else:
         terminal_state = "failed"
         _emit_transition(
@@ -381,7 +454,7 @@ def wait_for_model(
     stderr = ""
 
     result = RunResult(
-        success=(return_code == 0),
+        success=(terminal_state == "completed"),
         terminal_state=terminal_state,
         return_code=return_code,
         duration_seconds=duration,
