@@ -86,6 +86,7 @@ class RunHandle:
     pid: int
     log_file_name: str
     sync_performed: bool
+    log_start_offset: int = 0
 
 @dataclass
 class StateTransition:

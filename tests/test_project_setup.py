@@ -12,7 +12,9 @@ def make_fake_mesa_dir(tmp_path, version_raw: str = "r24.08.1") -> Path:
 
     for mode in ("star", "binary"):
         work = mesa_dir / mode / "work"
+        defaults = mesa_dir / mode / "defaults"
         (work / "src").mkdir(parents=True)
+        defaults.mkdir(parents=True)
 
         # Distinguish template src by mode
         if mode == "binary":
@@ -23,10 +25,10 @@ def make_fake_mesa_dir(tmp_path, version_raw: str = "r24.08.1") -> Path:
         for name in ("make", "clean", "mk", "rn", "re"):
             (work / name).write_text(f"{name}\n", encoding="utf-8")
 
-        (work / "history_columns.list").write_text("star history\n", encoding="utf-8")
-        (work / "profile_columns.list").write_text("star profile\n", encoding="utf-8")
+        (defaults / "history_columns.list").write_text("star history\n", encoding="utf-8")
+        (defaults / "profile_columns.list").write_text("star profile\n", encoding="utf-8")
         if mode == "binary":
-            (work / "binary_history_columns.list").write_text("binary history\n", encoding="utf-8")
+            (defaults / "binary_history_columns.list").write_text("binary history\n", encoding="utf-8")
 
     return mesa_dir
 

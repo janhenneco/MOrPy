@@ -149,7 +149,7 @@ def _resolve_model_status(
         if len(last_error) > 160:
             last_error = last_error[:157] + "..."
 
-    if state in {"running", "queued", "preparing"}:
+    if state in {"running", "queued", "preparing", "restart"}:
         return_code = None
 
     return ModelStatus(
@@ -167,6 +167,41 @@ def _resolve_model_status(
         last_error=last_error,
     )
 
+def _build_resume_summary(rows: list[ModelStatus]) -> dict[str, int]:
+    counts: dict[str, int] = {
+        "total": 0,
+        "completed": 0,
+        "running": 0,
+        "preparing": 0,
+        "queued": 0,
+        "restart": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "draft": 0,
+        "paused": 0,
+        "unknown": 0,
+        "resume_candidates_strict": 0,
+        "resume_candidates_with_retries": 0,
+    }
+
+    strict_states = {"draft", "queued", "preparing", "running", "restart", "paused", "unknown"}
+    retry_extra_states = {"failed", "cancelled"}
+
+    for row in rows:
+        state = (row.state or "unknown").strip().lower()
+        counts["total"] += 1
+        if state in counts:
+            counts[state] += 1
+        else:
+            counts["unknown"] += 1
+
+        if state in strict_states:
+            counts["resume_candidates_strict"] += 1
+        if state in strict_states or state in retry_extra_states:
+            counts["resume_candidates_with_retries"] += 1
+
+    return counts
+
 def grid_status(tracker: Tracker) -> list[ModelStatus]:
     """Return a list of ModelStatus objects."""
     repo = tracker.repo
@@ -180,6 +215,7 @@ def print_grid_status(
     refresh_seconds: float | None = None,
     notebook: bool = False,
     clear_screen: bool = True,
+    show_resume_summary: bool = True
 ) -> None:
     """Print the status of all grid models once or as a refreshing view.
 
@@ -195,11 +231,13 @@ def print_grid_status(
         raise ValueError("refresh_seconds must be > 0")
 
     def _state_order(state: str) -> int:
-        if state == "running":
-            return 0
-        if state in {"completed", "failed", "cancelled"}:
+        if state == "restart":
             return 1
-        return 2  # queued, preparing, unknown
+        if state in {"queued", "preparing"}:
+            return 2
+        if state in {"completed", "failed", "cancelled"}:
+            return 3
+        return 4
 
     def _clear_output() -> None:
         if notebook:
@@ -221,6 +259,20 @@ def print_grid_status(
             return
 
         rows.sort(key=lambda r: (_state_order(r.state), r.model_name.lower(), r.model_id))
+
+        if show_resume_summary:
+            summary = _build_resume_summary(rows)
+            print(
+                "Summary: "
+                f"total={summary['total']}  "
+                f"completed={summary['completed']}  "
+                f"strict_resume={summary['resume_candidates_strict']}  "
+                f"resume_with_retries={summary['resume_candidates_with_retries']}  "
+                f"failed={summary['failed']}  "
+                f"cancelled={summary['cancelled']}",
+                flush=True,
+            )
+            print("", flush=True)
 
         headers = ("MODEL", "STATE", "PID", "RC")
         model_w = max(len(headers[0]), *(len(r.model_name) for r in rows))

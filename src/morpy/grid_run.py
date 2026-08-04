@@ -28,14 +28,17 @@ from pathlib import Path
 from typing import Iterable, Literal, Mapping
 
 from .config import MesaConfig
-from .model import Model
+from .model import Model, ModelState
 from .options import DefaultsOptions
-from .run import launch_model, run_model, wait_for_model, terminate_run_process
+from .run import launch_model, wait_for_model, terminate_run_process
 from .run_types import RunHandle, RunResult, StateTransition
 from .repository import Tracker
 
 QueuePolicy = Literal["fifo"] # First In, First Out
 GridBackend = Literal["local", "mpi"]
+ResumeMatchPolicy = Literal["id_only", "id_or_path"]
+ResumeFailedPolicy = Literal["rerun", "skip"]
+ResumeCancelledPolicy = Literal["rerun", "skip"]
 
 
 @dataclass
@@ -85,6 +88,132 @@ class GridRunHandle:
     _running_lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
     _tracker: Tracker | None = field(default=None, repr=False)
 
+@dataclass
+class ResumePolicy:
+    enabled: bool = True
+    match_policy: ResumeMatchPolicy = "id_or_path"
+    skip_completed: bool = True
+    failed_policy: ResumeFailedPolicy = "rerun"
+    cancelled_policy: ResumeCancelledPolicy = "rerun"
+    hydrate_timestamps: bool = True
+
+@dataclass
+class ReconcileSummary:
+    total_items: int
+    runnable_items: int
+    skipped_items: int
+    reassigned_model_ids: int
+    state_counts: dict[str, int] = field(default_factory=dict)
+    skipped_by_reason: dict[str, int] = field(default_factory=dict)
+
+def _normalize_path(value: Path | str | None) -> str | None:
+    if value is None:
+        return None
+    try:
+        return str(Path(value).expanduser().resolve())
+    except Exception:
+        return str(Path(value).expanduser())
+
+def _coerce_model_state(state_text: str | None) -> ModelState | None:
+    if not state_text:
+        return None
+    text = state_text.strip().lower()
+    try:
+        return ModelState(text)
+    except ValueError:
+        return None
+
+def _setdefault_inc(counter: dict[str, int], key: str) -> None:
+    counter[key] = counter.get(key, 0) + 1
+
+def _schedule_decision_for_state(state_text: str, policy: ResumePolicy) -> tuple[bool, str | None]:
+    state_norm = state_text.strip().lower()
+
+    if state_norm == "completed":
+        if policy.skip_completed:
+            return False, "completed"
+        return True, None
+
+    if state_norm == "failed":
+        if policy.failed_policy == "skip":
+            return False, "failed"
+        return True, None
+
+    if state_norm == "cancelled":
+        if policy.cancelled_policy == "skip":
+            return False, "cancelled"
+        return True, None
+
+    # draft, queued, preparing, running, restart, paused, unknown -> runnable
+    return True, None
+
+def _reconcile_items_with_repository(
+    items: list[GridRunItem],
+    tracker: Tracker,
+    policy: ResumePolicy,
+) -> tuple[list[GridRunItem], ReconcileSummary]:
+    rows = tracker.repo.list_model_rows()
+
+    rows_by_id = {row.model_id: row for row in rows}
+    rows_by_path: dict[str, object] = {}
+    for row in rows:
+        row_path = _normalize_path(getattr(row, "model_path", None))
+        if row_path is not None:
+            rows_by_path[row_path] = row
+
+    runnable: list[GridRunItem] = []
+    skipped: list[tuple[GridRunItem, str]] = []
+    state_counts: dict[str, int] = {}
+    skipped_by_reason: dict[str, int] = {}
+    reassigned = 0
+
+    for item in items:
+        model = item.model
+        matched_row = rows_by_id.get(model.model_id)
+
+        if matched_row is None and policy.match_policy == "id_or_path":
+            model_path_norm = _normalize_path(model.model_path)
+            if model_path_norm is not None:
+                matched_row = rows_by_path.get(model_path_norm)
+
+                # Rebind ephemeral model_id to persisted DB identity
+                if matched_row is not None and model.model_id != matched_row.model_id:
+                    model.model_id = matched_row.model_id
+                    reassigned += 1
+
+        if matched_row is not None:
+            db_state = getattr(matched_row, "state", None)
+            parsed_state = _coerce_model_state(db_state)
+            if parsed_state is not None:
+                model.state = parsed_state
+
+            if policy.hydrate_timestamps:
+                # Only hydrate fields that actually exist on both objects.
+                for attr_name in ("started_at", "updated_at", "finished_at", "snapshot_taken_at"):
+                    if hasattr(matched_row, attr_name):
+                        attr_value = getattr(matched_row, attr_name)
+                        if attr_value is not None and hasattr(model, attr_name):
+                            setattr(model, attr_name, attr_value)
+
+        effective_state = model.state.value if getattr(model, "state", None) is not None else "unknown"
+        _setdefault_inc(state_counts, effective_state)
+
+        run_it, skip_reason = _schedule_decision_for_state(effective_state, policy)
+        if run_it:
+            runnable.append(item)
+        else:
+            skipped.append((item, skip_reason or "policy_skip"))
+            _setdefault_inc(skipped_by_reason, skip_reason or "policy_skip")
+
+    summary = ReconcileSummary(
+        total_items=len(items),
+        runnable_items=len(runnable),
+        skipped_items=len(skipped),
+        reassigned_model_ids=reassigned,
+        state_counts=state_counts,
+        skipped_by_reason=skipped_by_reason,
+    )
+    return runnable, summary
 
 def _exception_result(
     item: GridRunItem,
@@ -94,7 +223,7 @@ def _exception_result(
     command_name: str,
     sync_before_run: bool,
     return_code: int = 1
-) -> RunResult:
+    ) -> RunResult:
     """Private function to gracefully deal with runs part of a grid run that fail."""
     now = datetime.now(timezone.utc)
     if item.model.model_path is not None:
@@ -129,7 +258,7 @@ def _summarize(
     total: int,
     backend: GridBackend,
     duration_seconds: float,
-) -> GridRunResult:
+    ) -> GridRunResult:
     completed = sum(1 for r in results if r.terminal_state == "completed")
     failed = sum(1 for r in results if r.terminal_state == "failed")
     cancelled = sum(1 for r in results if r.terminal_state == "cancelled")
@@ -151,7 +280,7 @@ def _cancelled_result(
     sync_before_run: bool,
     reason: str,
     return_code: int = 130,
-) -> RunResult:
+    ) -> RunResult:
     now = datetime.now(timezone.utc)
     if item.model.model_path is not None:
         model_path = Path(item.model.model_path)
@@ -177,6 +306,212 @@ def _cancelled_result(
             "cancel_reason": reason,
         },
     )
+
+def _is_timeout_reason(reason: str | None) -> bool:
+    if reason is None:
+        return False
+    text = reason.strip().lower()
+    return "timeout" in text
+
+_RESTART_REQUEST_TAG = "stop_grid restart request"
+def _should_mark_restart(reason: str | None) -> bool:
+    if _is_timeout_reason(reason):
+        return True
+    if reason is None:
+        return False
+    return _RESTART_REQUEST_TAG in reason.strip().lower()
+
+
+def _mark_model_restart(
+    item: GridRunItem,
+    *,
+    observer,
+    reason: str,
+    run_id: str | None,
+    ) -> None:
+    previous_state = item.model.state.value
+    if item.model.state == ModelState.RESTART:
+        return
+    now = datetime.now(timezone.utc)
+    item.model.state = ModelState.RESTART
+    item.model.updated_at = now
+    transition = StateTransition(
+        model_id=item.model.model_id,
+        from_state=previous_state,
+        to_state=ModelState.RESTART.value,
+        at=now,
+        reason=reason,
+        run_id=run_id,
+    )
+    if observer is not None:
+        observer.on_state_transition(transition)
+
+
+def _cancel_pending_items(
+    pending_items: deque[GridRunItem],
+    *,
+    results: list[RunResult],
+    backend: GridBackend,
+    command_name: str,
+    sync_before_run: bool,
+    stop_reason: str,
+    observer,
+    restart_triggered: bool,
+) -> None:
+    while pending_items:
+        pending_item = pending_items.popleft()
+        cancel_result = _cancelled_result(
+            pending_item,
+            backend=backend,
+            command_name=command_name,
+            sync_before_run=sync_before_run,
+            reason=f"Cancelled before launch: {stop_reason}",
+        )
+        results.append(cancel_result)
+        if observer is not None:
+            observer.on_process_finished(cancel_result)
+        if restart_triggered:
+            _mark_model_restart(
+                pending_item,
+                observer=observer,
+                reason=f"Marked restart after stop request ({stop_reason})",
+                run_id=cancel_result.metadata.get("run_id"),
+            )
+
+
+def _cancel_running_item(
+    *,
+    item: GridRunItem,
+    handle: RunHandle,
+    process: subprocess.Popen,
+    backend: GridBackend,
+    command_name: str,
+    sync_before_run: bool,
+    capture_output: bool,
+    tracker: Tracker | None,
+    observer,
+    stop_reason: str,
+    restart_triggered: bool,
+) -> RunResult:
+    try:
+        terminate_run_process(process, force=True)
+        result = wait_for_model(
+            model=item.model,
+            handle=handle,
+            process=process,
+            timeout=None,
+            capture_output=capture_output,
+            tracker=tracker,
+            cancel_requested=True,
+            cancel_reason=stop_reason,
+        )
+    except Exception as exc:
+        result = _cancelled_result(
+            item,
+            backend=backend,
+            command_name=command_name,
+            sync_before_run=sync_before_run,
+            reason=f"{stop_reason}; finalise error: {exc}",
+        )
+        if observer is not None:
+            observer.on_process_finished(result)
+
+    if restart_triggered:
+        _mark_model_restart(
+            item,
+            observer=observer,
+            reason=f"Marked restart after stop request ({stop_reason})",
+            run_id=result.metadata.get("run_id"),
+        )
+
+    return result
+
+
+def _collect_run_result(
+    *,
+    item: GridRunItem,
+    handle: RunHandle,
+    process: subprocess.Popen,
+    timeout: float | None,
+    capture_output: bool,
+    tracker: Tracker | None,
+    backend: GridBackend,
+    command_name: str,
+    sync_before_run: bool,
+    observer,
+    return_code_on_error: int = 1,
+) -> RunResult:
+    try:
+        return wait_for_model(
+            model=item.model,
+            handle=handle,
+            process=process,
+            timeout=timeout,
+            capture_output=capture_output,
+            tracker=tracker,
+        )
+    except Exception as exc:
+        result = _exception_result(
+            item,
+            exc,
+            backend=backend,
+            command_name=command_name,
+            sync_before_run=sync_before_run,
+            return_code=return_code_on_error,
+        )
+        if observer is not None:
+            observer.on_process_finished(result)
+        return result
+
+def _prepare_tracker_for_grid(
+    tracker: Tracker | None,
+    timeout: float | None,
+) -> None:
+    if tracker is None:
+        return
+    tracker.repo.clear_grid_stop_request()
+    if timeout is None:
+        tracker.repo.clear_grid_timeout()
+    else:
+        tracker.repo.set_grid_timeout(timeout)
+
+
+def _cleanup_tracker_after_grid(tracker: Tracker | None) -> None:
+    if tracker is None:
+        return
+    tracker.repo.clear_grid_stop_request()
+    tracker.repo.clear_grid_timeout()
+
+
+def _poll_repo_stop_request(
+    *,
+    tracker: Tracker | None,
+    timeout: float | None,
+    last_db_check: float,
+    db_check_interval_seconds: float,
+    cached_stop_requested: bool,
+    cached_stop_reason: str | None,
+) -> tuple[bool, str | None, float]:
+    if tracker is None:
+        return cached_stop_requested, cached_stop_reason, last_db_check
+
+    now_check = time.monotonic()
+    if (now_check - last_db_check) < db_check_interval_seconds:
+        return cached_stop_requested, cached_stop_reason, last_db_check
+
+    deadline = tracker.repo.get_grid_timeout_deadline()
+    if deadline is not None and datetime.now(timezone.utc) >= deadline:
+        if not tracker.repo.is_grid_stop_requested():
+            if timeout is not None:
+                tracker.repo.request_grid_stop(reason=f"Grid timeout after {timeout} seconds")
+            else:
+                tracker.repo.request_grid_stop(reason="Grid timeout")
+
+    stop_requested = tracker.repo.is_grid_stop_requested()
+    stop_reason = tracker.repo.get_grid_stop_reason() if stop_requested else None
+    return stop_requested, stop_reason, now_check
+
+
 
 def _pid_exists(pid: int) -> bool:
     if pid <= 0:
@@ -285,6 +620,16 @@ def _mark_recovered_cancelled(
         metadata=metadata,
     )
     tracker.observer.on_process_finished(result)
+    if _should_mark_restart(reason):
+        restart_transition = StateTransition(
+            model_id=model_id,
+            from_state="cancelled",
+            to_state=ModelState.RESTART.value,
+            at=now,
+            reason=f"Marked restart after stop handling ({reason})",
+            run_id=run_id,
+        )
+        tracker.observer.on_state_transition(restart_transition)
     tracker.live_tracker.unregister(model_id)
 
 def _stop_from_repository(
@@ -303,6 +648,7 @@ def _stop_from_repository(
     missing_pid_model_ids: list[str] = []
     failed_model_ids: list[str] = []
     errors: list[str] = []
+    recovery_reason = tracker.repo.get_grid_stop_reason() or "Cancelled by stop_grid recovery path"
 
     for row in tracker.repo.list_model_rows():
         if row.model_id in skip:
@@ -337,7 +683,7 @@ def _stop_from_repository(
                 model_id=row.model_id,
                 from_state=state or "running",
                 latest_run=latest_run,
-                reason="Cancelled by stop_grid recovery path",
+                reason=recovery_reason,
             )
             terminated_model_ids.append(row.model_id)
         except Exception as exc:
@@ -352,7 +698,6 @@ def _stop_from_repository(
         "failed_model_ids": failed_model_ids,
         "errors": errors,
     }
-
 
 def run_models_local(
     items: list[GridRunItem],
@@ -371,7 +716,7 @@ def run_models_local(
     stop_event: threading.Event | None = None,
     running_processes: dict[str, tuple[GridRunItem, RunHandle, subprocess.Popen]] | None = None,
     running_lock: threading.Lock | None = None
-) -> GridRunResult:
+    ) -> GridRunResult:
     """Run many models locally with limit on parallel runs.
 
     Uses launch_model + wait_for_model so model lifecycle and
@@ -404,6 +749,7 @@ def run_models_local(
     Returns:
         GridRunResult
     """
+
     if max_workers < 1:
         raise ValueError("max_workers must be >= 1")
     if queue_policy != "fifo":
@@ -415,135 +761,53 @@ def run_models_local(
     results: list[RunResult] = []
 
     observer = tracker.observer if tracker is not None else None
-
     db_stop_requested = False
+    db_stop_reason: str | None = None
     last_db_check = 0.0
     db_check_interval_seconds = 0.2
 
-    while pending or running:
-        stop_by_event = stop_event is not None and stop_event.is_set()
+    _prepare_tracker_for_grid(tracker, timeout)
 
-        stop_by_db = False
-        if tracker is not None:
-            now_check = time.monotonic()
-            if (now_check - last_db_check) >= db_check_interval_seconds:
-                db_stop_requested = tracker.repo.is_grid_stop_requested()
-                last_db_check = now_check
+    try:
+        while pending or running:
+            stop_by_event = stop_event is not None and stop_event.is_set()
+            db_stop_requested, db_stop_reason, last_db_check = _poll_repo_stop_request(
+                tracker=tracker,
+                timeout=timeout,
+                last_db_check=last_db_check,
+                db_check_interval_seconds=db_check_interval_seconds,
+                cached_stop_requested=db_stop_requested,
+                cached_stop_reason=db_stop_reason,
+            )
             stop_by_db = db_stop_requested
 
-        if stop_by_db and stop_event is not None:
-            stop_event.set()
+            if stop_by_db and stop_event is not None:
+                stop_event.set()
 
-        stop_requested = stop_by_event or stop_by_db
+            stop_requested = stop_by_event or stop_by_db
+            stop_reason = db_stop_reason or "Cancelled by grid stop request"
+            restart_triggered = _should_mark_restart(stop_reason)
 
-        while pending and len(running) < max_workers:
-            if stop_requested:
-                break
-            item = pending.popleft()
-            try:
-                handle, process = launch_model(
-                    model=item.model,
-                    env=item.env,
-                    sync_before_run=sync_before_run,
-                    default_options=default_options,
-                    config=config,
-                    allow_unknown_options=allow_unknown_options,
-                    command_name=command_name,
-                    log_file_name=log_file_name,
-                    tracker=tracker
-                )
-                running.append((item, handle, process, time.monotonic()))
-                if running_processes is not None and running_lock is not None:
-                    with running_lock:
-                        running_processes[handle.run_id] = (item, handle, process)
-            except Exception as exc:
-                result = _exception_result(
-                    item,
-                    exc,
-                    backend="local",
-                    command_name=command_name,
-                    sync_before_run=sync_before_run,
-                )
-                results.append(result)
-                if observer is not None:
-                    observer.on_process_finished(result)
-
-        if stop_requested:
-            # Mark pending models as canceleld before launch.
-            while pending:
-                pending_item = pending.popleft()
-                cancel_result = _cancelled_result(
-                    pending_item,
-                    backend="local",
-                    command_name=command_name,
-                    sync_before_run=sync_before_run,
-                    reason="Cancelled before launch by grid stop request")
-                results.append(cancel_result)
-                if observer is not None:
-                    observer.on_process_finished(cancel_result)
-
-            # Terminate runnign models and finalise as cancelled.
-            for idx in range(len(running) - 1, -1, -1):
-                item, handle, process, _ = running[idx]
+            while pending and len(running) < max_workers:
+                if stop_requested:
+                    break
+                item = pending.popleft()
                 try:
-                    terminate_run_process(process, force=True)
-                    result = wait_for_model(
+                    handle, process = launch_model(
                         model=item.model,
-                        handle=handle,
-                        process=process,
-                        timeout=None,
-                        capture_output=capture_output,
-                        tracker=tracker,
-                        cancel_requested=True,
-                        cancel_reason="Cancelled by grid stop request",
-                    )
-                except Exception as exc:
-                    result = _cancelled_result(
-                        item,
-                        backend="local",
-                        command_name=command_name,
+                        env=item.env,
                         sync_before_run=sync_before_run,
-                        reason=f"Cancelled by grid stop request; finalise error: {exc}",
-                    )
-                    if observer is not None:
-                        observer.on_process_finished(result)
-
-                results.append(result)
-                running.pop(idx)
-                if running_processes is not None and running_lock is not None:
-                    with running_lock:
-                        running_processes.pop(handle.run_id, None)
-
-            continue
-
-        if not running:
-            continue
-
-        progressed = False
-        now = time.monotonic()
-
-        # Iterate backwards so we can pop safely by index.
-        for idx in range(len(running) - 1, -1, -1):
-            item, handle, process, launched_at = running[idx]
-
-            # Hard per-model timeout from launch time in local grid mode.
-            timed_out = (
-                timeout is not None
-                and process.poll() is None
-                and (now - launched_at) >= timeout
-            )
-
-            if timed_out:
-                try:
-                    # timeout=0 forces immediate timeout path if still alive.
-                    result = wait_for_model(
-                        model=item.model,
-                        handle=handle,
-                        process=process,
-                        timeout=0.0,
-                        capture_output=capture_output,
+                        default_options=default_options,
+                        config=config,
+                        allow_unknown_options=allow_unknown_options,
+                        command_name=command_name,
+                        log_file_name=log_file_name,
                         tracker=tracker
                     )
+                    running.append((item, handle, process, time.monotonic()))
+                    if running_processes is not None and running_lock is not None:
+                        with running_lock:
+                            running_processes[handle.run_id] = (item, handle, process)
                 except Exception as exc:
                     result = _exception_result(
                         item,
@@ -551,10 +815,101 @@ def run_models_local(
                         backend="local",
                         command_name=command_name,
                         sync_before_run=sync_before_run,
-                        return_code=124,
                     )
+                    results.append(result)
                     if observer is not None:
                         observer.on_process_finished(result)
+
+            if stop_requested:
+                _cancel_pending_items(
+                    pending,
+                    results=results,
+                    backend="local",
+                    command_name=command_name,
+                    sync_before_run=sync_before_run,
+                    stop_reason=stop_reason,
+                    observer=observer,
+                    restart_triggered=restart_triggered,
+                )
+
+                for idx in range(len(running) - 1, -1, -1):
+                    item, handle, process, _ = running[idx]
+                    result = _cancel_running_item(
+                        item=item,
+                        handle=handle,
+                        process=process,
+                        backend="local",
+                        command_name=command_name,
+                        sync_before_run=sync_before_run,
+                        capture_output=capture_output,
+                        tracker=tracker,
+                        observer=observer,
+                        stop_reason=stop_reason,
+                        restart_triggered=restart_triggered,
+                    )
+
+                    results.append(result)
+                    running.pop(idx)
+                    if running_processes is not None and running_lock is not None:
+                        with running_lock:
+                            running_processes.pop(handle.run_id, None)
+
+                continue
+
+            if not running:
+                continue
+
+            progressed = False
+            now = time.monotonic()
+
+            for idx in range(len(running) - 1, -1, -1):
+                item, handle, process, launched_at = running[idx]
+
+                timed_out = (
+                    timeout is not None
+                    and tracker is None
+                    and process.poll() is None
+                    and (now - launched_at) >= timeout
+                )
+
+                if timed_out:
+                    result = _collect_run_result(
+                        item=item,
+                        handle=handle,
+                        process=process,
+                        timeout=0.0,
+                        capture_output=capture_output,
+                        tracker=tracker,
+                        backend="local",
+                        command_name=command_name,
+                        sync_before_run=sync_before_run,
+                        observer=observer,
+                        return_code_on_error=124,
+                    )
+
+                    results.append(result)
+                    running.pop(idx)
+                    if running_processes is not None and running_lock is not None:
+                        with running_lock:
+                            running_processes.pop(handle.run_id, None)
+                    progressed = True
+                    continue
+
+                if process.poll() is None:
+                    continue
+
+                result = _collect_run_result(
+                    item=item,
+                    handle=handle,
+                    process=process,
+                    timeout=None,
+                    capture_output=capture_output,
+                    tracker=tracker,
+                    backend="local",
+                    command_name=command_name,
+                    sync_before_run=sync_before_run,
+                    observer=observer,
+                )
 
                 results.append(result)
                 running.pop(idx)
@@ -562,43 +917,11 @@ def run_models_local(
                     with running_lock:
                         running_processes.pop(handle.run_id, None)
                 progressed = True
-                continue
 
-            if process.poll() is None:
-                continue
-
-            try:
-                result = wait_for_model(
-                    model=item.model,
-                    handle=handle,
-                    process=process,
-                    timeout=None,
-                    capture_output=capture_output,
-                    tracker=tracker
-                )
-            except Exception as exc:
-                result = _exception_result(
-                    item,
-                    exc,
-                    backend="local",
-                    command_name=command_name,
-                    sync_before_run=sync_before_run,
-                )
-                if observer is not None:
-                    observer.on_process_finished(result)
-
-            results.append(result)
-            running.pop(idx)
-            if running_processes is not None and running_lock is not None:
-                with running_lock:
-                    running_processes.pop(handle.run_id, None)
-            progressed = True
-
-        if not progressed:
-            time.sleep(0.1)
-
-    if tracker is not None:
-        tracker.repo.clear_grid_stop_request()
+            if not progressed:
+                time.sleep(0.1)
+    finally:
+        _cleanup_tracker_after_grid(tracker)
 
     return _summarize(
         results=results,
@@ -606,7 +929,6 @@ def run_models_local(
         backend="local",
         duration_seconds=time.perf_counter() - t0,
     )
-
 
 def run_models_mpi(
     items: list[GridRunItem],
@@ -621,7 +943,7 @@ def run_models_mpi(
     capture_output: bool = True,
     timeout: float | None = None,
     tracker: Tracker | None = None,
-) -> GridRunResult:
+    ) -> GridRunResult:
     """Run many models distributed across MPI ranks.
 
     Work distribution is simple round-robin by rank for predictability.
@@ -669,14 +991,49 @@ def run_models_mpi(
     rank = comm.Get_rank()
     size = comm.Get_size()
 
-    local_items = items[rank::size]
-    local_results: list[RunResult] = []
+    if tracker is not None and rank == 0:
+        _prepare_tracker_for_grid(tracker, timeout)
 
+    local_items = deque(items[rank::size])
+    local_results: list[RunResult] = []
     observer = tracker.observer if tracker is not None else None
 
-    for item in local_items:
+    db_stop_requested = False
+    db_stop_reason: str | None = None
+    last_db_check = 0.0
+    db_check_interval_seconds = 0.2
+    stop_requested = False
+
+    while local_items:
+        db_stop_requested, db_stop_reason, last_db_check = _poll_repo_stop_request(
+            tracker=tracker,
+            timeout=timeout,
+            last_db_check=last_db_check,
+            db_check_interval_seconds=db_check_interval_seconds,
+            cached_stop_requested=db_stop_requested,
+            cached_stop_reason=db_stop_reason,
+        )
+
+        if db_stop_requested:
+            stop_requested = True
+            stop_reason = db_stop_reason or "Cancelled by grid stop request"
+            restart_triggered = _should_mark_restart(stop_reason)
+            _cancel_pending_items(
+                local_items,
+                results=local_results,
+                backend="mpi",
+                command_name=command_name,
+                sync_before_run=sync_before_run,
+                stop_reason=stop_reason,
+                observer=observer,
+                restart_triggered=restart_triggered,
+            )
+            break
+
+        item = local_items.popleft()
+
         try:
-            result = run_model(
+            handle, process = launch_model(
                 model=item.model,
                 env=item.env,
                 sync_before_run=sync_before_run,
@@ -685,8 +1042,6 @@ def run_models_mpi(
                 allow_unknown_options=allow_unknown_options,
                 command_name=command_name,
                 log_file_name=log_file_name,
-                capture_output=capture_output,
-                timeout=timeout,
                 tracker=tracker
             )
         except Exception as exc:
@@ -697,14 +1052,98 @@ def run_models_mpi(
                 command_name=command_name,
                 sync_before_run=sync_before_run,
             )
+            local_results.append(result)
             if observer is not None:
                 observer.on_process_finished(result)
-        local_results.append(result)
+            continue
+
+        launched_at = time.monotonic()
+
+        while True:
+            if process.poll() is not None:
+                result = _collect_run_result(
+                    item=item,
+                    handle=handle,
+                    process=process,
+                    timeout=None,
+                    capture_output=capture_output,
+                    tracker=tracker,
+                    backend="mpi",
+                    command_name=command_name,
+                    sync_before_run=sync_before_run,
+                    observer=observer,
+                )
+                local_results.append(result)
+                break
+
+            db_stop_requested, db_stop_reason, last_db_check = _poll_repo_stop_request(
+                tracker=tracker,
+                timeout=timeout,
+                last_db_check=last_db_check,
+                db_check_interval_seconds=db_check_interval_seconds,
+                cached_stop_requested=db_stop_requested,
+                cached_stop_reason=db_stop_reason,
+            )
+
+            if db_stop_requested:
+                stop_requested = True
+                stop_reason = db_stop_reason or "Cancelled by grid stop request"
+                restart_triggered = _should_mark_restart(stop_reason)
+                result = _cancel_running_item(
+                    item=item,
+                    handle=handle,
+                    process=process,
+                    backend="mpi",
+                    command_name=command_name,
+                    sync_before_run=sync_before_run,
+                    capture_output=capture_output,
+                    tracker=tracker,
+                    observer=observer,
+                    stop_reason=stop_reason,
+                    restart_triggered=restart_triggered,
+                )
+
+                local_results.append(result)
+                break
+
+            if tracker is None and timeout is not None and (time.monotonic() - launched_at) >= timeout:
+                result = _collect_run_result(
+                    item=item,
+                    handle=handle,
+                    process=process,
+                    timeout=0.0,
+                    capture_output=capture_output,
+                    tracker=tracker,
+                    backend="mpi",
+                    command_name=command_name,
+                    sync_before_run=sync_before_run,
+                    observer=observer,
+                    return_code_on_error=124,
+                )
+
+                local_results.append(result)
+                break
+
+            time.sleep(0.1)
+
+        if stop_requested:
+            stop_reason = db_stop_reason or "Cancelled by grid stop request"
+            restart_triggered = _should_mark_restart(stop_reason)
+            _cancel_pending_items(
+                local_items,
+                results=local_results,
+                backend="mpi",
+                command_name=command_name,
+                sync_before_run=sync_before_run,
+                stop_reason=stop_reason,
+                observer=observer,
+                restart_triggered=restart_triggered,
+            )
+            break
 
     gathered = comm.gather(local_results, root=0)
 
     if rank != 0:
-        # Non-root returns an empty summary by design.
         return GridRunResult(
             total=0,
             completed=0,
@@ -715,16 +1154,18 @@ def run_models_mpi(
             duration_seconds=time.perf_counter() - t0,
         )
 
-    flat_results: list[RunResult] = []
-    for chunk in gathered:
-        flat_results.extend(chunk)
-
-    return _summarize(
-        results=flat_results,
-        total=len(items),
-        backend="mpi",
-        duration_seconds=time.perf_counter() - t0,
-    )
+    try:
+        flat_results: list[RunResult] = []
+        for chunk in gathered:
+            flat_results.extend(chunk)
+        return _summarize(
+            results=flat_results,
+            total=len(items),
+            backend="mpi",
+            duration_seconds=time.perf_counter() - t0,
+        )
+    finally:
+        _cleanup_tracker_after_grid(tracker)
 
 
 def run_grid(
@@ -742,7 +1183,8 @@ def run_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     tracker: Tracker | None = None,
-) -> GridRunResult:
+    resume_policy: ResumePolicy | None = None,
+    ) -> GridRunResult:
     """Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).
      This function dispatches either the run_models_local or run_models_mpi functions.
      
@@ -778,8 +1220,21 @@ def run_grid(
      """
     item_list = list(items)
 
-    if tracker is not None:
-        tracker.repo.clear_grid_stop_request()
+    if resume_policy is not None and resume_policy.enabled:
+        if tracker is None:
+            raise ValueError("resume_policy requires tracker to be provided.")
+        item_list, _ = _reconcile_items_with_repository(item_list, tracker, resume_policy)
+
+    if len(item_list) == 0:
+        return GridRunResult(
+            total=0,
+            completed=0,
+            failed=0,
+            cancelled=0,
+            results=[],
+            backend=backend,
+            duration_seconds=0.0,
+        )
 
     if backend == "local":
         return run_models_local(
@@ -829,12 +1284,15 @@ def launch_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     tracker: Tracker | None = None,
-) -> GridRunHandle:
+    resume_policy: ResumePolicy | None = None
+    ) -> GridRunHandle:
     """Launch a grid run in the background and return immediately."""
     item_list = list(items)
 
-    if tracker is not None:
-        tracker.repo.clear_grid_stop_request()
+    if resume_policy is not None and resume_policy.enabled:
+        if tracker is None:
+            raise ValueError("resume_policy requires tracker to be provided.")
+        item_list, _ = _reconcile_items_with_repository(item_list, tracker, resume_policy)
 
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="mesa-grid")
     stop_event = threading.Event()
@@ -875,7 +1333,8 @@ def launch_grid(
             log_file_name=log_file_name,
             capture_output=capture_output,
             timeout=timeout,
-            tracker=tracker
+            tracker=tracker,
+            resume_policy=resume_policy
         )
 
     return GridRunHandle(
@@ -896,7 +1355,7 @@ def wait_for_grid(
     *,
     timeout: float | None = None,
     shutdown_executor: bool = True,
-) -> GridRunResult:
+    ) -> GridRunResult:
     """Wait for a launched grid run to complete and return its result."""
     try:
         result = handle.future.result(timeout=timeout)
@@ -916,7 +1375,8 @@ def stop_grid(
     force: bool = True,
     grace_seconds: float = 3.0,
     recover_from_dbfile: bool = True,
-) -> dict[str, object]:
+    restart: bool = False,
+    ) -> dict[str, object]:
     """Stop a launched grid in live mode and/or repository recovery mode.
 
     Behavior:
@@ -935,7 +1395,8 @@ def stop_grid(
 
     stop_request_persisted = False
     if active_tracker is not None:
-        active_tracker.repo.request_grid_stop(reason="stop_grid called")
+        reason = _RESTART_REQUEST_TAG if restart else "stop_grid called"
+        active_tracker.repo.request_grid_stop(reason=reason)
         stop_request_persisted = True
 
     mode_parts: list[str] = []
@@ -989,5 +1450,6 @@ def stop_grid(
         "mode": "+".join(mode_parts) if mode_parts else "none",
         "live": live_summary,
         "recovery": recovery_summary,
-        "stop_request_persisted": stop_request_persisted
+        "stop_request_persisted": stop_request_persisted,
+        "restart": restart
     }

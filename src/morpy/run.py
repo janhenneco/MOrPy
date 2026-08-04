@@ -124,6 +124,11 @@ def _resolve_executable(model_dir: Path, mode: WorkdirMode) -> Path:
     raise ExecutableMissingError(
         f"Neither 'star' nor 'binary' executable found in model directory: {model_dir}")
 
+def _resolve_command_name_for_model(model: Model, command_name: str) -> str:
+    """Use re automatically for models marked as restart when caller asks for rn."""
+    if command_name == "rn" and model.state == ModelState.RESTART:
+        return "re"
+    return command_name
 
 def _emit_transition(
     model: Model,
@@ -233,7 +238,8 @@ def launch_model(
     """
 
     model_dir = _resolve_model_dir(model)
-    script_path = _resolve_run_script(model_dir, command_name)
+    resolved_command_name = _resolve_command_name_for_model(model, command_name)
+    script_path = _resolve_run_script(model_dir, resolved_command_name)
     mode = detect_workdir_mode(model)
     _resolve_executable(model_dir, mode)
 
@@ -261,7 +267,15 @@ def launch_model(
         merged_env.update(env)
 
     log_path = model_dir / log_file_name
-    log_file = log_path.open("w", encoding="utf-8", buffering=1)
+    is_restart_run = resolved_command_name == "re"
+    log_open_mode = "a" if is_restart_run else "w"
+    log_start_offset = log_path.stat().st_size if (is_restart_run and log_path.exists()) else 0
+    log_file = log_path.open(log_open_mode, encoding="utf-8", buffering=1)
+    if is_restart_run and log_start_offset > 0:
+        restart_banner = (f"\n ===== RESTART | run_id={run_id} | utc={datetime.now(timezone.utc).isoformat()} =====\n")
+        log_file.write(restart_banner)
+        log_file.flush()
+
 
     try:
         popen_kwargs = {
@@ -302,7 +316,8 @@ def launch_model(
         start_time=datetime.now(timezone.utc),
         pid=process.pid,
         log_file_name=log_file_name,
-        sync_performed=sync_before_run
+        sync_performed=sync_before_run,
+       log_start_offset=log_start_offset,
     )
 
     _emit_transition(model, ModelState.RUNNING, observer=observer, run_id=run_id)
@@ -448,7 +463,10 @@ def wait_for_model(
 
     log_path = handle.model_path / handle.log_file_name
     if capture_output and log_path.exists():
-        stdout = log_path.read_text(encoding="utf-8", errors="replace")
+        with log_path.open("r", encoding="utf-8", errors="replace") as f:
+            if handle.log_start_offset > 0:
+                f.seek(handle.log_start_offset)
+            stdout = f.read()
     else:
         stdout = ""
     stderr = ""

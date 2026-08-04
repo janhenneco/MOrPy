@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import subprocess
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Protocol
 import threading
@@ -127,7 +127,9 @@ class GridControlRow(Base):
     stop_requested: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     requested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
-
+    timeout_seconds: Mapped[float | None] = mapped_column(Float, nullable=True)
+    timeout_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    timeout_deadline_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 class RunRepository(Protocol):
     def upsert_model(self, model) -> None: ...
@@ -144,6 +146,10 @@ class RunRepository(Protocol):
     def request_grid_stop(self, *, reason: str | None = None) -> None: ...
     def clear_grid_stop_request(self) -> None: ...
     def is_grid_stop_requested(self) -> bool: ...
+    def set_grid_timeout(self, timeout_seconds: float) -> None: ...
+    def clear_grid_timeout(self) -> None: ...
+    def get_grid_timeout_deadline(self) -> datetime | None: ...
+    def get_grid_stop_reason(self) -> str | None: ...
 
 
 class SQLiteRunRepository:
@@ -200,22 +206,11 @@ class SQLiteRunRepository:
                 )
                 session.add(row)
 
-    def request_grid_stop(self, *, reason: str | None = None) -> None:
-        with self.SessionLocal.begin() as session:
-            row = session.get(GridControlRow, 1)
-            if row is None:
-                row = GridControlRow(id=1)
-                session.add(row)
-            row.stop_requested = True
-            row.requested_at = _utc_now()
-            row.reason = reason
-
     def clear_grid_stop_request(self) -> None:
+        self.ensure_grid_control_row()
         with self.SessionLocal.begin() as session:
             row = session.get(GridControlRow, 1)
-            if row is None:
-                row = GridControlRow(id=1)
-                session.add(row)
+            assert row is not None
             row.stop_requested = False
             row.requested_at = None
             row.reason = None
@@ -226,6 +221,51 @@ class SQLiteRunRepository:
             if row is None:
                 return False
             return bool(row.stop_requested)
+
+    def set_grid_timeout(self, timeout_seconds: float) -> None:
+        if timeout_seconds <= 0:
+            raise ValueError("timeout_seconds must be > 0")
+        self.ensure_grid_control_row()
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            assert row is not None
+            now = _utc_now()
+            row.timeout_seconds = float(timeout_seconds)
+            row.timeout_started_at = now
+            row.timeout_deadline_at = now + timedelta(seconds=float(timeout_seconds))
+
+    def request_grid_stop(self, *, reason: str | None = None) -> None:
+        self.ensure_grid_control_row()
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            assert row is not None
+            row.stop_requested = True
+            row.requested_at = _utc_now()
+            row.reason = reason
+
+    def clear_grid_timeout(self) -> None:
+        self.ensure_grid_control_row()
+        with self.SessionLocal.begin() as session:
+            row = session.get(GridControlRow, 1)
+            assert row is not None
+
+            row.timeout_seconds = None
+            row.timeout_started_at = None
+            row.timeout_deadline_at = None
+
+    def get_grid_timeout_deadline(self) -> datetime | None:
+        self.ensure_grid_control_row()
+        with self.SessionLocal() as session:
+            row = session.get(GridControlRow, 1)
+            assert row is not None
+            return _ensure_utc(row.timeout_deadline_at)
+
+    def get_grid_stop_reason(self) -> str | None:
+        self.ensure_grid_control_row()
+        with self.SessionLocal() as session:
+            row = session.get(GridControlRow, 1)
+            assert row is not None
+            return row.reason
 
     def record_state_transition(self, transition: StateTransition) -> None:
         with self.SessionLocal.begin() as session:

@@ -42,7 +42,8 @@ from .grid_run import(GridRunItem,
                       launch_grid, 
                       wait_for_grid, 
                       GridRunHandle, 
-                      stop_grid)
+                      stop_grid, 
+                      ResumePolicy)
 from .repository import(SQLiteRunRepository, 
                         LiveProcessRegistry, 
                         RepositoryObserver, 
@@ -91,5 +92,6 @@ __all__ = [
     "wait_for_grid", 
     "GridRunHandle", 
     "Tracker",
-    "stop_grid"
+    "stop_grid",
+    "ResumePolicy"
 ]

@@ -78,7 +78,7 @@ def test_model_copy_shallow_shares_nested_inlists():
 
 def test_model_copy_uses_new_name_and_preserves_mesa_version():
     original = make_model("base")
-    copied = original.copy(name="base_clone")
+    copied = original.copy(model_copy_name="base_clone")
 
     assert copied.name == "base_clone"
     assert copied.mesa_version == original.mesa_version

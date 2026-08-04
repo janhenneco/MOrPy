@@ -27,6 +27,7 @@ class ModelState(Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
+    RESTART = "restart"
 
 @dataclass
 class Model:
