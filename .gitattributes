@@ -1,2 +1,2 @@
 tests/data_for_tests/** linguist-vendored
-*.ipynb linguist-generated
+**/*.ipynb linguist-vendored linguist-detectable=false

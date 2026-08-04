@@ -232,7 +232,7 @@ tests/manual_tests/output_tests/
 notes.md
 
 # VS code
-.code-workspace
+*.code-workspace
 
 # docs output
 docs/examples/example_output/
