@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.grid_run module" href="module_mesa_runner_grid_run.html"><link rel="prev" title="mesa_runner.config module" href="module_mesa_runner_config.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.errors module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,88 +252,12 @@
 <h1>mesa_runner.errors module<a class="headerlink" href="#mesa-runner-errors-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Shared exception hierarchy for run, orchestration, and persistence layers.</p>
-<p>This module defines domain-specific exception classes used to distinguish
-preflight validation errors, launch/runtime failures, timeout failures,
-and persistence-related failures.</p>
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">ExecutableMissingError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#ExecutableMissingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RunPreflightError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">MesaRunnerError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#MesaRunnerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">ModelPathMissingError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#ModelPathMissingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RunPreflightError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">PersistenceError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#PersistenceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">RunLaunchError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#RunLaunchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">RunPreflightError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#RunPreflightError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">RunScriptMissingError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#RunScriptMissingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RunPreflightError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.errors.</span></span><span class="sig-name descname"><span class="pre">RunTimeoutError</span></span><a class="reference internal" href="../_modules/mesa_runner/errors.html#RunTimeoutError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.ExecutableMissingError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.MesaRunnerError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.ModelPathMissingError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.PersistenceError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.RunLaunchError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.RunPreflightError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.RunScriptMissingError</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.errors.RunTimeoutError</span></code></p></td>
-<td><p></p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -349,26 +273,8 @@ and persistence-related failures.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_grid_run.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.grid_run module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner_config.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.config module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

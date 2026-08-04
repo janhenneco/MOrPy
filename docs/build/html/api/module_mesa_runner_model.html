@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.options module" href="module_mesa_runner_options.html"><link rel="prev" title="mesa_runner.grid_run module" href="module_mesa_runner_grid_run.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.model module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,393 +252,12 @@
 <h1>mesa_runner.model module<a class="headerlink" href="#mesa-runner-model-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Model objects and lifecycle state for individual MESA runs.</p>
-<p>This module defines:</p>
-<ul class="simple">
-<li><p>ModelState, the run lifecycle enum.</p></li>
-<li><p>Model, the in-memory representation of one model, including inlists,
-timestamps, identifiers, and disk snapshot metadata.</p></li>
-</ul>
-<p>Model instances are the central objects passed between setup, run, grid,
-and persistence/status layers.</p>
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesa_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ModelState.DRAFT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inlists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">started_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finished_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_snapshot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapshot_taken_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class that represents a MESA model with its inlists, execution files, IDs etc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>)</p></li>
-<li><p><strong>model_path</strong> (<em>Path</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>mesa_version</strong> (<em>MesaVersion</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>model_id</strong> (<em>str</em>)</p></li>
-<li><p><strong>state</strong> (<em>ModelState</em>)</p></li>
-<li><p><strong>inlists</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Inlist</em><em>]</em>)</p></li>
-<li><p><strong>created_at</strong> (<em>datetime</em>)</p></li>
-<li><p><strong>started_at</strong> (<em>datetime</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>updated_at</strong> (<em>datetime</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>finished_at</strong> (<em>datetime</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>file_snapshot</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>)</p></li>
-<li><p><strong>snapshot_taken_at</strong> (<em>datetime</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">name</span></span></dt>
-<dd><p>Name of the model, which will be the name of the model directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model_id</span></span></dt>
-<dd><p>Hexadecimal identification number for the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">state</span></span></dt>
-<dd><p>ModelState representing whether the model is running, failed, finished etc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>mesa_runner.model.ModelState</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mesa_version</span></span></dt>
-<dd><p>The MESA version used to prepare and run this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>mesa_runner.config.MesaVersion | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">inlists</span></span></dt>
-<dd><p>Dictionary of Inlist objects associated with this model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, mesa_runner.options.Inlist]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model_path</span></span></dt>
-<dd><p>Path to the location of the model directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pathlib.Path | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">created_at</span></span></dt>
-<dd><p>Datetime object representing the creation date and time of this Model object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime.datetime</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">started_at</span></span></dt>
-<dd><p>Datetime object representing date and time at which this model started running.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime.datetime | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">updated_at</span></span></dt>
-<dd><p>Datetime object representing date and time at which the ModelState or Model attributes changed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime.datetime | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">finished_at</span></span></dt>
-<dd><p>Datetime object representing the date and time at which the model finished running.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>datetime.datetime | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">file_snapshot</span></span></dt>
-<dd><p>Dictionary containing relative paths of files at model_path.
-Used to track changes between inlists at model_path and in Model.inlists
-and only set when work_setup.create_modeldir is called with this instance
-as an argument.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">snapshot_at</span></span></dt>
-<dd><p>datetime object to store at which moment a file_snapshot is taken.
-Only set when work_setup.create_modeldir is called with this instance
-as an argument.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_inlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model.add_inlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Method to add an Inlist object to the inlists attribute.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inlist</strong> (<em>Inlist</em>) – Inlist opject to be added to the Model.inlist attribute.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_copy_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">deep_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_copy_name</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>deep_copy</strong> (<em>bool</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Model</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">created_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesa_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Method to initiate and empty Model object which can be populated later.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name for this Model object, which will be the directory name when writing
-out the Model object to the storage.</p></li>
-<li><p><strong>mesa_version</strong> (<em>MesaVersion</em><em> | </em><em>None</em>) – MesaVersion of the Model object</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model object</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Model</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">file_snapshot</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">finished_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">inlists</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Inlist</span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mesa_version</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MesaVersion</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">remove_inlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inlist_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model.remove_inlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Method to remove an Inlist object from the inlists attribute.</p>
-<dl class="simple">
-<dt>Agrs:</dt><dd><dl class="simple">
-<dt>inlist_name: Name of the Inlist object to be removed from the</dt><dd><p>inlists attribute</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Boolean, True if removed, false if not present and, therefore, not removed</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>inlist_name</strong> (<em>str</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">return_log_directory_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#Model.return_log_directory_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="simple">
-<dt>Function that returns a dictionary containing all the LOGS directories specified in the inlists</dt><dd><p>that are part of Model.inlists.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>self</strong></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>Dictionary with locations to LOGS directories and the associated inlists</p></li>
-<li><p>Model.model_dir / LOGS or LOGS1 &amp; LOGS 2 if no logs directories are specified in the inlists</p></li>
-<li><p>An empty dictionary is the Model.inlists dictionary is empty</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">snapshot_taken_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">started_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ModelState</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'draft'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">updated_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.model.</span></span><span class="sig-name descname"><span class="pre">ModelState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/model.html#ModelState"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">CANCELLED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cancelled'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">COMPLETED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'completed'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">DRAFT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'draft'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">FAILED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'failed'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">PAUSED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'paused'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">PREPARING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'preparing'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">QUEUED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'queued'</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">RUNNING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'running'</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.model.Model</span></code></p></td>
-<td><p>Class that represents a MESA model with its inlists, execution files, IDs etc.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.model.ModelState</span></code></p></td>
-<td><p></p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -654,26 +273,8 @@ out the Model object to the storage.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_options.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.options module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner_grid_run.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.grid_run module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

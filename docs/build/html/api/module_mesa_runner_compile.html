@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.config module" href="module_mesa_runner_config.html"><link rel="prev" title="mesa_runner module" href="module_mesa_runner.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.compile module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,194 +252,12 @@
 <h1>mesa_runner.compile module<a class="headerlink" href="#mesa-runner-compile-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Compilation helpers for project-level MESA executables.</p>
-<p>This module runs clean and mk scripts to create the Fortran executables
-for a project directory and reports structured compile outcomes.</p>
-<ul class="simple">
-<li><p>CommandResult for individual script executions.</p></li>
-<li><p>CompileResult for overall compile status.</p></li>
-<li><p>compile_project as the main compile entrypoint.</p></li>
-</ul>
-<p>It also ensures relevant scripts and produced executables are executable.</p>
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.compile.</span></span><span class="sig-name descname"><span class="pre">CommandResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stderr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#CommandResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>command_path</strong> (<em>Path</em>)</p></li>
-<li><p><strong>return_code</strong> (<em>int</em>)</p></li>
-<li><p><strong>duration_seconds</strong> (<em>float</em>)</p></li>
-<li><p><strong>stdout</strong> (<em>str</em>)</p></li>
-<li><p><strong>stderr</strong> (<em>str</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">command_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">duration_seconds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">return_code</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">stderr</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">stdout</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_output_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#CommandResult.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>max_output_chars</strong> (<em>int</em><em> | </em><em>None</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.compile.</span></span><span class="sig-name descname"><span class="pre">CompileResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mesa_runner.compile.CommandResult</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mk_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mesa_runner.compile.CommandResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_scripts_updated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#CompileResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>success</strong> (<em>bool</em>)</p></li>
-<li><p><strong>return_code</strong> (<em>int</em>)</p></li>
-<li><p><strong>duration_seconds</strong> (<em>float</em>)</p></li>
-<li><p><strong>mode</strong> (<em>str</em>)</p></li>
-<li><p><strong>executable_path</strong> (<em>Path</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>clean_result</strong> (<em>CommandResult</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>mk_result</strong> (<em>CommandResult</em>)</p></li>
-<li><p><strong>model_scripts_updated</strong> (<em>list</em><em>[</em><em>Path</em><em>]</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">clean_result</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">CommandResult</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">duration_seconds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">executable_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mk_result</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">CommandResult</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model_scripts_updated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">pretty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_output_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#CompileResult.pretty"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>max_output_chars</strong> (<em>int</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">return_code</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">success</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_output_chars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#CompileResult.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>flatten</strong> (<em>bool</em>)</p></li>
-<li><p><strong>max_output_chars</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.compile.</span></span><span class="sig-name descname"><span class="pre">compile_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_rebuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/compile.html#compile_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Compile a MESA project directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – path to project directory containing clean/mk scripts.</p></li>
-<li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>'star'</em><em>, </em><em>'binary'</em><em>]</em>) – “star” or “binary”.</p></li>
-<li><p><strong>clean_rebuild</strong> (<em>bool</em>) – if True run clean then mk, else run mk only.</p></li>
-<li><p><strong>env</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>) – optional extra environment variables passed to subprocess.</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>) – optional timeout in seconds for each command.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>CompileResult with command outputs and final executable path.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>CompileResult</em></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile.CommandResult</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile.CompileResult</span></code></p></td>
-<td><p></p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -449,24 +267,6 @@ for a project directory and reports structured compile outcomes.</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile._collect_model_dirs</span></code></p></td>
-<td><p>Private helper function to collect model directories in projectdir.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile._ensure_executable</span></code></p></td>
-<td><p>Private helper function to add execute bits to a file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile._looks_like_model_dir</span></code></p></td>
-<td><p>Private helper function to detect model directories in projectdir.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile._make_model_scripts_executable</span></code></p></td>
-<td><p>Private helper function to make rn/re executable inside model directories.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile._run_script</span></code></p></td>
-<td><p>Private helper function to run build script and capture output.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.compile.compile_project</span></code></p></td>
-<td><p>Compile a MESA project directory.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -478,26 +278,8 @@ for a project directory and reports structured compile outcomes.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_config.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.config module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

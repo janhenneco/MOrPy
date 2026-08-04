@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.repository module" href="module_mesa_runner_repository.html"><link rel="prev" title="mesa_runner.parser module" href="module_mesa_runner_parser.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.project_setup module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,37 +252,6 @@
 <h1>mesa_runner.project_setup module<a class="headerlink" href="#mesa-runner-project-setup-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Project-directory creation utilities for MESA runs.</p>
-<p>This module creates and validates project directories from MESA work templates,
-including required build/run scripts and optional columns-list assets.</p>
-<p>The goal is to provide an idempotent, reproducible project layout that can
-be used by create_modeldir, compile, and run workflows.</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.project_setup.</span></span><span class="sig-name descname"><span class="pre">create_projectdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_columns_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/project_setup.html#create_projectdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Create a MESA project directory from star/work or binary/work.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – path to the project directory that needs to be created</p></li>
-<li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>'star'</em><em>, </em><em>'binary'</em><em>]</em>) – “star” or “binary”</p></li>
-<li><p><strong>include_columns_files</strong> (<em>bool</em>) – add the applicable <a href="#id1"><span class="problematic" id="id2">*</span></a>_columns.list files to the project dir</p></li>
-<li><p><strong>src_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – use this src folder instead of the default one</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>path to project directory when successfull</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>projectdir_path</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path to the project directory.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
@@ -293,21 +262,6 @@ be used by create_modeldir, compile, and run workflows.</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.project_setup._columns_files_for_mode</span></code></p></td>
-<td><p>Return optional files always needed</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.project_setup._copy_entry</span></code></p></td>
-<td><p>Private helper function for copying directories and files</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.project_setup._has_run_binary_extras</span></code></p></td>
-<td><p>Return True if src contains a file named run_binary_extras, ignoring extension.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.project_setup._validate_existing_projectdir</span></code></p></td>
-<td><p>Private helper function to validate if project directory creation was successful</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.project_setup.create_projectdir</span></code></p></td>
-<td><p>Create a MESA project directory from star/work or binary/work.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -319,26 +273,8 @@ be used by create_modeldir, compile, and run workflows.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_repository.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.repository module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner_parser.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.parser module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

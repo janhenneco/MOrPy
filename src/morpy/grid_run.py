@@ -43,13 +43,11 @@ ResumeCancelledPolicy = Literal["rerun", "skip"]
 
 @dataclass
 class GridRunItem:
-    """Object to be passed to grid run functions.
+    """Container for one model and optional per-model environment.
+
     Attributes:
-        model: Model object
+        model: Model object to run.
         env: Optional shell environment for this model.
-            For example, this allows you to assign a different 
-            number of threads to a specific model: 
-            `GridRunItem(model=model_a, env={"OMP_NUM_THREADS": "2"})`
     """
     model: Model
     env: Mapping[str, str] | None = None
@@ -57,15 +55,16 @@ class GridRunItem:
 
 @dataclass
 class GridRunResult:
-    """Results of grid run function.
+    """Aggregate results for a grid run.
+
     Attributes:
-        total: Total number of models in grid run.
+        total: Total number of models scheduled in the grid run.
         completed: Number of successfully completed model runs.
         failed: Number of failed model runs.
-        results: List of run_types.RunResult objects for each model.
-        backend: GridBackend used for this grid run: 'local' (subprocesses) 
-            or 'mpi' (mpi4pi)
-        duration: Duration of this grid run in seconds. 
+        cancelled: Number of cancelled model runs.
+        results: Terminal RunResult entries for all processed models.
+        backend: Execution backend, local or mpi.
+        duration_seconds: Grid-run wall-clock duration in seconds.
     """
     total: int
     completed: int
@@ -1185,39 +1184,29 @@ def run_grid(
     tracker: Tracker | None = None,
     resume_policy: ResumePolicy | None = None,
     ) -> GridRunResult:
-    """Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).
-     This function dispatches either the run_models_local or run_models_mpi functions.
-     
-     Args:
-        items: list of GridRunItem objects containing the models to run.
-        backend: "local" for concurrent.futures (default), "mpi" for mpi4py.
-        queue_policy: QueyePolicy type. Currently only 'fifo' (=First In, First Out) available.
-        max_workers: Maximum number of models to run in parallel. Only used when backend = "local".
-            See run_models_mpi documentation for setting number of MPI workers.
-            WARNING: make sure that OMP_NUM_THREADS x max_workers does not exceed
-            your machine's number of available threads.
-        sync_before_run: If True (default), the function calls work_setup.sync_model_with_disk
-            to update the inlist attributes of Model in case the user made any changes to
-            the inlist files themselves. This ensures that the inlist files themselves remain
-            the ground truth.
-        default_options: DefaultOptions object. Should be passed if sync_before_run == True.
-        config: MesaConfig object. Will be reconstructed on the fly 
-            if not passed.
-        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults
-            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception 
-            when inlist options are found that are not found in the defaults files.
-        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"
-            or can be used for custom-named "rn" scripts.
-        capture_output: If True, capture stdout/stderr and include them in RunResult.
-            If False, wait without collecting output (stdout/stderr in result are empty strings).
-        timeout: Maximum time in seconds to wait before aborting.
-            If exceeded, the process is killed and RunTimeoutError is raised.
-        tracker: Optional Tracker object for in-memory information through
-            tracker.live_tracker and StateTransitions via the tracker.observer
-    Returns:
-        GridRunResult
+    """Run a grid of models with local workers or MPI.
 
-     """
+    Dispatches to run_models_local or run_models_mpi based on backend.
+
+    Args:
+        items: GridRunItem values for models to run.
+        backend: local for subprocess-based execution, mpi for mpi4py execution.
+        max_workers: Maximum parallel workers for local backend.
+        queue_policy: Queue policy (currently fifo only).
+        sync_before_run: Sync model inlists from disk before each launch.
+        default_options: Parsed defaults used during sync_before_run.
+        config: MesaConfig object.
+        allow_unknown_options: Whether unknown inlist options are tolerated during sync.
+        command_name: Run script name, typically rn or re.
+        log_file_name: Log-file name written by run scripts.
+        capture_output: Whether to capture stdout/stderr in results.
+        timeout: Optional timeout in seconds.
+        tracker: Optional persistence/live-status tracker.
+        resume_policy: Optional repository-based resume policy.
+
+    Returns:
+        GridRunResult with per-model results and aggregate counts.
+    """
     item_list = list(items)
 
     if resume_policy is not None and resume_policy.enabled:

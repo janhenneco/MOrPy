@@ -66,16 +66,14 @@ def create_projectdir(
     """Create a MESA project directory from star/work or binary/work.
 
     Args:
-        projectdir_path: path to the project directory that needs to be created
+        projectdir_path: Path to the project directory to create.
         mode: "star" or "binary"
-        include_columns_files: add the applicable *_columns.list files to the project dir
-        src_path: use this src folder instead of the default one
+        include_columns_files: Add applicable \*_columns.list files to the project directory.
+        src_path: Use this src folder instead of the template src folder.
         config: MesaConfig
-    Returns:
-        projectdir_path: path to project directory when successfull
 
     Returns:
-        Path to the project directory.
+        Path to the created or validated project directory.
     """
     if config is None:
         config = require_active_config()

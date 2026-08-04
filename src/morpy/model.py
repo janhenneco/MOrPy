@@ -85,13 +85,13 @@ class Model:
         self.inlists[inlist.name] = inlist
     
     def remove_inlist(self, inlist_name: str) -> bool:
-        """Method to remove an Inlist object from the inlists attribute.
+        """Remove an inlist from the model by name.
 
-        Agrs:
-            inlist_name: Name of the Inlist object to be removed from the 
-                inlists attribute
+        Args:
+            inlist_name: Name of the inlist to remove.
+
         Returns:
-            Boolean, True if removed, false if not present and, therefore, not removed
+            True if removed, False if no matching inlist exists.
         """
         is_removed = self.inlists.pop(inlist_name, None)
         return is_removed is not None

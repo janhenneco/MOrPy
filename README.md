@@ -4,7 +4,116 @@
   <img src="docs/images/MOrPy_logo.svg" alt="MOrPy Diagram" width="500" style="background-color: white; padding: 20px; border-radius: 6px;" />
 </div>
 
-A `Python` package to serve as a modular interface for the stellar structure and evolution code Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org). Its main capabilities are building ready-to-run work directories, run MESA models from within Python, and run multiple models in parallel using `concurrent.futures` or `mpi4py`.
+The MESA Orchestrator in Python (MOrPy) software is designed to serve as an interface between the Modules for Experiments in Stellar Astrophysics (`MESA`, https://mesastar.org) code and `Python`. It consists of a `Python` package (`morpy`) that allows the user to create ready-to-run `MESA` work directories, load, construct, edit, and inspect inlists, and consult and search `MESA` "setting" (i.e. default options) using `Python`. Moreover, it allows the user to compile and run `MESA`, construct model grids, run these grids, and consult their status, all from within a `Python` session or `Jupyter Notebook`. The code uses `Python`'s built-in `concurrent.futures` or `mpi4py` (for multi-node setups) for parallel computations.
+
+This software is currently still a work in progress and any feedback or feature requests are more than welcome (see "Issues").
+
+## Installation Instructions
+
+### 0. Requirements
+
+Core:
+- Operating system: Linux or macOS
+- Python version: `Python 3.11.x`
+- Environment managers: `conda` or `Python` `venv`
+
+Optional: 
+- `pandas>=2.0` (preview), `mpi4py>=4.0` (mpi), and `sphinx>=7.0`, `furo>=2024.0.0`, `myst-parser>=2.0`
+- For MPI: OpenMPI/MPICH
+
+### 1. Download the code
+
+Clone or download the repository, if necessary extract it, and move into the root directory of the repository.
+
+### 2. Installation
+
+#### 2.1 Basic Installation
+
+1. Create a `Python` environment:
+
+conda:
+```
+conda create -n morpy python=3.11 -y
+conda activate morpy
+```
+
+venv:
+```
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install the `morpy` package:
+
+```
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -e .
+```
+
+or install with all optional dependencies:
+
+```
+python -m pip install -e ".[preview,mpi,docs]"
+```
+
+#### 2.2 MPI-aware installation (for HPC users)
+
+In some cases, the installed `mpi4py` package and the `MPI` installation are not compatible by default. If this is the case for you, follow these instructions:
+
+**1. Verify the MPI installation**
+
+Verify if and what version of MPI is installed and loaded by using:
+
+```
+ompi_info
+```
+
+Depending on your system/cluster, the MPI installation will have to be loaded via environment modules. If unsure, please consult your system/cluster's documentation or contact your system administrator. 
+
+**2. Find MPI location**
+
+Next, you want to see where MPI lives. You can do this by running:
+
+```
+which mpicc
+```
+
+Ideally, this outputs something like `/usr/bin/mpicc`. Take note of this location for later. 
+If multiple versions of MPI are installed, such as a system version and one from conda, you want the `which mpicc` command to point to your desired location.
+
+To make sure it does, prepend it to your PATH:
+
+```
+export PATH=/LOCATION_OF_MPI_BINARY:$PATH
+```
+
+Here, `/LOCATION_OF_MPI_BINARY` should be the absolute path to the directory in which the MPI binary is located, not the path to the binary itself.
+I.e., for `/usr/bin/mpicc`, this should be `/usr/bin`
+
+**3. Install `mpi4py` compiled against your MPI version**
+
+With your desired conda/venv environment activated, install `mpi4py` using `pip` while specifying the location of your MPI installation:
+
+```
+MPICC=/PATH_TO_MPI_BINARY pip install --no-binary=mpi4py mpi4py
+```
+Here, `/PATH_TO_MPI_BINARY` should be the path to the MPI binary, e.g. `/usr/bin/mpicc`.
+The `no-binary` option prevents `pip` from installing a pre-built version of `mpi4py` and compiles it against you desired MPI installation.
+
+**4. Install `morpy` without reinstalling `mpi4py`**
+```
+python -m pip install -e ".[preview,docs]"
+```
+
+### 3. Verify installation
+
+To verify if `morpy` was installed successfully, just run
+
+```
+python -c "import morpy; print('MOrPy installed successfully')"
+```
+
+## MOrPy Modules
 
 The `morpy` package's main modules are:
 
@@ -36,9 +145,9 @@ The `morpy` package's main modules are:
 
 - `status.py`: Status view contracts for live and persisted model execution state.
 
-## Installation Instructions
+## Issues
 
-[TODO]
+Please use the repository's "Issues" functionality to ask questions, report bugs, or make feature requests.
 
 ## Generative AI Disclosure
 Some code was drafted using generative AI tools. All prompts were provided by the author, and all AI-generated content was reviewed and approved by the author before being included. No generative AI was used without human review.

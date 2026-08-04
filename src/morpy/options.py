@@ -421,19 +421,20 @@ class Inlist:
         pgstar: dict[str, object] | None = None,
         pgbinary: dict[str, object] | None = None,
     ) -> None:
-        """Method that allows for MESA options to be set in bulk and optionally
-            ordered based on the MESA namelist they belong to.
+        """Set many options at once, optionally grouped by namelist.
 
         Args:
-            defaults: DefaultsOptions object that holds all information about
-                MESA defaults
-            options: Dictionary with all specified options to be added to the 
-                Inlist object. Allows options from all namelists to be mixed,
-                but will throw an error if one or more of the options is part
-                of more than one MESA namelist. In that case, the
-                namelist-specific dictionaries should be used.
-            controls, star_job, binary_controls, binary_job, kap, eos, pgstar, 
-            pgbinary: Namelist specific dictionaries for setting MesaOptions.
+            defaults: DefaultsOptions object with parsed MESA defaults.
+            options: Mixed-namelist option dictionary. Use only when option
+                names are unambiguous across namelists.
+            controls: Option dictionary for controls namelist.
+            star_job: Option dictionary for star_job namelist.
+            binary_controls: Option dictionary for binary_controls namelist.
+            binary_job: Option dictionary for binary_job namelist.
+            kap: Option dictionary for kap namelist.
+            eos: Option dictionary for eos namelist.
+            pgstar: Option dictionary for pgstar namelist.
+            pgbinary: Option dictionary for pgbinary namelist.
         """
 
         if options is not None:
@@ -467,10 +468,9 @@ class Inlist:
 
         Args:
             name: Name of the MesaOption to be removed.
-        Retruns:
-            None
-        Raises:
-            Raises Key Error if the specified option is not part of the Inlist object.
+
+        Returns:
+            True if an option was removed, False otherwise.
         """
         if not self._remove_option(name):
             warnings.warn(

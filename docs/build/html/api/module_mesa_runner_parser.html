@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.project_setup module" href="module_mesa_runner_project_setup.html"><link rel="prev" title="mesa_runner.options module" href="module_mesa_runner_options.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.parser module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,108 +252,6 @@
 <h1>mesa_runner.parser module<a class="headerlink" href="#mesa-runner-parser-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Parsing utilities for MESA defaults files and inlists.</p>
-<p>This module converts on-disk MESA text files into the in-memory option models
-defined in options.py:</p>
-<ul class="simple">
-<li><p>parse_defaults_file() -&gt; DefaultsFile</p></li>
-<li><p>build_defaults_options() / build_defaults_options_from_config() -&gt; DefaultsOptions</p></li>
-<li><p>parse_inlist() -&gt; Inlist</p></li>
-</ul>
-<p>The parser is version-aware and normalizes known MESA format differences
-(for example kap/eos split defaults and legacy binary_pgstar vs pgbinary naming).
-It also supports strict/lenient handling of unknown inlist options and preserves
-unrecognized namelist blocks for round-trip safety.</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.parser.</span></span><span class="sig-name descname"><span class="pre">build_defaults_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defaults_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/parser.html#build_defaults_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Method to parse all the available defaults files and store them into this class.
-:param defaults_dir: Path to the base location of the defaults files, usually the MESA installation directory
-:param config: MesaConfig instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A DefaultsOptions instance with parsed MESA defaults files as DefaultsFiles instances</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>defaults_dir</strong> (<em>Path</em><em> | </em><em>str</em>)</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DefaultsOptions</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.parser.</span></span><span class="sig-name descname"><span class="pre">build_defaults_options_from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/parser.html#build_defaults_options_from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the <cite>defaults_dir</cite> from the <cite>MesaConfig</cite> object for automatic parsing of defaults files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>MesaConfig</em>) – MesaConfig instance</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Calls <cite>build_defaults_options</cite> method to parse all available defaults files.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DefaultsOptions</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.parser.</span></span><span class="sig-name descname"><span class="pre">parse_defaults_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namelist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/parser.html#parse_defaults_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>namelist</strong> (<em>Literal</em><em>[</em><em>'controls'</em><em>, </em><em>'star_job'</em><em>, </em><em>'binary_controls'</em><em>, </em><em>'binary_job'</em><em>, </em><em>'kap'</em><em>, </em><em>'eos'</em><em>, </em><em>'pgstar'</em><em>, </em><em>'pgbinary'</em><em>]</em>) – The kind of defaults file (“controls”, “star_job”, …). Type: MesaNameList</p></li>
-<li><p><strong>source_path</strong> (<em>Path</em><em> | </em><em>str</em>) – The Path object to the defaults file</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em>) – The MesaConfig instance</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>A DefaultsFile instance containing the MesaOption objects with the names, default values and descriptions</dt><dd><p>of the MESA defaults file.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DefaultsFile</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.parser.</span></span><span class="sig-name descname"><span class="pre">parse_inlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/parser.html#parse_inlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Read the contents of an inlist and store it inside an Inlist object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_path</strong> (<em>Path</em><em> | </em><em>str</em>) – The Path object pointing to the location of the inlist file</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em>) – The MesaConfig instance</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – The DefaultsOptions object required to look up descriptions and default values
-of the parsed inlist options. Will be created automatically based on MESA installation directory
-if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
-provide it explicitly as an argument.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults files.
-If False, raise an exception when inlist options are found that re not found in the defaults files.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Inlist object with MesaOption instances.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Inlist</em></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
@@ -364,24 +262,6 @@ If False, raise an exception when inlist options are found that re not found in 
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser._base_option_name</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser._resolve_defaults_option</span></code></p></td>
-<td><p>Resolve an inlist option name against defaults, with array-aware matching.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser.build_defaults_options</span></code></p></td>
-<td><p>Method to parse all the available defaults files and store them into this class.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser.build_defaults_options_from_config</span></code></p></td>
-<td><p>Get the <cite>defaults_dir</cite> from the <cite>MesaConfig</cite> object for automatic parsing of defaults files.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser.parse_defaults_file</span></code></p></td>
-<td><p>Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.parser.parse_inlist</span></code></p></td>
-<td><p>Read the contents of an inlist and store it inside an Inlist object.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -393,26 +273,8 @@ If False, raise an exception when inlist options are found that re not found in 
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_project_setup.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.project_setup module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner_options.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.options module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

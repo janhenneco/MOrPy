@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="mesa_runner.utils module" href="module_mesa_runner_utils.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.work_setup module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_grid_run.html">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,161 +252,6 @@
 <h1>mesa_runner.work_setup module<a class="headerlink" href="#mesa-runner-work-setup-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Work-directory setup, synchronization, and export utilities for models.</p>
-<p>This module handles disk-facing model directory operations.</p>
-<ul class="simple">
-<li><p>importing inlists from disk into Model objects,</p></li>
-<li><p>creating model work directories with links/scripts/assets,</p></li>
-<li><p>syncing in-memory Model inlists with on-disk files,</p></li>
-<li><p>exporting self-contained runnable work directories.</p></li>
-</ul>
-<p>It forms the bridge between in-memory model objects and MESA-compatible
-directory layouts on disk.</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.work_setup.</span></span><span class="sig-name descname"><span class="pre">create_modeldir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_additional_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/work_setup.html#create_modeldir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="simple">
-<dt>Function to create a model directory in storage for a given Model object. This model</dt><dd><p>directory contains the inlists and rn &amp; re scripts appropriate to run it.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model</em>) – Model object to be written to the model directory</p></li>
-<li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – path to the project directory in which this model directory will be placed.
-This can technically be any path, but in order to run the run the model, the mdoel directory should
-be placed inside a project directory containing the /src folder and Fortran executable.</p></li>
-<li><p><strong>include_additional_options</strong> (<em>bool</em>) – If present, include unclassified namelist blocks in all inlists written to storage
-(see options.Inlist and options.Unclassifiednamelist documentation)</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Automatically detected from active config if None.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path to model directory.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>FileNotFoundError if projectdir_path does not exist.</strong> – </p></li>
-<li><p><strong>OSError if rm command fails when clearing out model_dirs that need to be overwritten.</strong> – </p></li>
-<li><p><strong>ValueError if model has no inlists.</strong> – </p></li>
-<li><p><strong>FileExistsError if path directory already exists and overwite=False</strong><strong> or </strong><strong>if file exists at same path.</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Path</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.work_setup.</span></span><span class="sig-name descname"><span class="pre">detect_workdir_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/work_setup.html#detect_workdir_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Function that looks in all inlists to determine if this is a star or binary model.
-:param model: Model object</p>
-<dl class="simple">
-<dt>Returs:</dt><dd><p>WorkdirMode = “star” or “binary”</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError if neither star</strong><strong> or </strong><strong>binary namelists are detected.</strong> – </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>model</strong> (<em>Model</em>)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Literal</em>[‘star’, ‘binary’]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.work_setup.</span></span><span class="sig-name descname"><span class="pre">export_modeldir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_executable_symlinks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/work_setup.html#export_modeldir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="simple">
-<dt>Function that creates a self-contained MESA work directory for a given model</dt><dd><p>directory and project directory. This function creates a copy of the model
-directroy and copies over all the files and folders from the project directory
-required to compile and run this model on its own. This essentially creates
-a portable copy of the model directory, e.g. for sharing with others.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_dir</strong> (<em>Path</em><em> | </em><em>str</em>) – Location of the model directory</p></li>
-<li><p><strong>export_dir</strong> (<em>Path</em><em> | </em><em>str</em>) – Full target directory path for the exported workdir</p></li>
-<li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – Location of the project directory which contains the model
-directory.</p></li>
-<li><p><strong>keep_executable_symlinks</strong> (<em>bool</em>) – if True, also copy over the Fortran executables
-into the exported workdir. Only recommended if you plan to run the model
-again locally, not recommended when moving the model elsewhere and/or
-sharing it.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path to the exported workdir.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Path</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.work_setup.</span></span><span class="sig-name descname"><span class="pre">import_inlists_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/work_setup.html#import_inlists_from_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl class="simple">
-<dt>Function that looks for files with ‘inlist’ in their name in a given directory (non-recursively),</dt><dd><p>parses them, and adds them to model.inlists.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model</em>) – Model object which inlists attribute will be populated by the parsed inlists</p></li>
-<li><p><strong>source_dir</strong> (<em>Path</em><em> | </em><em>str</em>) – path to the directory in which the function will look for inlists</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em>) – DefaultsOptions object</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults files.
-If False, raise an exception when inlist options are found that re not found in the defaults files.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model object</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>FileNotFoundError is source_dir does not exist.</strong> – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Model</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.work_setup.</span></span><span class="sig-name descname"><span class="pre">sync_model_with_disk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/work_setup.html#sync_model_with_disk"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Ensure model.inlists matches current files in model.model_path.</p>
-<p>Disk is treated as source of truth. If drift is detected compared to the
-stored model.file_snapshot, model.inlists is reloaded from disk.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if a reload was performed, False if model was already in sync.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model</em>)</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em>)</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
@@ -417,36 +262,6 @@ stored model.file_snapshot, model.inlists is reloaded from disk.</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup._columns_files_for_mode</span></code></p></td>
-<td><p>Return optional files always needed</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup._ensure_scripts_in_project_dir</span></code></p></td>
-<td><p>Ensure rn and re scripts exist in projectdir.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup._hash_file</span></code></p></td>
-<td><p>Return SHA-256 hash of a file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup._link_into_model_dir</span></code></p></td>
-<td><p>Helper function that creates symbolic links for files in the project directory that are shared by all models.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup._snapshot_model_inlists</span></code></p></td>
-<td><p>Create a stable snapshot of inlist files in a model directory.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup.create_modeldir</span></code></p></td>
-<td><p>Function to create a model directory in storage for a given Model object. This model</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup.detect_workdir_mode</span></code></p></td>
-<td><p>Function that looks in all inlists to determine if this is a star or binary model.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup.export_modeldir</span></code></p></td>
-<td><p>Function that creates a self-contained MESA work directory for a given model</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup.import_inlists_from_dir</span></code></p></td>
-<td><p>Function that looks for files with 'inlist' in their name in a given directory (non-recursively),</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.work_setup.sync_model_with_disk</span></code></p></td>
-<td><p>Ensure model.inlists matches current files in model.model_path.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -459,17 +274,7 @@ stored model.file_snapshot, model.inlists is reloaded from disk.</p>
         
         <div class="related-pages">
           
-          <a class="prev-page" href="module_mesa_runner_utils.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.utils module</div>
-                
-              </div>
-            </a>
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

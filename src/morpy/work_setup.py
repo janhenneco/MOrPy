@@ -99,13 +99,16 @@ def _link_into_model_dir(
     return dst
 
 def detect_workdir_mode(model: Model) -> WorkdirMode:
-    """Function that looks in all inlists to determine if this is a star or binary model.
+    """Infer whether a model should run in star or binary work mode.
+
     Args:
-        model: Model object
-    Returs:
-        WorkdirMode = "star" or "binary"
+        model: Model object.
+
+    Returns:
+        "star" or "binary".
+
     Raises:
-        ValueError if neither star or binary namelists are detected.
+        ValueError: If neither star nor binary namelist options are detected.
     """
     saw_binary = False
     saw_star = False

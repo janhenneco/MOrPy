@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="mesa_runner.model module" href="module_mesa_runner_model.html"><link rel="prev" title="mesa_runner.errors module" href="module_mesa_runner_errors.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>mesa_runner.grid_run module - mesa-runner 0.1.0.dev0 documentation</title>
@@ -191,23 +191,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner.html">mesa_runner module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_compile.html">mesa_runner.compile module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_config.html">mesa_runner.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_errors.html">mesa_runner.errors module</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">mesa_runner.grid_run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_model.html">mesa_runner.model module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_options.html">mesa_runner.options module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_parser.html">mesa_runner.parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_project_setup.html">mesa_runner.project_setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_repository.html">mesa_runner.repository module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run.html">mesa_runner.run module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_run_types.html">mesa_runner.run_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_status.html">mesa_runner.status module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_utils.html">mesa_runner.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_mesa_runner_work_setup.html">mesa_runner.work_setup module</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_project_setup.html">morpy.project_setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_repository.html">morpy.repository module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run.html">morpy.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_run_types.html">morpy.run_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_status.html">morpy.status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_utils.html">morpy.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_work_setup.html">morpy.work_setup module</a></li>
 </ul>
 </li>
 </ul>
@@ -252,446 +252,12 @@
 <h1>mesa_runner.grid_run module<a class="headerlink" href="#mesa-runner-grid-run-module" title="Link to this heading">¶</a></h1>
 <section id="module">
 <h2>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h2>
-<p>Grid orchestration for multi-model execution.</p>
-<p>This module provides:
-- run_models_local: local parallel orchestration using existing launch/wait APIs.
-- run_models_mpi: simple rank-split parallel execution using mpi4py.
-- run_models: backend dispatcher.</p>
-<p>Design goals:
-- Keep behavior consistent with run.py by delegating per-model execution there.
-- Keep orchestration simple (FIFO queue, bounded concurrency).
-- Remain compatible with observer-based persistence/status adapters.</p>
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">GridRunHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submitted_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">future</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_executor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#GridRunHandle"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Handle for a launched non-blocking grid run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>grid_id</strong> (<em>str</em>)</p></li>
-<li><p><strong>backend</strong> (<em>Literal</em><em>[</em><em>'local'</em><em>, </em><em>'mpi'</em><em>]</em>)</p></li>
-<li><p><strong>submitted_at</strong> (<em>datetime</em>)</p></li>
-<li><p><strong>future</strong> (<em>Future</em><em>[</em><em>GridRunResult</em><em>]</em>)</p></li>
-<li><p><strong>_executor</strong> (<em>ThreadPoolExecutor</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'local'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mpi'</span></span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">future</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><span class="pre">GridRunResult</span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">grid_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">submitted_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">GridRunItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#GridRunItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Object to be passed to grid run functions.
-.. attribute:: model</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">no-index<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-<p>Model object</p>
-<dl class="field-list simple">
-<dt class="field-odd">type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>mesa_runner.model.Model</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model</em>)</p></li>
-<li><p><strong>env</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">env</span></span></dt>
-<dd><p>Optional shell environment for this model.
-For example, this allows you to assign a different
-number of threads to a specific model:
-<cite>GridRunItem(model=model_a, env={“OMP_NUM_THREADS”: “2”})</cite></p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mapping[str, str] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">env</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">model</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Model</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">GridRunResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancelled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration_seconds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#GridRunResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Results of grid run function.
-.. attribute:: total</p>
-<blockquote>
-<div><dl class="field-list simple">
-<dt class="field-odd">no-index<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-<p>Total number of models in grid run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>total</strong> (<em>int</em>)</p></li>
-<li><p><strong>completed</strong> (<em>int</em>)</p></li>
-<li><p><strong>failed</strong> (<em>int</em>)</p></li>
-<li><p><strong>cancelled</strong> (<em>int</em>)</p></li>
-<li><p><strong>results</strong> (<em>list</em><em>[</em><em>RunResult</em><em>]</em>)</p></li>
-<li><p><strong>backend</strong> (<em>Literal</em><em>[</em><em>'local'</em><em>, </em><em>'mpi'</em><em>]</em>)</p></li>
-<li><p><strong>duration_seconds</strong> (<em>float</em>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">completed</span></span></dt>
-<dd><p>Number of successfully completed model runs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">failed</span></span></dt>
-<dd><p>Number of failed model runs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">results</span></span></dt>
-<dd><p>List of run_types.RunResult objects for each model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[mesa_runner.run_types.RunResult]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">backend</span></span></dt>
-<dd><p>GridBackend used for this grid run: ‘local’ (subprocesses)
-or ‘mpi’ (mpi4pi)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[‘local’, ‘mpi’]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">duration</span></span></dt>
-<dd><p>Duration of this grid run in seconds.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">backend</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'local'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'mpi'</span></span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">cancelled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">completed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">duration_seconds</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">failed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">results</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">RunResult</span><span class="p"><span class="pre">]</span></span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">total</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">launch_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fifo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_before_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">live_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#launch_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Launch a grid run in the background and return immediately.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>items</strong> (<em>Iterable</em><em>[</em><em>GridRunItem</em><em>]</em>)</p></li>
-<li><p><strong>backend</strong> (<em>Literal</em><em>[</em><em>'local'</em><em>, </em><em>'mpi'</em><em>]</em>)</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em>)</p></li>
-<li><p><strong>queue_policy</strong> (<em>Literal</em><em>[</em><em>'fifo'</em><em>]</em>)</p></li>
-<li><p><strong>sync_before_run</strong> (<em>bool</em>)</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>)</p></li>
-<li><p><strong>command_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>log_file_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>capture_output</strong> (<em>bool</em>)</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>observer</strong> (<em>RunObserver</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>live_registry</strong> (<em>LiveProcessRegistry</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>GridRunHandle</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">run_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fifo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_before_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">live_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#run_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><dl>
-<dt>Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).</dt><dd><p>This fuction dispatches either the run_models_local or run_models_mpi functions.</p>
-<dl>
-<dt>Args:</dt><dd><p>items: list of GridRunItem objects containing the models to run.
-backend: “local” for subroutines (default), “mpi” for mpi4py.
-queue_policy: QueyePolicy type. Currently only ‘fifo’ (=First In, First Out) available.
-max_workers: Maximun number of models to run in parallel. Only used when backend = “local”.</p>
-<blockquote>
-<div><p>See run_models_mpi documentation for setting number of MPI workers.
-WARNING: make sure that OMP_NUM_THREADS x max_workers does not exceed
-your machine’s number of available threads.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>sync_before_run: If True (default), the function calls work_setup.sync_model_with_disk</dt><dd><p>to update the inlist attributes of Model in case the user made any changes to
-the inlist files themselves. This ensures that the inlist files themselves remain
-the ground truth.</p>
-</dd>
-</dl>
-<p>default_options: DefaultOptions object. Should be passed if sync_before_run == True.
-config: MesaConfig object. Will be reconstructed on the fly</p>
-<blockquote>
-<div><p>if not passed.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</dt><dd><p>files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
-when inlist options are found that are not found in the defaults files.</p>
-</dd>
-<dt>command_name: Name of the “rn” script. Can be used for restarts by specifying “re”</dt><dd><p>or can be used for custom-named “rn” scripts.</p>
-</dd>
-<dt>capture_output: If True, capture stdout/stderr and include them in RunResult.</dt><dd><p>If False, wait without collecting output (stdout/stderr in result are empty strings).</p>
-</dd>
-<dt>timeout: Maximum time in seconds to wait before aborting.</dt><dd><p>If exceeded, the process is killed and RunTimeoutError is raised.</p>
-</dd>
-</dl>
-<p>observer: RunObserver object that observes StateTransitions for status and repository admin.
-live_registry: LiveProcessRegistry object that serves as an</p>
-<blockquote>
-<div><p>in-memory registry for currently running models.</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>GridRunResult</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>items</strong> (<em>Iterable</em><em>[</em><em>GridRunItem</em><em>]</em>)</p></li>
-<li><p><strong>backend</strong> (<em>Literal</em><em>[</em><em>'local'</em><em>, </em><em>'mpi'</em><em>]</em>)</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em>)</p></li>
-<li><p><strong>queue_policy</strong> (<em>Literal</em><em>[</em><em>'fifo'</em><em>]</em>)</p></li>
-<li><p><strong>sync_before_run</strong> (<em>bool</em>)</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>)</p></li>
-<li><p><strong>command_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>log_file_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>capture_output</strong> (<em>bool</em>)</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>observer</strong> (<em>RunObserver</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>live_registry</strong> (<em>LiveProcessRegistry</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>GridRunResult</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">run_models_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fifo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_before_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">live_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#run_models_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Run many models locally with limit on parallel runs.</p>
-<p>Uses launch_model_process + wait_for_model_process so model lifecycle and
-observer behavior remains aligned with single-model runs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>items</strong> (<em>list</em><em>[</em><em>GridRunItem</em><em>]</em>) – list of GridRunItem objects containing the models to run.</p></li>
-<li><p><strong>queue_policy</strong> (<em>Literal</em><em>[</em><em>'fifo'</em><em>]</em>) – QueyePolicy type. Currently only ‘fifo’ (=First In, First Out) available.</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em>) – Maximun number of models to run in parallel.
-WARNING: make sure that OMP_NUM_THREADS x max_workers does not exceed
-your machine’s number of available threads.</p></li>
-<li><p><strong>sync_before_run</strong> (<em>bool</em>) – If True (default), the function calls work_setup.sync_model_with_disk
-to update the inlist attributes of Model in case the user made any changes to
-the inlist files themselves. This ensures that the inlist files themselves remain
-the ground truth.</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
-if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
-files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
-when inlist options are found that are not found in the defaults files.</p></li>
-<li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”
-or can be used for custom-named “rn” scripts.</p></li>
-<li><p><strong>capture_output</strong> (<em>bool</em>) – If True, capture stdout/stderr and include them in RunResult.
-If False, wait without collecting output (stdout/stderr in result are empty strings).</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>) – Maximum time in seconds to wait before aborting.
-If exceeded, the process is killed and RunTimeoutError is raised.</p></li>
-<li><p><strong>observer</strong> (<em>RunObserver</em><em> | </em><em>None</em>) – RunObserver object that observes StateTransitions for status and repository admin.</p></li>
-<li><p><strong>live_registry</strong> (<em>LiveProcessRegistry</em><em> | </em><em>None</em>) – LiveProcessRegistry object that serves as an
-in-memory registry for currently running models.</p></li>
-<li><p><strong>log_file_name</strong> (<em>str</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>GridRunResult</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>GridRunResult</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">run_models_mpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fifo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_before_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">live_registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#run_models_mpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Run many models distributed across MPI ranks.</p>
-<p>Work distribution is simple round-robin by rank for predictability.</p>
-<p>Should be run as <cite>mpirun -n &lt;&lt;MAX_WORKERS&gt;&gt; python mr_script.py</cite> or
-<cite>srun -n &lt;&lt;MAX_WORKERS&gt;&gt; python mr_script.py</cite>, where &lt;&lt;MAX_WORKERS&gt;&gt;
-is an integer number equivalent to <cite>max_workers</cite> in run_models_local.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>items</strong> (<em>list</em><em>[</em><em>GridRunItem</em><em>]</em>) – list of GridRunItem objects containing the models to run.</p></li>
-<li><p><strong>queue_policy</strong> (<em>Literal</em><em>[</em><em>'fifo'</em><em>]</em>) – QueyePolicy type. Currently only ‘fifo’ (=First In, First Out) available.</p></li>
-<li><p><strong>sync_before_run</strong> (<em>bool</em>) – If True (default), the function calls work_setup.sync_model_with_disk
-to update the inlist attributes of Model in case the user made any changes to
-the inlist files themselves. This ensures that the inlist files themselves remain
-the ground truth.</p></li>
-<li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
-<li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
-if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
-files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
-when inlist options are found that are not found in the defaults files.</p></li>
-<li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”
-or can be used for custom-named “rn” scripts.</p></li>
-<li><p><strong>capture_output</strong> (<em>bool</em>) – If True, capture stdout/stderr and include them in RunResult.
-If False, wait without collecting output (stdout/stderr in result are empty strings).</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>) – Maximum time in seconds to wait before aborting.
-If exceeded, the process is killed and RunTimeoutError is raised.</p></li>
-<li><p><strong>observer</strong> (<em>RunObserver</em><em> | </em><em>None</em>) – RunObserver object that observes StateTransitions for status and repository admin.</p></li>
-<li><p><strong>live_registry</strong> (<em>LiveProcessRegistry</em><em> | </em><em>None</em>) – LiveProcessRegistry object that serves as an
-in-memory registry for currently running models.</p></li>
-<li><p><strong>log_file_name</strong> (<em>str</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>GridRunResult</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>GridRunResult</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">mesa_runner.grid_run.</span></span><span class="sig-name descname"><span class="pre">wait_for_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shutdown_executor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mesa_runner/grid_run.html#wait_for_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Wait for a launched grid run to complete and return its result.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>handle</strong> (<em>GridRunHandle</em>)</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
-<li><p><strong>shutdown_executor</strong> (<em>bool</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>GridRunResult</em></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run.GridRunItem</span></code></p></td>
-<td><p>Object to be passed to grid run functions.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run.GridRunResult</span></code></p></td>
-<td><p>Results of grid run function.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -701,21 +267,6 @@ in-memory registry for currently running models.</p></li>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run._exception_result</span></code></p></td>
-<td><p>Private function to gracefully deal with runs part of a grid run that fail.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run._summarize</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run.run_grid</span></code></p></td>
-<td><p>Run a grid of MESA models locally (using subroutines) or with MPI (using mpi4py).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run.run_models_local</span></code></p></td>
-<td><p>Run many models locally with limit on parallel runs.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesa_runner.grid_run.run_models_mpi</span></code></p></td>
-<td><p>Run many models distributed across MPI ranks.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -727,26 +278,8 @@ in-memory registry for currently running models.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_mesa_runner_model.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">mesa_runner.model module</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="module_mesa_runner_errors.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">mesa_runner.errors module</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

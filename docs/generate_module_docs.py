@@ -60,7 +60,8 @@ def render_rst_for_module(mod_name: str) -> str:
     lines.append("-------")
     lines.append("")
     lines.append(f".. automodule:: {mod_name}")
-    lines.append("   :members:")  # you can set this to nothing if you want ONLY docstring
+    if mod_name != PACKAGE_NAME:
+        lines.append("   :members:")
     lines.append("   :noindex:")
     lines.append("")
     # If you truly want ONLY the module docstring (no class/function dump on the module page),
@@ -83,8 +84,7 @@ def render_rst_for_module(mod_name: str) -> str:
         lines.append("   :nosignatures:")
         lines.append("")
         for name, _ in classes:
-            # fully qualified path for autosummary
-            lines.append(f"   {mod_name}.{name}")
+            lines.append(f"   {name}")
     else:
         lines.append("_No classes found in this module._")
 
@@ -98,7 +98,7 @@ def render_rst_for_module(mod_name: str) -> str:
         lines.append("   :nosignatures:")
         lines.append("")
         for name, _ in functions:
-            lines.append(f"   {mod_name}.{name}")
+            lines.append(f"   {name}")
     else:
         lines.append("_No functions found in this module._")
 
