@@ -238,7 +238,8 @@ def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config:
 def create_modeldir(model: Model, 
                     projectdir_path: Path | str, 
                     overwrite: bool = False, 
-                    include_additional_options: bool = False, 
+                    include_additional_options: bool = False,
+                    include_comment_blocks: bool = True, 
                     config: MesaConfig | None = None,) -> Path:
     """Function to create a model directory in storage for a given Model object. This model
         directory contains the inlists and rn & re scripts appropriate to run it.
@@ -251,6 +252,8 @@ def create_modeldir(model: Model,
         overwrite: Overwrite the model directory if it already exists in the project directory.
         include_additional_options: If present, include unclassified namelist blocks in all inlists written to storage
             (see options.Inlist and options.Unclassifiednamelist documentation)
+        include_comment_blocks: Add Inlist.comment_block to the top of the inlist files
+            if it exists.
         config: MesaConfig object. Automatically detected from active config if None.
     Returns:
         Path to model directory.
@@ -294,7 +297,7 @@ def create_modeldir(model: Model,
 
         # write inlists into temp
         for inlist in model.inlists.values():
-            inlist.write(output_path=tmp_dir, include_additional_options=include_additional_options)
+            inlist.write(output_path=tmp_dir, include_additional_options=include_additional_options, include_comment_block=include_comment_blocks)
 
         # symlink executable (may be dangling until compile)
         _link_into_model_dir(

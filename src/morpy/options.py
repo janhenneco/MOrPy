@@ -301,6 +301,9 @@ class Inlist:
         source_path: Path to the inlist file from which this object was parsed,
             None if this Inlist object was not initialised from a file.
         additional_options: UnclassifiedNamelist object
+        comment_block: String containing any information about the inlist 
+            to be placed at the top of the inlist file (text will be commented
+            automatically upon write).
         empty_namelists: Known MESA namelist blocks that were present in the
             source inlist but contained no options.
         
@@ -310,6 +313,7 @@ class Inlist:
     options: dict[str, MesaOption] = field(default_factory=dict)
     additional_options: list[UnclassifiedNamelist] = field(default_factory=list)
     empty_namelists: set[MesaNameList] = field(default_factory=set)
+    comment_block: str | None = None
     source_path: Path | None = None
 
     def __post_init__(self) -> None:
@@ -606,7 +610,7 @@ class Inlist:
 
         return True
 
-    def write(self, output_path: Path | str, include_additional_options: bool = False) -> Path:
+    def write(self, output_path: Path | str, include_additional_options: bool = False, include_comment_block: bool = True) -> Path:
         """Method to write the contents of an Inlist object to an inlist file that
             can be read by MESA.
 
@@ -614,6 +618,8 @@ class Inlist:
             output_path: Path object for the location and filename of the inlist file.
             include_additional_options: Optional argument to write any additional
                 UnclassifiedNamelist objects to the inlist. Default = False
+            include_comment_block: If True, the Inlist.comment_block is
+                placed at the top of the inlist file.
         Returns: 
             Path object pointing to location of written inlist file.
         Raises: 
@@ -671,6 +677,12 @@ class Inlist:
         explicit_empty_blocks: set[MesaNameList] = set(self.empty_namelists)
 
         lines: list[str] = []
+
+        if include_comment_block and self.comment_block is not None:
+            comment_lines = self.comment_block.splitlines()
+            lines.extend(f"! {line}" for line in comment_lines)
+            lines.append("")
+        
 
         for block in block_order:
             # In binary mode, do not write kap/eos blocks at all.

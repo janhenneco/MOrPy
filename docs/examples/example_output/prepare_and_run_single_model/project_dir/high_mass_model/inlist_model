@@ -1,3 +1,7 @@
+! This inlist is intended as an example only.
+! It should not be used for science runs, but can serve as
+! a basis for creating a proper inlist.
+
 &star_job
    show_log_description_at_start = .false.
    load_saved_model = .false. ! DEFAULT
