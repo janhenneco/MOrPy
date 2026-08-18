@@ -3,6 +3,7 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import shutil
 
 from .repository import LiveProcessRegistry, RunRepository, Tracker
 
@@ -249,17 +250,18 @@ def print_grid_status(
                 # Fall back to ANSI if IPython is unavailable.
                 pass
         if clear_screen:
-            print("\033[2J\033[H", end="")
+            print("\033[H\033[2J\033[3J", end="")  # also clears scrollback (3J)
 
+    
     def _render_once() -> None:
         rows = grid_status(tracker)
-
+    
         if not rows:
             print("No models found.", flush=True)
             return
-
+    
         rows.sort(key=lambda r: (_state_order(r.state), r.model_name.lower(), r.model_id))
-
+    
         if show_resume_summary:
             summary = _build_resume_summary(rows)
             print(
@@ -273,35 +275,51 @@ def print_grid_status(
                 flush=True,
             )
             print("", flush=True)
-
-        headers = ("MODEL", "STATE", "PID", "RC")
-        model_w = max(len(headers[0]), *(len(r.model_name) for r in rows))
-        state_w = max(len(headers[1]), *(len(r.state) for r in rows))
-        pid_w = max(len(headers[2]), *(len(str(r.pid)) if r.pid is not None else 1 for r in rows))
-        rc_w = max(len(headers[3]), *(len(str(r.return_code)) if r.return_code is not None else 1 for r in rows))
-
-        def _line(model: str, state: str, pid: str, rc: str) -> str:
-            return f"{model:<{model_w}}  {state:<{state_w}}  {pid:>{pid_w}}  {rc:>{rc_w}}"
-
+    
         now = datetime.now().astimezone()
         offset = now.strftime('%z')
         offset = offset[:3] + ":" + offset[3:]
         print(f"[{now:%Y-%m-%d %H:%M:%S} UTC{offset}]\n")
-        print(_line(*headers), flush=True)
-        print(_line("-" * model_w, "-" * state_w, "-" * pid_w, "-" * rc_w), flush=True)
-
-        for r in rows:
+    
+        # Build one formatted cell string per row: "MODEL STATE PID/RC"
+        model_w = max(len("MODEL"), *(len(r.model_name) for r in rows))
+        state_w = max(len("STATE"), *(len(r.state) for r in rows))
+    
+        def _cell(r) -> str:
             pid = "" if r.pid is None else str(r.pid)
             rc = "" if r.return_code is None else str(r.return_code)
-            print(_line(r.model_name, r.state, pid, rc), flush=True)
+            pidrc = f"{pid}/{rc}" if (pid or rc) else ""
+            return f"{r.model_name:<{model_w}} {r.state:<{state_w}} {pidrc}"
+    
+        cells = [_cell(r) for r in rows]
+        cell_w = max(len(c) for c in cells) + 2  # padding between columns
+    
+        term_size = shutil.get_terminal_size(fallback=(120, 40))
+        # Reserve a few lines for summary/timestamp/prompt
+        available_lines = max(term_size.lines - 6, 5)
+        max_cols = max(term_size.columns // cell_w, 1)
+        n_cols = min(max_cols, -(-len(cells) // available_lines))  # ceil division for rows-per-col
+        n_cols = max(n_cols, 1)
+        n_rows_per_col = -(-len(cells) // n_cols)  # ceil
+    
+        # Pad cells list to fill the grid evenly
+        padded = cells + [""] * (n_rows_per_col * n_cols - len(cells))
+    
+        for row_i in range(n_rows_per_col):
+            line_parts = []
+            for col_i in range(n_cols):
+                idx = col_i * n_rows_per_col + row_i
+                line_parts.append(f"{padded[idx]:<{cell_w}}")
+            print("".join(line_parts).rstrip(), flush=True)
 
     if refresh_seconds is None:
         _render_once()
         return
 
     try:
+        print("\033[?1049h", end="")  # enter alt screen
         while True:
-            _clear_output()
+            print("\033[H", end="")  # just move cursor home, no need to clear — new content overwrites old
             _render_once()
             time.sleep(refresh_seconds)
     except KeyboardInterrupt:

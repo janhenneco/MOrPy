@@ -84,6 +84,8 @@ def create_projectdir(
     projectdir_path = Path(projectdir_path)
     work_template = config.mesa_dir / mode / "work"
     defaults_template = config.mesa_dir / mode / "defaults"
+    # We need this because the history and profile columns files always live in star, never in binary.
+    star_defaults_template = config.mesa_dir / "star" / "defaults"    
 
     if not work_template.is_dir():
         raise FileNotFoundError(f"Template work directory does not exist: {work_template}")
@@ -136,7 +138,10 @@ def create_projectdir(
         # Optional assets
         if include_columns_files:
             for name in _columns_files_for_mode(mode):
-                src = defaults_template / name
+                if name in ("history_columns.list", "profile_columns.list"):
+                    src = star_defaults_template / name
+                else:
+                    src = defaults_template / name
                 if src.exists():
                     _copy_entry(src, tmp_dir / name)
 
