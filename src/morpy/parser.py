@@ -242,9 +242,28 @@ def parse_defaults_file(namelist: MesaNameList, source_path: Path | str, config:
                     name=name,
                     default_option=value,
                     description=desc,
-                    namelist=namelist,
-                )
+                    namelist=namelist)
                 pending_description = []
+
+    # For some reason, the extra_binary_controls_inlist_name(:) and read_extra_binary_controls_inlist(:) options
+    # are not part of the binary_controls defaults file. As a result we get a ValueError when dealing with binary inlists.
+    # This is not the most elegant fix, but for now we'll add them manually here if they are missing...
+    if namelist == 'binary_controls':
+        if not 'extra_binary_controls_inlist_name(:)' in df.options.keys():
+            df.options['extra_binary_controls_inlist_name(:)'] = MesaOption(
+                name='extra_binary_controls_inlist_name(:)', 
+                default_option='undefined', 
+                description='', 
+                namelist=namelist)
+        if not 'read_extra_binary_controls_inlist(:)' in df.options.keys():
+                    df.options['read_extra_binary_controls_inlist(:)'] = MesaOption(
+                        name='read_extra_binary_controls_inlist(:)', 
+                        default_option='.false.', 
+                        description='One can split controls inlist into pieces using the following parameters. ' \
+                        'BTW: it works recursively, so the extras can read extras too. ' \
+                        'If ``read_extra_controls_inlist(1)`` is true, then read &controls from this namelist file.', 
+                        namelist=namelist)
+
     
     return df
 
@@ -409,9 +428,5 @@ def parse_inlist(source_path: Path | str,
 
     return il
 
-# TODO: curently, empty namelist blocks will be skipped in inlits.write becasue there are no options in 
-# inlist.options with that namelist type. I should change the inlist parser and Inlist class 
-# so that empty blocks are added to an Inlist attribute and subsequently written as empty blocks if there
-# are still no options for that namelist at the time Inlist.write() is called.
 
 
