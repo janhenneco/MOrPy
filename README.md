@@ -33,7 +33,7 @@ Clone or download the repository, if necessary extract it, and move into the roo
 
 conda:
 ```
-conda create -n morpy python=3.11 -y
+conda create -n morpy python=3.11
 conda activate morpy
 ```
 
@@ -47,20 +47,20 @@ source .venv/bin/activate
 
 ```
 python -m pip install --upgrade pip setuptools wheel
-python -m pip install -e .
+python -m pip install .
 ```
 
 or install with all optional dependencies:
 
 ```
-python -m pip install -e ".[preview,mpi,docs]"
+python -m pip install ".[preview,mpi,docs]"
 ```
 
 #### 2.2 MPI-aware installation (for HPC users)
 
 In some cases, the installed `mpi4py` package and the `MPI` installation are not compatible by default. If this is the case for you, follow these instructions:
 
-**1. Verify the MPI installation**
+1. **Verify the MPI installation**
 
 Verify if and what version of MPI is installed and loaded by using:
 
@@ -70,7 +70,7 @@ ompi_info
 
 Depending on your system/cluster, the MPI installation will have to be loaded via environment modules. If unsure, please consult your system/cluster's documentation or contact your system administrator. 
 
-**2. Find MPI location**
+2. **Find MPI location**
 
 Next, you want to see where MPI lives. You can do this by running:
 
@@ -79,18 +79,8 @@ which mpicc
 ```
 
 Ideally, this outputs something like `/usr/bin/mpicc`. Take note of this location for later. 
-If multiple versions of MPI are installed, such as a system version and one from conda, you want the `which mpicc` command to point to your desired location.
 
-To make sure it does, prepend it to your PATH:
-
-```
-export PATH=/LOCATION_OF_MPI_BINARY:$PATH
-```
-
-Here, `/LOCATION_OF_MPI_BINARY` should be the absolute path to the directory in which the MPI binary is located, not the path to the binary itself.
-I.e., for `/usr/bin/mpicc`, this should be `/usr/bin`
-
-**3. Install `mpi4py` compiled against your MPI version**
+3. **Install `mpi4py` compiled against your MPI version**
 
 With your desired conda/venv environment activated, install `mpi4py` using `pip` while specifying the location of your MPI installation:
 
@@ -100,10 +90,10 @@ MPICC=/PATH_TO_MPI_BINARY pip install --no-binary=mpi4py mpi4py
 Here, `/PATH_TO_MPI_BINARY` should be the path to the MPI binary, e.g. `/usr/bin/mpicc`.
 The `no-binary` option prevents `pip` from installing a pre-built version of `mpi4py` and compiles it against you desired MPI installation.
 
-**4. Install `morpy` without reinstalling `mpi4py`**
+4. **Install `morpy` without reinstalling `mpi4py`**
 ```
 python -m pip install -e ".[preview,docs]"
-```
+``` 
 
 ### 3. Verify installation
 
@@ -112,6 +102,30 @@ To verify if `morpy` was installed successfully, just run
 ```
 python -c "import morpy; print('MOrPy installed successfully')"
 ```
+
+### 4. Install `ipykernel` (OPTIONAL)
+
+If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`.
+
+With the `morpy` environment activated, install `ipykernel`
+
+```
+conda install ipykernel
+```
+
+or 
+
+```
+python -m pip install ipykernel
+```
+
+Then create the kernel and give it a recognisable name (in this case "MOrPy")
+
+```
+python -m ipykernel install --user --name morpy --display-name "MOrPy"
+```
+
+After that, just restart you preexisting Jupyter server if it was already running. When you want to execute a Jupyter notebook on this server, you just have to select the `MOrPy` kernel, which should be in you kernel list now.
 
 ## MOrPy Modules
 
