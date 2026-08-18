@@ -223,6 +223,7 @@ __marimo__/
 !docs/build/
 !docs/build/**
 !docs/examples/**
+docs/examples/**/.ipynb_checkpoints/
 
 # tests
 tests/data_for_tests/
