@@ -1,4 +1,4 @@
-"""This module defines CLI functions for `morpy`.
+"""This module defines CLI commands for `morpy`.
 """
 
 import argparse
@@ -12,6 +12,9 @@ def _build_tracker(project_dir: str, db_name: str) -> Tracker:
     return Tracker.create(db_path=db_path)
 
 def main_status() -> None:
+    '''Function that defines the `morpy_status` CLI command.
+    Makes use of status.print_grid_status().
+    '''
     parser = argparse.ArgumentParser(prog="morpy_status", description="Print MOrPy grid status.")
     parser.add_argument("project_dir", help="Path to the project directory.")
     parser.add_argument("db_name", help="Database filename inside project_dir.")
@@ -23,6 +26,9 @@ def main_status() -> None:
 
 
 def main_stop() -> None:
+    '''Function that defines the `morpy_stop` CLI command.
+    Makes use of grid_run.stop_grid().
+    '''
     parser = argparse.ArgumentParser(prog="morpy_stop", description="Stop a running MOrPy grid.")
     parser.add_argument("project_dir", help="Path to the project directory.")
     parser.add_argument("db_name", help="Database filename inside project_dir.")

@@ -131,7 +131,7 @@ class MesaVersion:
 
 @dataclass
 class MesaConfig:
-    """ Class that holds the configuration related to the used MESA version.
+    """Class that holds the configuration related to the used MESA version.
     
     Attributes:
         mesa_dir: Path to the MESA source directory.

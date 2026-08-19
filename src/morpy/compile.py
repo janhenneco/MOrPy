@@ -1,13 +1,15 @@
-"""Compilation helpers for project-level MESA executables.
+"""Module for compiling the MESA binaries (executables) 
+`star` and `binary` with morpy.
 
 This module runs clean and mk scripts to create the Fortran executables
 for a project directory and reports structured compile outcomes.
 
-- CommandResult for individual script executions.
-- CompileResult for overall compile status.
-- compile_project as the main compile entrypoint.
-
-It also ensures relevant scripts and produced executables are executable.
+- CommandResult contains the result of individual commands.
+- CompileResult contains the result of the entire MESA 
+    compilation process. 
+- compile_project is the main function to be used by the 
+    user to compile the MESA executables. It also ensures
+    that the relevant scripts are executable.
 """
 
 from dataclasses import dataclass
@@ -19,11 +21,14 @@ import subprocess
 import time
 
 
+# For projects with single- or binary-star models.
 WorkdirMode = Literal["star", "binary"]
 
 
 @dataclass
 class CommandResult:
+    """Object that stores information about a single executed command.
+    """
     command_path: Path
     return_code: int
     duration_seconds: float
@@ -47,6 +52,9 @@ class CommandResult:
 
 @dataclass
 class CompileResult:
+    """Object that stores information about the whole MESA
+    compilation procedure.
+    """
     success: bool
     return_code: int
     duration_seconds: float
@@ -98,6 +106,14 @@ class CompileResult:
         return out
 
     def pretty(self, max_output_chars: int = 400) -> str:
+        '''Function to display the contents of a CompileResult object
+        in a more human-readable way.
+
+        Args:
+            max_output_chars: Maximum numbers of characters
+                to be displayed. Set to lower number to avoid
+                cluttering the output/terminal.
+        '''
         d = self.to_dict(flatten=True, max_output_chars=max_output_chars)
         lines = [f"{k}: {v}" for k, v in d.items()]
         return "\n".join(lines)
@@ -134,7 +150,7 @@ def _ensure_executable(path: Path) -> None:
 
 
 def _looks_like_model_dir(path: Path) -> bool:
-    """Private helper function to detect model directories in projectdir."""
+    """Private helper function to detect model directories in project directory."""
     if not path.is_dir():
         return False
     if path.name.startswith("."):
@@ -151,10 +167,10 @@ def _looks_like_model_dir(path: Path) -> bool:
 
 
 def _collect_model_dirs(projectdir_path: Path) -> list[Path]:
-    """Private helper function to collect model directories in projectdir."""
+    """Private helper function to collect model directories in project directories."""
     return sorted(
         [p for p in projectdir_path.iterdir() if _looks_like_model_dir(p)],
-        key=lambda p: p.name,
+        key=lambda p: p.name
     )
 
 
@@ -177,8 +193,7 @@ def _run_script(
     *,
     cwd: Path,
     env: Mapping[str, str] | None = None,
-    timeout: float | None = None,
-) -> CommandResult:
+    timeout: float | None = None) -> CommandResult:
     """Private helper function to run build script and capture output."""
     start = time.perf_counter()
 

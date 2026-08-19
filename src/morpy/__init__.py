@@ -1,7 +1,4 @@
-"""Public package exports for mesa-runner.
-
-This module re-exports the primary user-facing classes and functions from
-submodules so common workflows can be accessed from a single import point.
+"""Public package exports for morpy.
 """
 
 from .config import (MesaConfig, 
