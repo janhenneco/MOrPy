@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.project_setup - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.project_setup - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,60 +243,63 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.project_setup</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Project-directory creation utilities for MESA runs.</span>
+<span></span><span class="sd">"""Project-directory creation utilities for MESA runs.</span>
 
 <span class="sd">This module creates and validates project directories from MESA work templates,</span>
 <span class="sd">including required build/run scripts and optional columns-list assets.</span>
 
 <span class="sd">The goal is to provide an idempotent, reproducible project layout that can</span>
 <span class="sd">be used by create_modeldir, compile, and run workflows.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MesaConfig</span><span class="p">,</span> <span class="n">require_active_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.grid_run</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridRunItem</span><span class="p">,</span> <span class="n">_normalize_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tracker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.work_setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_modeldir</span>
 
-<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">]</span>
+<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">]</span>
 
-<span class="n">_REQUIRED_CONTENT</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;mk&quot;</span><span class="p">,</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span> <span class="s2">&quot;re&quot;</span><span class="p">)</span>
+<span class="n">_REQUIRED_CONTENT</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"src"</span><span class="p">,</span> <span class="s2">"make"</span><span class="p">,</span> <span class="s2">"clean"</span><span class="p">,</span> <span class="s2">"mk"</span><span class="p">,</span> <span class="s2">"rn"</span><span class="p">,</span> <span class="s2">"re"</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_columns_files_for_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return optional files always needed&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return optional files always needed"""</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"binary"</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="s2">&quot;binary_history_columns.list&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;history_columns.list&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;profile_columns.list&quot;</span><span class="p">,</span>
+            <span class="s2">"binary_history_columns.list"</span><span class="p">,</span>
+            <span class="s2">"history_columns.list"</span><span class="p">,</span>
+            <span class="s2">"profile_columns.list"</span><span class="p">,</span>
         <span class="p">]</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;history_columns.list&quot;</span><span class="p">,</span> <span class="s2">&quot;profile_columns.list&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">"history_columns.list"</span><span class="p">,</span> <span class="s2">"profile_columns.list"</span><span class="p">]</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function for copying directories and files&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private helper function for copying directories and files"""</span>
     <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">symlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">src</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported path type: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported path type: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_existing_projectdir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to validate if project directory creation was successful&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private helper function to validate if project directory creation was successful"""</span>
     <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_REQUIRED_CONTENT</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
     <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
-        <span class="n">missing_txt</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span>
+        <span class="n">missing_txt</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Project directory exists but is missing required entries: </span><span class="si">{</span><span class="n">missing_txt</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Project directory exists but is missing required entries: </span><span class="si">{</span><span class="n">missing_txt</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_has_run_binary_extras</span><span class="p">(</span><span class="n">src_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if src contains a file named run_binary_extras, ignoring extension.&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">src_dir</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return True if src contains a file named run_binary_extras, ignoring extension."""</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">src_dir</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*"</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">continue</span>
         <span class="c1"># Match run_binary_extras, run_binary_extras.f90, run_binary_extras.F90, etc.</span>
-        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;run_binary_extras&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"run_binary_extras"</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
@@ -309,37 +313,39 @@
      <span class="n">src_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a MESA project directory from star/work or binary/work.</span>
+<span class="w">    </span><span class="sd">"""Create a MESA project directory from star/work or binary/work.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        projectdir_path: Path to the project directory to create.</span>
-<span class="sd">        mode: &quot;star&quot; or &quot;binary&quot;</span>
+<span class="sd">        mode: "star" or "binary"</span>
 <span class="sd">        include_columns_files: Add applicable \*_columns.list files to the project directory.</span>
 <span class="sd">        src_path: Use this src folder instead of the template src folder.</span>
 <span class="sd">        config: MesaConfig</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Path to the created or validated project directory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mode must be &#39;star&#39; or &#39;binary&#39;, got: </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mode must be 'star' or 'binary', got: </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">projectdir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
-    <span class="n">work_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="n">mode</span> <span class="o">/</span> <span class="s2">&quot;work&quot;</span>
-    <span class="n">defaults_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="n">mode</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span>
+    <span class="n">work_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="n">mode</span> <span class="o">/</span> <span class="s2">"work"</span>
+    <span class="n">defaults_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="n">mode</span> <span class="o">/</span> <span class="s2">"defaults"</span>
+    <span class="c1"># We need this because the history and profile columns files always live in star, never in binary.</span>
+    <span class="n">star_defaults_template</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="s2">"star"</span> <span class="o">/</span> <span class="s2">"defaults"</span>    
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">work_template</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Template work directory does not exist: </span><span class="si">{</span><span class="n">work_template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Template work directory does not exist: </span><span class="si">{</span><span class="n">work_template</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Idempotent path: existing directory is validated then returned.</span>
     <span class="k">if</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot create project directory because path exists and is not a directory: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot create project directory because path exists and is not a directory: "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">_validate_existing_projectdir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">projectdir_path</span>
@@ -350,39 +356,42 @@
     <span class="k">if</span> <span class="n">src_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">custom_src</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">custom_src</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provided src_path is not a directory: </span><span class="si">{</span><span class="n">custom_src</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Provided src_path is not a directory: </span><span class="si">{</span><span class="n">custom_src</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_run_binary_extras</span><span class="p">(</span><span class="n">custom_src</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"binary"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_run_binary_extras</span><span class="p">(</span><span class="n">custom_src</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="s2">&quot;Binary mode with custom src requires a run_binary_extras file &quot;</span>
-                <span class="s2">&quot;in the provided src directory.&quot;</span>
+                <span class="s2">"Binary mode with custom src requires a run_binary_extras file "</span>
+                <span class="s2">"in the provided src directory."</span>
             <span class="p">)</span>
 
-    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">projectdir_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">projectdir_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">committed</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">tmp_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Required scaffold</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_REQUIRED_CONTENT</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;src&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"src"</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">src</span> <span class="o">=</span> <span class="n">work_template</span> <span class="o">/</span> <span class="n">name</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Required template entry not found in </span><span class="si">{</span><span class="n">work_template</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Required template entry not found in </span><span class="si">{</span><span class="n">work_template</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span>
 
-        <span class="n">src_to_copy</span> <span class="o">=</span> <span class="n">custom_src</span> <span class="k">if</span> <span class="n">custom_src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">work_template</span> <span class="o">/</span> <span class="s2">&quot;src&quot;</span><span class="p">)</span>
+        <span class="n">src_to_copy</span> <span class="o">=</span> <span class="n">custom_src</span> <span class="k">if</span> <span class="n">custom_src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">work_template</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">src_to_copy</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;src directory not found: </span><span class="si">{</span><span class="n">src_to_copy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src_to_copy</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="s2">&quot;src&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"src directory not found: </span><span class="si">{</span><span class="n">src_to_copy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src_to_copy</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">)</span>
 
         <span class="c1"># Optional assets</span>
         <span class="k">if</span> <span class="n">include_columns_files</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_columns_files_for_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
-                <span class="n">src</span> <span class="o">=</span> <span class="n">defaults_template</span> <span class="o">/</span> <span class="n">name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"history_columns.list"</span><span class="p">,</span> <span class="s2">"profile_columns.list"</span><span class="p">):</span>
+                    <span class="n">src</span> <span class="o">=</span> <span class="n">star_defaults_template</span> <span class="o">/</span> <span class="n">name</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">src</span> <span class="o">=</span> <span class="n">defaults_template</span> <span class="o">/</span> <span class="n">name</span>
                 <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                     <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span>
 
@@ -396,6 +405,76 @@
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
     
+<div class="viewcode-block" id="prepare_grid">
+<a class="viewcode-back" href="../../api/module_morpy_project_setup.html#morpy.prepare_grid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_grid</span><span class="p">(</span>
+    <span class="n">project_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">grid_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">restart</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"runs.db"</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">include_additional_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">include_comment_blocks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create/validate model directories and the tracking DB for a grid, consistently.</span>
+
+<span class="sd">    Cross-checks `restart` against whether `project_dir/db_name` already exists,</span>
+<span class="sd">    and refuses to proceed if they disagree — this is the only guard against</span>
+<span class="sd">    accidentally wiping existing model output or grid history.</span>
+
+<span class="sd">    Models already present in the DB (matched by model_path) are not re-registered, </span>
+<span class="sd">    so calling this with restart=True and extra models in grid_list will register </span>
+<span class="sd">    only the new ones.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError if `restart` disagrees with the DB's actual existence.</span>
+<span class="sd">    """</span>
+    <span class="n">project_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">/</span> <span class="n">db_name</span>
+    <span class="n">db_existed</span> <span class="o">=</span> <span class="n">db_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">restart</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">db_existed</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"restart=True but no database found at </span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="s2">"This looks like a first run for this project — call with restart=False instead."</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">restart</span> <span class="ow">and</span> <span class="n">db_existed</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"restart=False but </span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s2"> already exists, meaning this grid has run before. "</span>
+            <span class="s2">"Refusing to overwrite model directories and output. "</span>
+            <span class="sa">f</span><span class="s2">"Delete </span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s2"> manually if you want a fresh start."</span>
+        <span class="p">)</span>
+
+    <span class="n">overwrite</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">restart</span>
+    <span class="n">reuse_existing</span> <span class="o">=</span> <span class="n">restart</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">grid_list</span><span class="p">:</span>
+        <span class="n">create_modeldir</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">projectdir_path</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span>
+            <span class="n">reuse_existing</span><span class="o">=</span><span class="n">reuse_existing</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">include_additional_options</span><span class="o">=</span><span class="n">include_additional_options</span><span class="p">,</span>
+            <span class="n">include_comment_blocks</span><span class="o">=</span><span class="n">include_comment_blocks</span> 
+        <span class="p">)</span>
+
+    <span class="n">tracker</span> <span class="o">=</span> <span class="n">Tracker</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">db_path</span><span class="o">=</span><span class="n">db_path</span><span class="p">)</span>
+    <span class="n">known_paths</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">_normalize_path</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">list_model_rows</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">}</span>
+    <span class="c1"># When we restart a grid but added new models, they will still be added to the DB file.</span>
+    <span class="n">new_models</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">model</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">grid_list</span>
+        <span class="k">if</span> <span class="n">_normalize_path</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_paths</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">new_models</span><span class="p">:</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">add_models_to_repo</span><span class="p">(</span><span class="n">models</span><span class="o">=</span><span class="n">new_models</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tracker</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -428,7 +507,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

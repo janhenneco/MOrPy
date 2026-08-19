@@ -79,7 +79,10 @@ def _make_handle(model_id: str) -> RunHandle:
 
 @pytest.mark.parametrize("backend", ["local", "mpi"])
 def test_cancel_pending_items_marks_restart_when_requested(backend):
-    pending = deque([_make_item("a1"), _make_item("a2")])
+    pending = deque([
+        _make_item("a1", state=ModelState.QUEUED),
+        _make_item("a2", state=ModelState.QUEUED),
+    ])
     observer = DummyObserver()
     results: list[RunResult] = []
 
@@ -101,6 +104,27 @@ def test_cancel_pending_items_marks_restart_when_requested(backend):
     assert all(r.metadata["backend"] == backend for r in results)
     assert all("Cancelled before launch" in r.stderr for r in results)
 
+
+@pytest.mark.parametrize("backend", ["local", "mpi"])
+def test_cancel_pending_items_leaves_draft_items_untouched(backend):
+    pending = deque([_make_item("a1"), _make_item("a2")])  # default state=DRAFT
+    observer = DummyObserver()
+    results: list[RunResult] = []
+
+    _cancel_pending_items(
+        pending,
+        results=results,
+        backend=backend,
+        command_name="rn",
+        sync_before_run=True,
+        stop_reason=_RESTART_REQUEST_TAG,
+        observer=observer,
+        restart_triggered=True,
+    )
+
+    assert results == []
+    assert observer.finished == []
+    assert observer.transitions == []
 
 @pytest.mark.parametrize("backend", ["local", "mpi"])
 def test_cancel_pending_items_does_not_mark_restart_without_trigger(backend):

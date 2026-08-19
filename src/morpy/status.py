@@ -232,6 +232,8 @@ def print_grid_status(
         raise ValueError("refresh_seconds must be > 0")
 
     def _state_order(state: str) -> int:
+        if state == "running":
+            return 0
         if state == "restart":
             return 1
         if state in {"queued", "preparing"}:
@@ -310,7 +312,7 @@ def print_grid_status(
             for col_i in range(n_cols):
                 idx = col_i * n_rows_per_col + row_i
                 line_parts.append(f"{padded[idx]:<{cell_w}}")
-            print("".join(line_parts).rstrip(), flush=True)
+            print("".join(line_parts) + "\033[K", flush=True)
 
     if refresh_seconds is None:
         _render_once()

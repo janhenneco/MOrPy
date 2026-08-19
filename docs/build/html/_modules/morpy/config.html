@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.config - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.config - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,7 +243,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.config</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Configuration and environment utilities.</span>
+<span></span><span class="sd">"""Configuration and environment utilities.</span>
 
 <span class="sd">This module resolves MESA installation metadata and runtime shell environment.</span>
 
@@ -252,7 +253,7 @@
 
 <span class="sd">It also provides active-config helpers so other modules can use a shared</span>
 <span class="sd">MesaConfig context without repeatedly passing it through every call.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">total_ordering</span>
@@ -267,28 +268,28 @@
 <span class="c1"># This bit is here to make the active MesaConfig available by all modules</span>
 <span class="c1"># and avoid users having to pass a MesaVersion object when initialising Inlist and Model</span>
 <span class="c1"># instances.</span>
-<span class="n">_ACTIVE_CONFIG</span><span class="p">:</span> <span class="n">ContextVar</span><span class="p">[</span><span class="s2">&quot;MesaConfig | None&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span><span class="s2">&quot;_ACTIVE_CONFIG&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">_ACTIVE_CONFIG</span><span class="p">:</span> <span class="n">ContextVar</span><span class="p">[</span><span class="s2">"MesaConfig | None"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContextVar</span><span class="p">(</span><span class="s2">"_ACTIVE_CONFIG"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 <div class="viewcode-block" id="set_active_config">
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.set_active_config">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_active_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="s2">&quot;MesaConfig&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_active_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="s2">"MesaConfig"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">_ACTIVE_CONFIG</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_active_config">
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.get_active_config">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_active_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;MesaConfig | None&quot;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_active_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">"MesaConfig | None"</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">_ACTIVE_CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="require_active_config">
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.require_active_config">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">require_active_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;MesaConfig&quot;</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">require_active_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">"MesaConfig"</span><span class="p">:</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">get_active_config</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">cfg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-            <span class="s2">&quot;No active MesaConfig found. Run MesaConfig.setup(...) first, &quot;</span>
-            <span class="s2">&quot;or pass mesa_version/config explicitly.&quot;</span>
+            <span class="s2">"No active MesaConfig found. Run MesaConfig.setup(...) first, "</span>
+            <span class="s2">"or pass mesa_version/config explicitly."</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">cfg</span></div>
 
@@ -298,7 +299,7 @@
 <span class="nd">@total_ordering</span>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MesaVersion</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that holds and sets the MESA version in raw and normalised numeric format to allow comparisons.</span>
+<span class="w">    </span><span class="sd">"""Class that holds and sets the MESA version in raw and normalised numeric format to allow comparisons.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        version_name: Raw format of the MESA version</span>
@@ -310,7 +311,7 @@
 <span class="sd">            Represents the second pair of digits of rXX.XX.X </span>
 <span class="sd">        patch: Optional attribute set in case `version_name` is in release format. </span>
 <span class="sd">            Represents the last digit of rXX.XX.X </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">version_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">scheme</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">revision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -322,7 +323,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.MesaVersion.parse_mesa_version">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_mesa_version</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">version_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Parse the raw MESA version string into a normalised MesaVersion.</span>
+<span class="w">        </span><span class="sd">""" Parse the raw MESA version string into a normalised MesaVersion.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            version_name: Raw MESA version string, for example `r23.05.1`, `12786`,</span>
@@ -333,46 +334,46 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If `version_name` does not match a supported format.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># strip whitespaces and quotation marks</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">version_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">version_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">'"</span><span class="se">\'</span><span class="s1">'</span><span class="p">)</span>
         <span class="c1"># check if the version name is in the release format, i.e. rXX.XX.X</span>
-        <span class="n">release_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;r?(\d+)\.(\d+)(?:\.(\d+))?&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+        <span class="n">release_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"r?(\d+)\.(\d+)(?:\.(\d+))?"</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
         <span class="c1"># if in the release format, then extract year, month, and patch number</span>
         <span class="k">if</span> <span class="n">release_match</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
                 <span class="n">version_name</span> <span class="o">=</span> <span class="n">version_name</span><span class="p">,</span> 
-                <span class="n">scheme</span> <span class="o">=</span> <span class="s2">&quot;release&quot;</span><span class="p">,</span>
+                <span class="n">scheme</span> <span class="o">=</span> <span class="s2">"release"</span><span class="p">,</span>
                 <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">release_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
                 <span class="n">month</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">release_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
                 <span class="n">patch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">release_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
             <span class="p">)</span>
         
         <span class="c1"># if version_name was not in release format, it is likely (otherwise wrong format) in revision format</span>
-        <span class="n">revision_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;r?(\d+)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+        <span class="n">revision_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"r?(\d+)"</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">revision_match</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
                 <span class="n">version_name</span> <span class="o">=</span> <span class="n">version_name</span><span class="p">,</span>
-                <span class="n">scheme</span> <span class="o">=</span> <span class="s2">&quot;revision&quot;</span><span class="p">,</span>
+                <span class="n">scheme</span> <span class="o">=</span> <span class="s2">"revision"</span><span class="p">,</span>
                 <span class="n">revision</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">revision_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
             <span class="p">)</span>
         
         <span class="c1"># Git hash format: 7 to 40 hex characters</span>
-        <span class="n">git_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9a-f]{7,40}&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+        <span class="n">git_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[0-9a-f]{7,40}"</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">git_match</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
                 <span class="n">version_name</span> <span class="o">=</span> <span class="n">version_name</span><span class="p">,</span>
-                <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;git&quot;</span><span class="p">,</span>
+                <span class="n">scheme</span><span class="o">=</span><span class="s2">"git"</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># if the `return` statement has not been triggered by now, there is something wrong with the format</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not parse MESA version: </span><span class="si">{</span><span class="n">version_name</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not parse MESA version: </span><span class="si">{</span><span class="n">version_name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span></div>
 
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_comparison_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;revision&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">"revision"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;git&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">"git"</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">)</span>
 
@@ -392,14 +393,14 @@
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.MesaConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MesaConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class that holds the configuration related to the used MESA version.</span>
+<span class="w">    </span><span class="sd">""" Class that holds the configuration related to the used MESA version.</span>
 <span class="sd">    </span>
 <span class="sd">    Attributes:</span>
 <span class="sd">        mesa_dir: Path to the MESA source directory.</span>
 <span class="sd">        mesa_version: MesaVersion object</span>
 <span class="sd">        version_raw: Optional attribute with the raw MESA version name. </span>
 <span class="sd">            Only needed when the MESA version cannot be recovered from the MESA directory. </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">mesa_dir</span><span class="p">:</span> <span class="n">Path</span>
     <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span>
     <span class="n">version_raw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -408,7 +409,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_config.html#morpy.MesaConfig.setup">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mesa_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">version_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a MesaConfig from a MESA source directory.</span>
+<span class="w">        </span><span class="sd">"""Create a MesaConfig from a MESA source directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mesa_dir: Optional path to the MESA source directory. If omitted, uses</span>
@@ -423,19 +424,19 @@
 <span class="sd">            EnvironmentError: If `MESA_DIR` is not set and `mesa_dir` is not provided.</span>
 <span class="sd">            FileNotFoundError: If the resolved MESA directory does not exist.</span>
 <span class="sd">            ValueError: If version parsing fails or a git hash requires manual input.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">mesa_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resolved</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">mesa_dir</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">env_value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MESA_DIR&quot;</span><span class="p">)</span>
+            <span class="n">env_value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MESA_DIR"</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">env_value</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span>
-                    <span class="s2">&quot;MESA_DIR is not set and no mesa_dir was provided.&quot;</span>
+                    <span class="s2">"MESA_DIR is not set and no mesa_dir was provided."</span>
                 <span class="p">)</span>
             <span class="n">resolved</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">env_value</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">resolved</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MESA directory does not exist: </span><span class="si">{</span><span class="n">resolved</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MESA directory does not exist: </span><span class="si">{</span><span class="n">resolved</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">version_raw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -443,19 +444,19 @@
         <span class="k">if</span> <span class="n">version_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mesa_version</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="n">version_name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">version_file</span> <span class="o">=</span> <span class="n">resolved</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;version_number&quot;</span>
+            <span class="n">version_file</span> <span class="o">=</span> <span class="n">resolved</span> <span class="o">/</span> <span class="s2">"data"</span> <span class="o">/</span> <span class="s2">"version_number"</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">version_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MESA version file does not exist: </span><span class="si">{</span><span class="n">version_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MESA version file does not exist: </span><span class="si">{</span><span class="n">version_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-            <span class="n">version_raw</span> <span class="o">=</span> <span class="n">version_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">version_raw</span> <span class="o">=</span> <span class="n">version_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">mesa_version</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="n">version_raw</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">mesa_version</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;git&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mesa_version</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">"git"</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;MESA version detected as git hash (</span><span class="si">{</span><span class="n">version_raw</span><span class="si">}</span><span class="s2">). &quot;</span>
-                    <span class="s2">&quot;Cannot determine version scheme automatically. &quot;</span>
-                    <span class="s2">&quot;Please specify version_name manually: &quot;</span>
-                    <span class="s2">&quot;MesaConfig.setup(version_name=&#39;r23.05.1&#39;)&quot;</span>
+                    <span class="sa">f</span><span class="s2">"MESA version detected as git hash (</span><span class="si">{</span><span class="n">version_raw</span><span class="si">}</span><span class="s2">). "</span>
+                    <span class="s2">"Cannot determine version scheme automatically. "</span>
+                    <span class="s2">"Please specify version_name manually: "</span>
+                    <span class="s2">"MesaConfig.setup(version_name='r23.05.1')"</span>
                 <span class="p">)</span>
 
         <span class="n">cfg</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
@@ -475,10 +476,10 @@
         <span class="n">mesasdk_root</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">omp_num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">apply_to_process</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">shell_executable</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/bin/bash&quot;</span><span class="p">,</span>
+        <span class="n">shell_executable</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/bin/bash"</span><span class="p">,</span>
         <span class="n">base_env</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the MESA_DIR and MESASDK_ROOT variables and execute the initialisation scripts.</span>
+<span class="w">        </span><span class="sd">"""Set the MESA_DIR and MESASDK_ROOT variables and execute the initialisation scripts.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mesasdk_root: Location of the MESA SDK directory (MESASDK_ROOT)</span>
@@ -488,7 +489,7 @@
 <span class="sd">            sees them. If False, do not modify os.environ; the method still returns the environment </span>
 <span class="sd">            dictionary, which you can pass explicitly to subprocess calls.</span>
 <span class="sd">        shell_executable: Path to the shell used to run the MESASDK init script. </span>
-<span class="sd">            Most users should keep the default &quot;/bin/bash&quot;.</span>
+<span class="sd">            Most users should keep the default "/bin/bash".</span>
 <span class="sd">            Change this only if your system requires a different shell executable.</span>
 <span class="sd">        base_env:</span>
 <span class="sd">            Optional starting environment mapping. If None, the current process environment (os.environ) is used.</span>
@@ -499,55 +500,55 @@
 <span class="sd">            env: The returned dict is the final runtime environment after sourcing MESASDK and applying </span>
 <span class="sd">            explicit MESA variables. If apply_to_process is True, this final environment is also written to os.environ.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">sdk_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">mesasdk_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sdk_root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MESASDK root does not exist: </span><span class="si">{</span><span class="n">sdk_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MESASDK root does not exist: </span><span class="si">{</span><span class="n">sdk_root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">init_script</span> <span class="o">=</span> <span class="n">sdk_root</span> <span class="o">/</span> <span class="s2">&quot;bin&quot;</span> <span class="o">/</span> <span class="s2">&quot;mesasdk_init.sh&quot;</span>
+        <span class="n">init_script</span> <span class="o">=</span> <span class="n">sdk_root</span> <span class="o">/</span> <span class="s2">"bin"</span> <span class="o">/</span> <span class="s2">"mesasdk_init.sh"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">init_script</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MESASDK init script not found: </span><span class="si">{</span><span class="n">init_script</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MESASDK init script not found: </span><span class="si">{</span><span class="n">init_script</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">threads</span> <span class="o">=</span> <span class="n">omp_num_threads</span>
         <span class="k">if</span> <span class="n">threads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">threads</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">threads</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;omp_num_threads must be &gt;= 1, got: </span><span class="si">{</span><span class="n">threads</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"omp_num_threads must be &gt;= 1, got: </span><span class="si">{</span><span class="n">threads</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">env</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="k">if</span> <span class="n">base_env</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">base_env</span><span class="p">)</span>
         <span class="n">explicit</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;MESA_DIR&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesa_dir</span><span class="p">),</span>
-            <span class="s2">&quot;MESASDK_ROOT&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sdk_root</span><span class="p">),</span>
-            <span class="s2">&quot;OMP_NUM_THREADS&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">threads</span><span class="p">),</span>
+            <span class="s2">"MESA_DIR"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesa_dir</span><span class="p">),</span>
+            <span class="s2">"MESASDK_ROOT"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sdk_root</span><span class="p">),</span>
+            <span class="s2">"OMP_NUM_THREADS"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">threads</span><span class="p">),</span>
         <span class="p">}</span>
         <span class="n">env</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">explicit</span><span class="p">)</span>
 
         <span class="n">quoted_script</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">init_script</span><span class="p">))</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;source </span><span class="si">{</span><span class="n">quoted_script</span><span class="si">}</span><span class="s2"> &gt;/dev/null 2&gt;&amp;1 &amp;&amp; env -0&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"source </span><span class="si">{</span><span class="n">quoted_script</span><span class="si">}</span><span class="s2"> &gt;/dev/null 2&gt;&amp;1 &amp;&amp; env -0"</span>
 
         <span class="n">completed</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">shell_executable</span><span class="p">),</span> <span class="s2">&quot;-lc&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">],</span>
+            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">shell_executable</span><span class="p">),</span> <span class="s2">"-lc"</span><span class="p">,</span> <span class="n">cmd</span><span class="p">],</span>
             <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
             <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">completed</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">stderr_text</span> <span class="o">=</span> <span class="n">completed</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+            <span class="n">stderr_text</span> <span class="o">=</span> <span class="n">completed</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Failed to source MESASDK init script. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Script: </span><span class="si">{</span><span class="n">init_script</span><span class="si">}</span><span class="s2"> | stderr: </span><span class="si">{</span><span class="n">stderr_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">"Failed to source MESASDK init script. "</span>
+                <span class="sa">f</span><span class="s2">"Script: </span><span class="si">{</span><span class="n">init_script</span><span class="si">}</span><span class="s2"> | stderr: </span><span class="si">{</span><span class="n">stderr_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="n">sourced_env</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">completed</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">completed</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">key</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="sa">b</span><span class="s2">"="</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">sep</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">sourced_env</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
-                <span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span>
+            <span class="n">sourced_env</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+                <span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span>
             <span class="p">)</span>
 
         <span class="c1"># Keep explicit user-requested values authoritative.</span>
@@ -570,9 +571,9 @@
     <span class="n">version_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">omp_num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">apply_to_process</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">shell_executable</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/bin/bash&quot;</span>
+    <span class="n">shell_executable</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/bin/bash"</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MesaConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper function to initialise a MesaConfig object (MesaConfig.setup) and</span>
+<span class="w">    </span><span class="sd">"""Wrapper function to initialise a MesaConfig object (MesaConfig.setup) and</span>
 <span class="sd">        set the MESA environment variables to be able to compile and run MESA </span>
 <span class="sd">        (as usually done in .*rc scripts or module files)</span>
 <span class="sd">    </span>
@@ -587,12 +588,12 @@
 <span class="sd">            sees them. If False, do not modify os.environ; the method still returns the environment </span>
 <span class="sd">            dictionary, which you can pass explicitly to subprocess calls.</span>
 <span class="sd">        shell_executable: Path to the shell used to run the MESASDK init script. </span>
-<span class="sd">            Most users should keep the default &quot;/bin/bash&quot;.</span>
+<span class="sd">            Most users should keep the default "/bin/bash".</span>
 <span class="sd">            Change this only if your system requires a different shell executable.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        cfg: MesaConfig object.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">MesaConfig</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
     <span class="n">mesa_dir</span><span class="o">=</span><span class="n">mesa_dir</span><span class="p">,</span>
     <span class="n">version_name</span><span class="o">=</span><span class="n">version_name</span><span class="p">)</span>
@@ -635,7 +636,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -359,6 +359,8 @@ def _cancel_pending_items(
 ) -> None:
     while pending_items:
         pending_item = pending_items.popleft()
+        if pending_item.model.state == ModelState.DRAFT:
+            continue  # never launched, leave as draft for a clean resume
         cancel_result = _cancelled_result(
             pending_item,
             backend=backend,

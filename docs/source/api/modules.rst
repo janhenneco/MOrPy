@@ -5,6 +5,7 @@ API (Modules)
    :maxdepth: 1
 
    module_morpy
+   module_morpy_cli
    module_morpy_compile
    module_morpy_config
    module_morpy_errors

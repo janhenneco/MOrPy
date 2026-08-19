@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.utils - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.utils - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,12 +243,12 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.utils</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Low-level utility helpers for MESA value normalization and conversion.</span>
+<span></span><span class="sd">"""Low-level utility helpers for MESA value normalization and conversion.</span>
 
 <span class="sd">This module provides conversion and comparison functions for Python and</span>
 <span class="sd">Fortran-style inlist values, including canonical formatting for output and</span>
 <span class="sd">robust semantic comparison for synchronization and equality checks.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -255,38 +256,38 @@
 <div class="viewcode-block" id="python_float_to_fortran_string">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.python_float_to_fortran_string">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">python_float_to_fortran_string</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert Python float to compact Fortran double notation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Convert Python float to compact Fortran double notation."""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Value must be finite.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Value must be finite."</span><span class="p">)</span>
 
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">sig</span><span class="si">}</span><span class="s2">g&quot;</span><span class="p">)</span>  <span class="c1"># compact decimal/scientific form</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">sig</span><span class="si">}</span><span class="s2">g"</span><span class="p">)</span>  <span class="c1"># compact decimal/scientific form</span>
 
-    <span class="k">if</span> <span class="s2">&quot;e&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="ow">or</span> <span class="s2">&quot;E&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">mantissa</span><span class="p">,</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mantissa</span><span class="si">}</span><span class="s2">d</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="s2">"e"</span> <span class="ow">in</span> <span class="n">s</span> <span class="ow">or</span> <span class="s2">"E"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">mantissa</span><span class="p">,</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"e"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mantissa</span><span class="si">}</span><span class="s2">d</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">d0&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">d0"</span></div>
 
 
 <div class="viewcode-block" id="fortran_float_string_to_float">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.fortran_float_string_to_float">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fortran_float_string_to_float</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"d"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="normalize_inlist_value_for_output">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.normalize_inlist_value_for_output">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normalize_inlist_value_for_output</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a value for writing to an inlist.</span>
+<span class="w">    </span><span class="sd">"""Normalize a value for writing to an inlist.</span>
 
 <span class="sd">    - Numeric-like values are rewritten to compact Fortran d notation.</span>
 <span class="sd">    - .true./.false. are normalized to lowercase.</span>
 <span class="sd">    - Non-numeric strings are returned stripped.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">lowered</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;.true.&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">".true."</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}:</span>
         <span class="k">return</span> <span class="n">lowered</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -301,16 +302,16 @@
 <div class="viewcode-block" id="normalize_inlist_value_for_compare">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.normalize_inlist_value_for_compare">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normalize_inlist_value_for_compare</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Canonical form for robust equality checks.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Canonical form for robust equality checks."""</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">""</span>
 
     <span class="n">text</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">""</span>
 
     <span class="n">lowered</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;.true.&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">".true."</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}:</span>
         <span class="k">return</span> <span class="n">lowered</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -320,7 +321,7 @@
         <span class="k">return</span> <span class="n">text</span>
 
     <span class="c1"># Stable representation for equality comparison.</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">number</span><span class="si">:</span><span class="s2">.16e</span><span class="si">}</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">number</span><span class="si">:</span><span class="s2">.16e</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
@@ -334,34 +335,34 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_fortran_logical</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;.true.&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">".true."</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_quoted_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="n">stripped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">stripped</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">stripped</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">stripped</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">stripped</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"'"</span><span class="p">,</span> <span class="s1">'"'</span><span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_looks_like_float_default</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="n">stripped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">stripped</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;.true.&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="n">stripped</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">""</span><span class="p">,</span> <span class="s2">".true."</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}:</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">stripped</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">stripped</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_looks_like_integer_default</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="n">stripped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">stripped</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;.true.&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="n">stripped</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">""</span><span class="p">,</span> <span class="s2">".true."</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="c1"># quoted defaults are strings, not integers</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stripped</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">stripped</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stripped</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">stripped</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"'"</span><span class="p">,</span> <span class="s1">'"'</span><span class="p">}:</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;+-&quot;</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"+-"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
 
 
@@ -392,19 +393,19 @@
     <span class="k">return</span> <span class="n">normalize_inlist_value_for_output</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="n">sig</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_quote_fortran_string</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">escaped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">escaped</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="n">escaped</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"'"</span><span class="p">,</span> <span class="s2">"''"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">escaped</span><span class="si">}</span><span class="s2">'"</span>
 
 
 <div class="viewcode-block" id="python_value_to_inlist_value">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.python_value_to_inlist_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">python_value_to_inlist_value</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">default_option</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Python value into a MESA inlist value string.</span>
+<span class="w">    </span><span class="sd">"""Convert a Python value into a MESA inlist value string.</span>
 
 <span class="sd">    The default value is used as a hint for how to serialize the input.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="s2">&quot;.true.&quot;</span> <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;.false.&quot;</span>
+        <span class="k">return</span> <span class="s2">".true."</span> <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="s2">".false."</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">)):</span>
         <span class="n">int_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -423,10 +424,10 @@
 
         <span class="k">if</span> <span class="n">_is_fortran_logical</span><span class="p">(</span><span class="n">default_option</span><span class="p">):</span>
             <span class="n">lowered</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;.true.&quot;</span><span class="p">}:</span>
-                <span class="k">return</span> <span class="s2">&quot;.true.&quot;</span>
-            <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;.false.&quot;</span><span class="p">}:</span>
-                <span class="k">return</span> <span class="s2">&quot;.false.&quot;</span>
+            <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"true"</span><span class="p">,</span> <span class="s2">".true."</span><span class="p">}:</span>
+                <span class="k">return</span> <span class="s2">".true."</span>
+            <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"false"</span><span class="p">,</span> <span class="s2">".false."</span><span class="p">}:</span>
+                <span class="k">return</span> <span class="s2">".false."</span>
 
         <span class="k">if</span> <span class="n">_is_quoted_string</span><span class="p">(</span><span class="n">default_option</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">_is_quoted_string</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
@@ -436,32 +437,32 @@
         <span class="k">return</span> <span class="n">_normalize_string_for_default</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">default_option</span><span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-        <span class="s2">&quot;Unsupported value type for inlist option. &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="s2">"Unsupported value type for inlist option. "</span>
+        <span class="sa">f</span><span class="s2">"Got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">."</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="fortran_value_to_python_value">
 <a class="viewcode-back" href="../../api/module_morpy_utils.html#morpy.fortran_value_to_python_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fortran_value_to_python_value</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a raw Fortran/MESA inlist value string to a Python value.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Convert a raw Fortran/MESA inlist value string to a Python value."""</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">low</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">low</span> <span class="o">==</span> <span class="s2">&quot;.true.&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">low</span> <span class="o">==</span> <span class="s2">".true."</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">if</span> <span class="n">low</span> <span class="o">==</span> <span class="s2">&quot;.false.&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">low</span> <span class="o">==</span> <span class="s2">".false."</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"'"</span><span class="p">,</span> <span class="s1">'"'</span><span class="p">}:</span>
         <span class="n">inner</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">:</span>
-            <span class="n">inner</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"'"</span><span class="p">:</span>
+            <span class="n">inner</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"''"</span><span class="p">,</span> <span class="s2">"'"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">inner</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># float-like tokens: 1.0, 1d0, 1e0</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">low</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ch</span> <span class="ow">in</span> <span class="n">low</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">fortran_float_string_to_float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="c1"># otherwise try int</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -500,7 +501,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

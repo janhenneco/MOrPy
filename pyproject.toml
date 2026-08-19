@@ -21,6 +21,7 @@ classifiers = [
 [project.optional-dependencies]
 preview = ["pandas>=2.0"]
 mpi = ["mpi4py>=4.0"]
+notebooks = ["ipykernel", "jupyter"]
 docs = [
   "sphinx>=7.0",
   "furo>=2024.0.0",
@@ -31,6 +32,10 @@ docs = [
 Homepage = "https://github.com/janhenneco/MOrPy"
 Repository = "https://github.com/janhenneco/MOrPy"
 Issues = "https://github.com/janhenneco/MOrPy/issues"
+
+[project.scripts]
+morpy_status = "morpy.cli:main_status"
+morpy_stop = "morpy.cli:main_stop"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

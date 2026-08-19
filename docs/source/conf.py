@@ -12,7 +12,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.abspath("../../src"))
 
-project = 'mesa-runner'
+project = 'MOrPy'
 author = 'Jan Henneco'
 copyright = f"{datetime.now():%Y}, {author}"
 
@@ -46,6 +46,13 @@ templates_path = ["_templates"]
 exclude_patterns = []
 
 html_theme = "furo"
+html_title = "MOrPy Documentation"
+html_theme_options = {
+    "source_repository": "https://github.com/janhenneco/MOrPy/",
+    "source_branch": "main",
+    "source_directory": "docs/source/",
+    "navigation_with_keys": True,
+}
 
 language = 'en'
 

@@ -24,3 +24,4 @@ Functions
    _has_run_binary_extras
    _validate_existing_projectdir
    create_projectdir
+   prepare_grid

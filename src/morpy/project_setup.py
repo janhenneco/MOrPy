@@ -12,6 +12,9 @@ from typing import Literal
 import shutil
 import uuid
 from .config import MesaConfig, require_active_config
+from .grid_run import GridRunItem, _normalize_path
+from .repository import Tracker
+from .work_setup import create_modeldir
 
 WorkdirMode = Literal["star", "binary"]
 
@@ -154,3 +157,70 @@ def create_projectdir(
         if not committed and tmp_dir.exists():
             shutil.rmtree(tmp_dir, ignore_errors=True)
     
+def prepare_grid(
+    project_dir: Path | str,
+    grid_list: list[GridRunItem],
+    *,
+    restart: bool,
+    db_name: str = "runs.db",
+    config: MesaConfig | None = None,
+    include_additional_options: bool = False,
+    include_comment_blocks: bool = True) -> Tracker:
+    """Create/validate model directories and the tracking DB for a grid, consistently.
+
+    Cross-checks `restart` against whether `project_dir/db_name` already exists,
+    and refuses to proceed if they disagree — this is the only guard against
+    accidentally wiping existing model output or grid history.
+
+    Models already present in the DB (matched by model_path) are not re-registered, 
+    so calling this with restart=True and extra models in grid_list will register 
+    only the new ones.
+
+    Raises:
+        RuntimeError if `restart` disagrees with the DB's actual existence.
+    """
+    project_dir = Path(project_dir)
+    db_path = project_dir / db_name
+    db_existed = db_path.exists()
+
+    if restart and not db_existed:
+        raise RuntimeError(
+            f"restart=True but no database found at {db_path}. "
+            "This looks like a first run for this project — call with restart=False instead."
+        )
+    if not restart and db_existed:
+        raise RuntimeError(
+            f"restart=False but {db_path} already exists, meaning this grid has run before. "
+            "Refusing to overwrite model directories and output. "
+            f"Delete {db_path} manually if you want a fresh start."
+        )
+
+    overwrite = not restart
+    reuse_existing = restart
+
+    for item in grid_list:
+        create_modeldir(
+            model=item.model,
+            projectdir_path=project_dir,
+            overwrite=overwrite,
+            reuse_existing=reuse_existing,
+            config=config,
+            include_additional_options=include_additional_options,
+            include_comment_blocks=include_comment_blocks 
+        )
+
+    tracker = Tracker.create(db_path=db_path)
+    known_paths = {
+        _normalize_path(row.model_path)
+        for row in tracker.repo.list_model_rows()
+        if row.model_path is not None
+    }
+    # When we restart a grid but added new models, they will still be added to the DB file.
+    new_models = [
+        item.model for item in grid_list
+        if _normalize_path(item.model.model_path) not in known_paths
+    ]
+    if new_models:
+        tracker.repo.add_models_to_repo(models=new_models)
+
+    return tracker

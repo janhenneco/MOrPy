@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.parser - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.parser - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,7 +243,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.parser</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Parsing utilities for MESA defaults files and inlists.</span>
+<span></span><span class="sd">"""Parsing utilities for MESA defaults files and inlists.</span>
 
 <span class="sd">This module converts on-disk MESA text files into the in-memory option models</span>
 <span class="sd">defined in options.py:</span>
@@ -255,7 +256,7 @@
 <span class="sd">(for example kap/eos split defaults and legacy binary_pgstar vs pgbinary naming).</span>
 <span class="sd">It also supports strict/lenient handling of unknown inlist options and preserves</span>
 <span class="sd">unrecognized namelist blocks for round-trip safety.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -268,26 +269,26 @@
                       <span class="n">MesaNameList</span><span class="p">)</span>
 
 <span class="c1"># MESA version at which kap and eos get separate defaults namelists</span>
-<span class="n">KAP_EOS_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">&quot;r15140&quot;</span><span class="p">)</span>
+<span class="n">KAP_EOS_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">"r15140"</span><span class="p">)</span>
 
 <span class="c1"># MESA version at which separate pgbinary defaults inlist and the pgbinary block become a thing</span>
-<span class="n">PGBINARY_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">&quot;r23.05.1&quot;</span><span class="p">)</span>
+<span class="n">PGBINARY_SPLIT_VERSION</span> <span class="o">=</span> <span class="n">MesaVersion</span><span class="o">.</span><span class="n">parse_mesa_version</span><span class="p">(</span><span class="s2">"r23.05.1"</span><span class="p">)</span>
 
 <span class="c1"># All MESA namelist blocks that the code can currently handle</span>
-<span class="n">KNOWN_NAMELISTS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;star_job&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;binary_controls&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;binary_job&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;kap&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;eos&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;pgstar&quot;</span><span class="p">,</span>
-                   <span class="s2">&quot;pgbinary&quot;</span><span class="p">}</span>
+<span class="n">KNOWN_NAMELISTS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"controls"</span><span class="p">,</span>
+                   <span class="s2">"star_job"</span><span class="p">,</span>
+                   <span class="s2">"binary_controls"</span><span class="p">,</span>
+                   <span class="s2">"binary_job"</span><span class="p">,</span>
+                   <span class="s2">"kap"</span><span class="p">,</span>
+                   <span class="s2">"eos"</span><span class="p">,</span>
+                   <span class="s2">"pgstar"</span><span class="p">,</span>
+                   <span class="s2">"pgbinary"</span><span class="p">}</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_base_option_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"("</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_defaults_option</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">defaults_file</span><span class="p">:</span> <span class="n">DefaultsFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MesaOption</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve an inlist option name against defaults, with array-aware matching.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Resolve an inlist option name against defaults, with array-aware matching."""</span>
 
     <span class="c1"># Exact match first.</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">defaults_file</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
@@ -305,19 +306,19 @@
 
     <span class="c1"># Prefer canonical array template if present.</span>
     <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;(:)&quot;</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"(:)"</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">opt</span>
 
     <span class="c1"># If this is an indexed array option and defaults only have numbered entries,</span>
     <span class="c1"># use the first match as metadata template instead of failing as ambiguous.</span>
-    <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="s2">&quot;)&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"("</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="s2">")"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1"># Non-array scalar ambiguity is still suspicious.</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Ambiguous defaults match for option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; in namelist &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">defaults_file</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">matches</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Ambiguous defaults match for option '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">' in namelist "</span>
+            <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">defaults_file</span><span class="o">.</span><span class="n">namelist</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">matches</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -325,7 +326,7 @@
 <div class="viewcode-block" id="build_defaults_options">
 <a class="viewcode-back" href="../../api/module_morpy_parser.html#morpy.build_defaults_options">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_defaults_options</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultsOptions</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Method to parse all the available defaults files and store them into this class.</span>
+<span class="w">    </span><span class="sd">"""Method to parse all the available defaults files and store them into this class.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        defaults_dir: Path to the base location of the defaults files, usually the MESA installation directory</span>
 <span class="sd">        config: MesaConfig instance</span>
@@ -333,7 +334,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        A DefaultsOptions instance with parsed MESA defaults files as DefaultsFiles instances</span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Note to self: technically this implementation only works with a self-provided</span>
     <span class="c1">#   path to the defaults files directory if that directory has the same structure as in the</span>
     <span class="c1">#   MESA installation directory. If ever necessary, I should make his more flexible.</span>
@@ -341,42 +342,42 @@
     <span class="n">defaults_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">)</span>
 
     <span class="n">controls</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-        <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span>
-        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;star&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;controls.defaults&quot;</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="o">=</span><span class="s2">"controls"</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"star"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"controls.defaults"</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">star_job</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-        <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;star_job&quot;</span><span class="p">,</span>
-        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;star&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;star_job.defaults&quot;</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="o">=</span><span class="s2">"star_job"</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"star"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"star_job.defaults"</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">binary_controls</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-        <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;binary_controls&quot;</span><span class="p">,</span>
-        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;binary&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;binary_controls.defaults&quot;</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="o">=</span><span class="s2">"binary_controls"</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"binary"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"binary_controls.defaults"</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">binary_job</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-        <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;binary_job&quot;</span><span class="p">,</span>
-        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;binary&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;binary_job.defaults&quot;</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="o">=</span><span class="s2">"binary_job"</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"binary"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"binary_job.defaults"</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="p">)</span>
     
     <span class="n">pgstar</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-        <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;pgstar&quot;</span><span class="p">,</span>
-        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;star&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;pgstar.defaults&quot;</span><span class="p">,</span>
+        <span class="n">namelist</span><span class="o">=</span><span class="s2">"pgstar"</span><span class="p">,</span>
+        <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"star"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"pgstar.defaults"</span><span class="p">,</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">pgbinary</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">pgbinary</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-            <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;pgbinary&quot;</span><span class="p">,</span>
-            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;binary&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;pgbinary.defaults&quot;</span><span class="p">,</span>
+            <span class="n">namelist</span><span class="o">=</span><span class="s2">"pgbinary"</span><span class="p">,</span>
+            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"binary"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"pgbinary.defaults"</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded.&quot;</span><span class="p">,</span>
+            <span class="s2">"pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded."</span><span class="p">,</span>
             <span class="ne">RuntimeWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -385,13 +386,13 @@
     <span class="n">eos</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&gt;=</span> <span class="n">KAP_EOS_SPLIT_VERSION</span><span class="p">:</span>
         <span class="n">kap</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-            <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;kap&quot;</span><span class="p">,</span>
-            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;kap&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;kap.defaults&quot;</span><span class="p">,</span>
+            <span class="n">namelist</span><span class="o">=</span><span class="s2">"kap"</span><span class="p">,</span>
+            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"kap"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"kap.defaults"</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">eos</span> <span class="o">=</span> <span class="n">parse_defaults_file</span><span class="p">(</span>
-            <span class="n">namelist</span><span class="o">=</span><span class="s2">&quot;eos&quot;</span><span class="p">,</span>
-            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">&quot;eos&quot;</span> <span class="o">/</span> <span class="s2">&quot;defaults&quot;</span> <span class="o">/</span> <span class="s2">&quot;eos.defaults&quot;</span><span class="p">,</span>
+            <span class="n">namelist</span><span class="o">=</span><span class="s2">"eos"</span><span class="p">,</span>
+            <span class="n">source_path</span><span class="o">=</span><span class="n">defaults_dir</span> <span class="o">/</span> <span class="s2">"eos"</span> <span class="o">/</span> <span class="s2">"defaults"</span> <span class="o">/</span> <span class="s2">"eos.defaults"</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -411,14 +412,14 @@
 <div class="viewcode-block" id="build_defaults_options_from_config">
 <a class="viewcode-back" href="../../api/module_morpy_parser.html#morpy.build_defaults_options_from_config">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_defaults_options_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultsOptions</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the `defaults_dir` from the `MesaConfig` object for automatic parsing of defaults files.</span>
+<span class="w">    </span><span class="sd">"""Get the `defaults_dir` from the `MesaConfig` object for automatic parsing of defaults files.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config: MesaConfig instance</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Calls `build_defaults_options` method to parse all available defaults files.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">build_defaults_options</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span></div>
 
 
@@ -426,36 +427,36 @@
 <div class="viewcode-block" id="parse_defaults_file">
 <a class="viewcode-back" href="../../api/module_morpy_parser.html#morpy.parse_defaults_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_defaults_file</span><span class="p">(</span><span class="n">namelist</span><span class="p">:</span> <span class="n">MesaNameList</span><span class="p">,</span> <span class="n">source_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultsFile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,</span>
+<span class="w">    </span><span class="sd">"""Method to parse a MESA defaults file and store its contents as MesaOption objects in a DefaultsFile instance,</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        namelist: The kind of defaults file (&quot;controls&quot;, &quot;star_job&quot;, ...). Type: MesaNameList</span>
+<span class="sd">        namelist: The kind of defaults file ("controls", "star_job", ...). Type: MesaNameList</span>
 <span class="sd">        source_path: The Path object to the defaults file</span>
 <span class="sd">        config: The MesaConfig instance</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        A DefaultsFile instance containing the MesaOption objects with the names, default values and descriptions</span>
 <span class="sd">            of the MESA defaults file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">DefaultsFile</span><span class="p">(</span><span class="n">namelist</span> <span class="o">=</span> <span class="n">namelist</span><span class="p">,</span> 
                       <span class="n">source_path</span> <span class="o">=</span> <span class="n">source_path</span><span class="p">,</span> 
                       <span class="n">mesa_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_version</span><span class="p">)</span>
     
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">source_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">source_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
     <span class="n">pending_description</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
         <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
-            <span class="n">comment_text</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"!"</span><span class="p">):</span>
+            <span class="n">comment_text</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"!"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="c1"># decoration-only lines like =====, ~~~~~, ----</span>
-            <span class="n">is_decorator</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">comment_text</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="s2">&quot;=~:- &quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comment_text</span><span class="p">)</span>
+            <span class="n">is_decorator</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">comment_text</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="s2">"=~:- "</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comment_text</span><span class="p">)</span>
 
             <span class="c1"># old-format headers like !# title or !### title</span>
-            <span class="n">is_hash_header</span> <span class="o">=</span> <span class="n">comment_text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
+            <span class="n">is_hash_header</span> <span class="o">=</span> <span class="n">comment_text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"#"</span><span class="p">)</span>
 
             <span class="c1"># single uppercase token headers (optional legacy guard)</span>
             <span class="n">is_upper_header</span> <span class="o">=</span> <span class="n">comment_text</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">comment_text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
@@ -464,39 +465,58 @@
             <span class="n">next_is_decorator</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
                 <span class="n">nxt</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">nxt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
-                    <span class="n">nxt_text</span> <span class="o">=</span> <span class="n">nxt</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="n">next_is_decorator</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">nxt_text</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="s2">&quot;=~:- &quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nxt_text</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nxt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"!"</span><span class="p">):</span>
+                    <span class="n">nxt_text</span> <span class="o">=</span> <span class="n">nxt</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"!"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">next_is_decorator</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">nxt_text</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="s2">"=~:- "</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nxt_text</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">is_decorator</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_hash_header</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_upper_header</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">next_is_decorator</span><span class="p">:</span>
                 <span class="c1"># keep line-level formatting; empty comment lines become blank lines</span>
                 <span class="n">pending_description</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comment_text</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">value_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"="</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"!"</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">value_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-            <span class="n">inline_comment</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="k">if</span> <span class="s2">&quot;!&quot;</span> <span class="ow">in</span> <span class="n">value_part</span><span class="p">:</span>
-                <span class="n">value_part</span><span class="p">,</span> <span class="n">inline_comment</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">inline_comment</span> <span class="o">=</span> <span class="s2">""</span>
+            <span class="k">if</span> <span class="s2">"!"</span> <span class="ow">in</span> <span class="n">value_part</span><span class="p">:</span>
+                <span class="n">value_part</span><span class="p">,</span> <span class="n">inline_comment</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"!"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">inline_comment</span> <span class="o">=</span> <span class="n">inline_comment</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="n">value</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
-                <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pending_description</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pending_description</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
                 <span class="c1"># Append inline comment to existing block description.</span>
                 <span class="k">if</span> <span class="n">inline_comment</span><span class="p">:</span>
-                    <span class="n">desc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">inline_comment</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">inline_comment</span>
+                    <span class="n">desc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">inline_comment</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">desc</span> <span class="k">else</span> <span class="n">inline_comment</span>
 
                 <span class="n">df</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">MesaOption</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                     <span class="n">default_option</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
                     <span class="n">description</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span>
-                    <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">,</span>
-                <span class="p">)</span>
+                    <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
                 <span class="n">pending_description</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># For some reason, the extra_binary_controls_inlist_name(:) and read_extra_binary_controls_inlist(:) options</span>
+    <span class="c1"># are not part of the binary_controls defaults file. As a result we get a ValueError when dealing with binary inlists.</span>
+    <span class="c1"># This is not the most elegant fix, but for now we'll add them manually here if they are missing...</span>
+    <span class="k">if</span> <span class="n">namelist</span> <span class="o">==</span> <span class="s1">'binary_controls'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'extra_binary_controls_inlist_name(:)'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'extra_binary_controls_inlist_name(:)'</span><span class="p">]</span> <span class="o">=</span> <span class="n">MesaOption</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">'extra_binary_controls_inlist_name(:)'</span><span class="p">,</span> 
+                <span class="n">default_option</span><span class="o">=</span><span class="s1">'undefined'</span><span class="p">,</span> 
+                <span class="n">description</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> 
+                <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'read_extra_binary_controls_inlist(:)'</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">'read_extra_binary_controls_inlist(:)'</span><span class="p">]</span> <span class="o">=</span> <span class="n">MesaOption</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">'read_extra_binary_controls_inlist(:)'</span><span class="p">,</span> 
+                        <span class="n">default_option</span><span class="o">=</span><span class="s1">'.false.'</span><span class="p">,</span> 
+                        <span class="n">description</span><span class="o">=</span><span class="s1">'One can split controls inlist into pieces using the following parameters. '</span> \
+                        <span class="s1">'BTW: it works recursively, so the extras can read extras too. '</span> \
+                        <span class="s1">'If ``read_extra_controls_inlist(1)`` is true, then read &amp;controls from this namelist file.'</span><span class="p">,</span> 
+                        <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">)</span>
+
     
     <span class="k">return</span> <span class="n">df</span></div>
 
@@ -508,7 +528,7 @@
                  <span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Inlist</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the contents of an inlist and store it inside an Inlist object.</span>
+<span class="w">    </span><span class="sd">"""Read the contents of an inlist and store it inside an Inlist object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source_path: The Path object pointing to the location of the inlist file</span>
@@ -523,7 +543,7 @@
 <span class="sd">            If False, raise an exception when inlist options are found that re not found in the defaults files.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Inlist object with MesaOption instances.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
 
@@ -537,13 +557,13 @@
     
     <span class="n">il</span> <span class="o">=</span> <span class="n">Inlist</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="n">inlist_name</span><span class="p">,</span> <span class="n">source_path</span> <span class="o">=</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">mesa_version</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_version</span><span class="p">)</span>
 
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">source_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">source_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
     <span class="n">block_type</span><span class="p">:</span> <span class="n">MesaNameList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">defaults_file</span><span class="p">:</span> <span class="n">DefaultsFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">active_unclassified_block_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">active_unclassified_block_lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">block_had_option</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># track if we&#39;re dealing with an empty block</span>
+    <span class="n">block_had_option</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># track if we're dealing with an empty block</span>
 
     <span class="c1"># Collector for unknown options</span>
     <span class="n">unknown_options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -551,13 +571,13 @@
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
         <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="c1"># If we are inside an unknown block, keep raw lines until closing &quot;/&quot;.</span>
+        <span class="c1"># If we are inside an unknown block, keep raw lines until closing "/".</span>
         <span class="k">if</span> <span class="n">active_unclassified_block_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/"</span><span class="p">):</span>
                 <span class="n">il</span><span class="o">.</span><span class="n">additional_options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">UnclassifiedNamelist</span><span class="p">(</span>
                         <span class="n">name</span><span class="o">=</span><span class="n">active_unclassified_block_name</span><span class="p">,</span>
-                        <span class="n">body</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">active_unclassified_block_lines</span><span class="p">),</span>
+                        <span class="n">body</span><span class="o">=</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">active_unclassified_block_lines</span><span class="p">),</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">active_unclassified_block_name</span> <span class="o">=</span> <span class="kc">None</span>
@@ -566,19 +586,19 @@
                 <span class="n">active_unclassified_block_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
             <span class="k">continue</span>
 
-        <span class="c1"># Determine which block type = MesaNameList type we&#39;re in</span>
-        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">):</span>
-            <span class="n">potential_block_type</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="c1"># Determine which block type = MesaNameList type we're in</span>
+        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">):</span>
+            <span class="n">potential_block_type</span> <span class="o">=</span> <span class="n">stripped</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="c1"># Take care of the fact that older MESA version do not have a pgbinary</span>
             <span class="c1"># namelist but instead have a binary_pgstar namelist.</span>
             <span class="c1"># We want to treat this as a pgbinary namelist internally.</span>
-            <span class="k">if</span> <span class="n">potential_block_type</span> <span class="o">==</span> <span class="s2">&quot;binary_pgstar&quot;</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&lt;</span> <span class="n">PGBINARY_SPLIT_VERSION</span><span class="p">:</span>
-                <span class="n">normalised_block_type</span> <span class="o">=</span> <span class="s2">&quot;pgbinary&quot;</span>
+            <span class="k">if</span> <span class="n">potential_block_type</span> <span class="o">==</span> <span class="s2">"binary_pgstar"</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">&lt;</span> <span class="n">PGBINARY_SPLIT_VERSION</span><span class="p">:</span>
+                <span class="n">normalised_block_type</span> <span class="o">=</span> <span class="s2">"pgbinary"</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">normalised_block_type</span> <span class="o">=</span> <span class="n">potential_block_type</span>
             
-            <span class="c1"># Check if we&#39;re dealing with a regular namelist or an unrecognised namelist</span>
+            <span class="c1"># Check if we're dealing with a regular namelist or an unrecognised namelist</span>
             <span class="k">if</span> <span class="n">normalised_block_type</span> <span class="ow">in</span> <span class="n">KNOWN_NAMELISTS</span><span class="p">:</span>
                 <span class="c1"># Normnal behaviour for regular namelist</span>
                 <span class="n">block_type</span> <span class="o">=</span> <span class="n">normalised_block_type</span>
@@ -592,7 +612,7 @@
                 <span class="n">active_unclassified_block_lines</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">continue</span>
         
-        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'/'</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">block_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">block_had_option</span><span class="p">:</span>
                 <span class="n">il</span><span class="o">.</span><span class="n">empty_namelists</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">block_type</span><span class="p">)</span>
             <span class="n">block_type</span> <span class="o">=</span> <span class="kc">None</span>
@@ -600,15 +620,15 @@
             <span class="n">block_had_option</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">continue</span>
         
-        <span class="k">if</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">"="</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"!"</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">block_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">value_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">value_part</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="s2">&quot;!&quot;</span> <span class="ow">in</span> <span class="n">value_part</span><span class="p">:</span>
-                <span class="n">value_part</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"!"</span> <span class="ow">in</span> <span class="n">value_part</span><span class="p">:</span>
+                <span class="n">value_part</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"!"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">value_part</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">name</span> <span class="ow">and</span> <span class="n">value</span><span class="p">):</span>
@@ -622,8 +642,8 @@
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_unknown_options</span><span class="p">:</span>
                         <span class="k">continue</span>
 
-            <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="n">default_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="s2">""</span>
+            <span class="n">default_value</span> <span class="o">=</span> <span class="s2">""</span>
             <span class="k">if</span> <span class="n">resolved_default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">description</span> <span class="o">=</span> <span class="n">resolved_default</span><span class="o">.</span><span class="n">description</span>
                 <span class="n">default_value</span> <span class="o">=</span> <span class="n">resolved_default</span><span class="o">.</span><span class="n">default_option</span>
@@ -639,25 +659,25 @@
     
     <span class="k">if</span> <span class="n">active_unclassified_block_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unclosed namelist block &#39;&amp;</span><span class="si">{</span><span class="n">active_unclassified_block_name</span><span class="si">}</span><span class="s2">&#39; in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unclosed namelist block '&amp;</span><span class="si">{</span><span class="n">active_unclassified_block_name</span><span class="si">}</span><span class="s2">' in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">."</span>
         <span class="p">)</span>
     
     <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_unknown_options</span> <span class="ow">and</span> <span class="n">unknown_options</span><span class="p">:</span>
-        <span class="n">details</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="s2">"; "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">for</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unknown_options</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unknown options found in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2"> for loaded MESA defaults: </span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unknown options found in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2"> for loaded MESA defaults: </span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">allow_unknown_options</span> <span class="ow">and</span> <span class="n">unknown_options</span><span class="p">:</span>
-        <span class="n">details</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="s2">"; "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">namelist</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">for</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unknown_options</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="p">)</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unknown inlist options found in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2"> for loaded MESA defaults: </span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"Unknown inlist options found in </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2"> for loaded MESA defaults: </span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="ne">RuntimeWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -665,10 +685,6 @@
     <span class="k">return</span> <span class="n">il</span></div>
 
 
-<span class="c1"># TODO: curently, empty namelist blocks will be skipped in inlits.write becasue there are no options in </span>
-<span class="c1"># inlist.options with that namelist type. I should change the inlist parser and Inlist class </span>
-<span class="c1"># so that empty blocks are added to an Inlist attribute and subsequently written as empty blocks if there</span>
-<span class="c1"># are still no options for that namelist at the time Inlist.write() is called.</span>
 
 
 </pre></div>
@@ -703,7 +719,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

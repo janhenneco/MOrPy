@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="morpy.utils module" href="module_morpy_utils.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.work_setup module - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.work_setup module - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -161,7 +161,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -182,7 +182,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -190,10 +190,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
@@ -230,12 +231,16 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/api/module_morpy_work_setup.rst.txt" title="View this page">
+  <a class="muted-link" href="https://github.com/janhenneco/MOrPy/blob/main/docs/source/api/module_morpy_work_setup.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/janhenneco/MOrPy/edit/main/docs/source/api/module_morpy_work_setup.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -264,7 +269,7 @@
 directory layouts on disk.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">morpy.work_setup.</span></span><span class="sig-name descname"><span class="pre">create_modeldir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_additional_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/work_setup.html#create_modeldir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">morpy.work_setup.</span></span><span class="sig-name descname"><span class="pre">create_modeldir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reuse_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_additional_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_comment_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/work_setup.html#create_modeldir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><dl class="simple">
 <dt>Function to create a model directory in storage for a given Model object. This model</dt><dd><p>directory contains the inlists and rn &amp; re scripts appropriate to run it.</p>
 </dd>
@@ -276,9 +281,14 @@ directory layouts on disk.</p>
 <li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – path to the project directory in which this model directory will be placed.
 This can technically be any path, but in order to run the run the model, the mdoel directory should
 be placed inside a project directory containing the /src folder and Fortran executable.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite the model directory if it already exists in the project directory.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite the model directory if it already exists in the project directory.
+Set this to False for restarts of existing grids.</p></li>
+<li><p><strong>reuse_existing</strong> (<em>bool</em>) – Reuse existing model directories if they exist. Set to True for restarts
+of existing grids.</p></li>
 <li><p><strong>include_additional_options</strong> (<em>bool</em>) – If present, include unclassified namelist blocks in all inlists written to storage
 (see options.Inlist and options.Unclassifiednamelist documentation)</p></li>
+<li><p><strong>include_comment_blocks</strong> (<em>bool</em>) – Add Inlist.comment_block to the top of the inlist files
+if it exists.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Automatically detected from active config if None.</p></li>
 </ul>
 </dd>
@@ -515,7 +525,7 @@ stored model.file_snapshot, model.inlists is reloaded from disk.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../_static/documentation_options.js?v=4681f273"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

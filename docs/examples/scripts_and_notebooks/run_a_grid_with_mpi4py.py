@@ -7,9 +7,9 @@ Since we don't have any interactive capabilities in a `.py` script, you can use 
 Alternatively, you can also consider setting up the grid in a notebooks just like in `run_a_grid.ipynb` and copy-pasting the 
 setup code into a `.py` script once you're satisfied.
 
-The script contains multiple "if rank == 0" conditionals. These are there
-to ensure tha the enclosed code is only executed by the MPI communicator,
-not by each MPi worker.
+The script contains a "if rank == 0" conditional. Although not super
+elegant, this is required to make sure the grid setup and registration
+of the models in the database is not repeated by every rank (worker).
 '''
 
 ### 1. IMPORTS ###
@@ -22,13 +22,29 @@ from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 
-### 2. GENERAL SETTINGS ###
+### 2.1 GENERAL SETTINGS ###
 
 # Adjust these paths to match your local desired MESA installation.
-MESA_DIR = Path('/stars/software/mesa/mesa-r23.05.1/')
-MESASDK_ROOT = Path('/stars/software/mesasdk/24.7.1/')
+MESA_DIR = Path('/Users/janhenneco/software/mesa/mesa-r24.08.1')
+MESASDK_ROOT = Path('/Applications/mesasdk-25.12.1/')
 OMP_THREADS  = 1 # Number of threads used per MESA model. Can be specified on a model-per-model basis when running/launching the models.
-MESA_VERSION = 'r23.05.1'
+MESA_VERSION = 'r24.08.1'
+
+### 2.2 USER SETTINGS ###
+# RESTART? --   set this to True of you want to restart earlier computations.
+#               this will make sure noring is overwritten!
+RESTART = True
+DB_NAME = 'runs.db'
+
+# Resume (restart) policy
+resume_policy = mp.ResumePolicy(
+    enabled=True,                 # turn resume logic on/off
+    match_policy="id_or_path",    # "id_only" or "id_or_path" (fallback match by model_path)
+    skip_completed=True,          # don't rerun models already marked "completed"
+    failed_policy="rerun",        # "rerun" or "skip" for models that ended "failed"
+    cancelled_policy="rerun",     # "rerun" or "skip" for models that ended "cancelled"
+    hydrate_timestamps=True,      # copy started_at/updated_at/finished_at from DB into Model
+)
 
 ### 3. SET UP MESA ENVIRONMENT AND PARSE DEFAULT OPTION FILES ###
 
@@ -67,68 +83,59 @@ for name in to_remove:
 inlist1.set_option(name='pgstar_flag', value=False, namelist='star_job', defaults=def_opts)
 inlist1.set_option(name='profile_interval', value=500, namelist='controls', defaults=def_opts)
 inlist2.set_option(name='profile_interval', value=500, namelist='controls', defaults=def_opts)
+inlist1.set_option(name='xa_central_lower_limit_species(1)', value='h1', namelist='controls', defaults=def_opts)
+inlist1.set_option(name='xa_central_lower_limit(1)', value=1e-6, namelist='controls', defaults=def_opts)
+inlist2.set_option(name='xa_central_lower_limit_species(1)', value='h1', namelist='controls', defaults=def_opts)
+inlist2.set_option(name='xa_central_lower_limit(1)', value=1e-6, namelist='controls', defaults=def_opts)
 
-### 6. CONSTRUCT A GRID ###
+### 6. CONSTRUCT AND SET UP A GRID ###
 
-# Create a project directory
-project_dir = Path('/home/njh462/software/MOrPy/docs/examples/example_output/run_a_grid_with_mpi4py/project_dir')
+# Everything in this block should only be executed once
 if rank == 0:
+
+    # Create a project directory
+    project_dir = Path('/Users/janhenneco/GitHub/MOrPy/docs/examples/example_output/run_a_grid_with_mpi4py/project_dir')
     project_dir = mp.create_projectdir(project_dir, mode='binary', config=mconf)
-comm.Barrier()
 
-primary_masses = np.arange(10, 21, 1)
-mass_ratios = np.arange(0.1, 1.0, 0.1)
 
-name_template = 'mi%s_qi%s'
-model_dict = {}
+    primary_masses = np.arange(10, 22, 1)
+    mass_ratios = np.arange(0.1, 1.0, 0.1)
 
-for mi in primary_masses:
-    for qi in mass_ratios:
-        name = name_template % (str(mi), str(round(qi, 2)).replace('.', 'p'))
-        # print(name)
-        this_model = base_model.copy(model_copy_name=name, deep_copy=True)
-        this_model.inlists['inlist_project'].set_options(defaults=def_opts, 
-                                                         binary_controls={'m1': mi, 'm2': mi*qi})
-        model_dict[name] = this_model
+    name_template = 'mi%s_qi%s'
+    model_dict = {}
 
-# Create model directories for all models, add the models to GridRunItem wrappers and add those to a list
-grid_list = []
-for key in model_dict.keys():
-    model = model_dict[key]
-    grid_list.append(mp.GridRunItem(model=model))
-    
+    for mi in primary_masses:
+        for qi in mass_ratios:
+            name = name_template % (str(mi), str(round(qi, 2)).replace('.', 'p'))
+            # print(name)
+            this_model = base_model.copy(model_copy_name=name, deep_copy=True)
+            this_model.inlists['inlist_project'].set_options(defaults=def_opts, 
+                                                            binary_controls={'m1': mi, 'm2': mi*qi})
+            model_dict[name] = this_model
 
-if rank == 0:
-    for item in grid_list:
-        mp.create_modeldir(model=item.model, projectdir_path=project_dir, overwrite=True)
-    print(f'{len(grid_list)} models prepared.')
-    for item in grid_list:
-        print(f'  {item.model.name}  --->  {item.model.model_path}')
-comm.Barrier()
+    grid_list = []
+    for key in model_dict.keys():
+        model = model_dict[key]
+        grid_list.append(mp.GridRunItem(model=model))
+           
+    tracker0 = mp.prepare_grid(project_dir, grid_list, db_name=DB_NAME, restart=RESTART, config=mconf)
 
 ### 7. COMPILE MESA ###
 
-if rank == 0:
     compile_result = mp.compile_project(projectdir_path=project_dir, mode='binary')
     print(compile_result.pretty(2000))
-comm.Barrier()
 
-### 8. ENABLE TRACKING FUNCTIONALIY ###
 
-# Path to the SQLite database file that stores information about models (important for tracking).
-DB_PATH = project_dir / 'runs.db'
+else:
+    project_dir = None
+    grid_list = None
 
-if rank == 0:
-    if DB_PATH.exists():
-        DB_PATH.unlink()
-    tracker = mp.Tracker.create(db_path=DB_PATH)
-    models = [item.model for item in grid_list]
-    tracker.repo.add_models_to_repo(models=models)
-    print(DB_PATH)
-comm.Barrier()
+# Now we share all the required objects with all ranks
+project_dir = comm.bcast(project_dir, root=0)
+grid_list = comm.bcast(grid_list, root=0)
 
-# Every rank (including rank 0) opens the now-existing database.
-tracker = mp.Tracker.create(db_path=DB_PATH)
+# Here we let each rank connect to the prebuilt and fully populated DB file
+tracker = mp.Tracker.create(db_path=project_dir / DB_NAME)
 
 '''
 At this point, let's check if the tracker works. Since we'll have to track the progress of the grid in another
@@ -173,22 +180,21 @@ mp.print_grid_status(tracker=tracker, refresh_seconds=5, clear_screen=true)
 
 '''
 
-### 9. SETTING UP GRID RUN FUNCTION
+### 8. SETTING UP GRID RUN FUNCTION
 
 grid_handle = mp.run_grid(grid_list,
                             backend='mpi',
-                            sync_before_run=True, # Sync any changes made to inlist files with Model objects in memory
+                            sync_before_run=True,
                             default_options=def_opts,
                             config=mconf,
-                            capture_output=True, # Store terminal output in individual models' RunResults
+                            capture_output=True,
                             tracker=tracker,
-                            command_name='rn')
-
-print(grid_handle)
+                            command_name='rn', timeout=300, resume_policy=resume_policy)
 
 if rank == 0:
     print(grid_handle)
-### 10. RUN THE GRID ###
+
+### 9. RUN THE GRID ###
 
 '''
 The last thing we need to do now is run the grid using a specific command, in which we'll
@@ -201,18 +207,21 @@ The command is the following:
 mpirun -n N python run_a_grid_with_mpi4py.py
 ```
 
-where N = the number of models to be run in parallel + 1
+where N = the number of models to run in parallel
 '''
 
+### 10. TRACK GRID STATUS OR STOP GRID
 
-# print('--------- inlist_project ---------')
-# to_print = mp.preview(model_dict['mi18_qi0p2'].inlists['inlist_project'].options)
-# print(to_print, '\n')
+'''
+To make life easier, there are two CLI function available to see the live status or stop the grid.
+They need to be called from an active `morpy` environment and you need to know the location of the 
+project directory and the name of the database file.
 
-# print('--------- inlist1 ---------')
-# to_print = mp.preview(base_model.inlists['inlist1'].options)
-# print(to_print, '\n')
+```
+morpy_status <PATH_TO_PROJECT_DIR> <DATABASE_FILE_NAME> <REFRESH SECONDS>
+```
 
-# print('--------- inlist2 ---------')
-# to_print = mp.preview(base_model.inlists['inlist2'].options)
-# print(to_print, '\n')
+```
+morpy_stop <PATH_TO_PROJECT_DIR> <DATABASE_FILE_NAME>
+```
+'''

@@ -18,7 +18,10 @@ Core:
 - Environment managers: `conda` or `Python` `venv`
 
 Optional: 
-- `pandas>=2.0` (preview), `mpi4py>=4.0` (mpi), and `sphinx>=7.0`, `furo>=2024.0.0`, `myst-parser>=2.0`
+- `pandas>=2.0` (preview)
+- `mpi4py>=4.0` (mpi)
+- `sphinx>=7.0`, `furo>=2024.0.0` and `myst-parser>=2.0` (docs)
+- `ipykernel`, `jupyter` (notebooks)
 - For MPI: OpenMPI/MPICH
 
 ### 1. Download the code
@@ -53,7 +56,7 @@ python -m pip install .
 or install with all optional dependencies:
 
 ```
-python -m pip install ".[preview,mpi,docs]"
+python -m pip install ".[preview,mpi,docs,notebooks]"
 ```
 
 #### 2.2 MPI-aware installation (for HPC users)
@@ -92,7 +95,7 @@ The `no-binary` option prevents `pip` from installing a pre-built version of `mp
 
 4. **Install `morpy` without reinstalling `mpi4py`**
 ```
-python -m pip install -e ".[preview,docs]"
+python -m pip install -e ".[preview,docs,notebooks]"
 ``` 
 
 ### 3. Verify installation
@@ -105,7 +108,7 @@ python -c "import morpy; print('MOrPy installed successfully')"
 
 ### 4. Install `ipykernel` (OPTIONAL)
 
-If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`.
+If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`. Installing `ipykernel` can be achieved by installing the optional `notebooks` dependency (see instructions above). If you only want to install `ipykernel`, simply do the following:
 
 With the `morpy` environment activated, install `ipykernel`
 
@@ -119,13 +122,21 @@ or
 python -m pip install ipykernel
 ```
 
-Then create the kernel and give it a recognisable name (in this case "MOrPy")
+With `ipykernel` installed, create the kernel and give it a recognisable name (in this case "MOrPy")
 
 ```
 python -m ipykernel install --user --name morpy --display-name "MOrPy"
 ```
 
 After that, just restart you preexisting Jupyter server if it was already running. When you want to execute a Jupyter notebook on this server, you just have to select the `MOrPy` kernel, which should be in you kernel list now.
+
+## Documentation
+
+Feel free to check out the documentation here: [index.html](docs/build/html/index.html)
+
+
+More comprehensive documentation, please use the provided [examples](docs/examples/).
+
 
 ## MOrPy Modules
 
@@ -158,6 +169,8 @@ The `morpy` package's main modules are:
 - `repository.py`: Persistence abstraction and adapter hooks for run metadata.
 
 - `status.py`: Status view contracts for live and persisted model execution state.
+
+- `cli.py`: CLI functions for status and grid termination.
 
 ## Issues
 

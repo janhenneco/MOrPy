@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.grid_run - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.grid_run - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,7 +243,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.grid_run</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Grid orchestration for multi-model execution.</span>
+<span></span><span class="sd">"""Grid orchestration for multi-model execution.</span>
 
 <span class="sd">This module provides:</span>
 <span class="sd">- run_models_local: local parallel orchestration using existing launch/wait APIs.</span>
@@ -253,7 +254,7 @@
 <span class="sd">- Keep behavior consistent with run.py by delegating per-model execution there.</span>
 <span class="sd">- Keep orchestration simple (FIFO queue, bounded concurrency).</span>
 <span class="sd">- Remain compatible with observer-based persistence/status adapters.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -278,23 +279,23 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.run_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunHandle</span><span class="p">,</span> <span class="n">RunResult</span><span class="p">,</span> <span class="n">StateTransition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tracker</span>
 
-<span class="n">QueuePolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;fifo&quot;</span><span class="p">]</span> <span class="c1"># First In, First Out</span>
-<span class="n">GridBackend</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;local&quot;</span><span class="p">,</span> <span class="s2">&quot;mpi&quot;</span><span class="p">]</span>
-<span class="n">ResumeMatchPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;id_only&quot;</span><span class="p">,</span> <span class="s2">&quot;id_or_path&quot;</span><span class="p">]</span>
-<span class="n">ResumeFailedPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rerun&quot;</span><span class="p">,</span> <span class="s2">&quot;skip&quot;</span><span class="p">]</span>
-<span class="n">ResumeCancelledPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rerun&quot;</span><span class="p">,</span> <span class="s2">&quot;skip&quot;</span><span class="p">]</span>
+<span class="n">QueuePolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"fifo"</span><span class="p">]</span> <span class="c1"># First In, First Out</span>
+<span class="n">GridBackend</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"local"</span><span class="p">,</span> <span class="s2">"mpi"</span><span class="p">]</span>
+<span class="n">ResumeMatchPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"id_only"</span><span class="p">,</span> <span class="s2">"id_or_path"</span><span class="p">]</span>
+<span class="n">ResumeFailedPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"rerun"</span><span class="p">,</span> <span class="s2">"skip"</span><span class="p">]</span>
+<span class="n">ResumeCancelledPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"rerun"</span><span class="p">,</span> <span class="s2">"skip"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="GridRunItem">
 <a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.GridRunItem">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GridRunItem</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for one model and optional per-model environment.</span>
+<span class="w">    </span><span class="sd">"""Container for one model and optional per-model environment.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        model: Model object to run.</span>
 <span class="sd">        env: Optional shell environment for this model.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
     <span class="n">env</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -304,7 +305,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.GridRunResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GridRunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate results for a grid run.</span>
+<span class="w">    </span><span class="sd">"""Aggregate results for a grid run.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        total: Total number of models scheduled in the grid run.</span>
@@ -314,7 +315,7 @@
 <span class="sd">        results: Terminal RunResult entries for all processed models.</span>
 <span class="sd">        backend: Execution backend, local or mpi.</span>
 <span class="sd">        duration_seconds: Grid-run wall-clock duration in seconds.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">total</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">completed</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">failed</span><span class="p">:</span> <span class="nb">int</span>
@@ -328,7 +329,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.GridRunHandle">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GridRunHandle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle for a launched non-blocking grid run.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Handle for a launched non-blocking grid run."""</span>
     <span class="n">grid_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span>
     <span class="n">submitted_at</span><span class="p">:</span> <span class="n">datetime</span>
@@ -345,10 +346,10 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResumePolicy</span><span class="p">:</span>
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">match_policy</span><span class="p">:</span> <span class="n">ResumeMatchPolicy</span> <span class="o">=</span> <span class="s2">&quot;id_or_path&quot;</span>
+    <span class="n">match_policy</span><span class="p">:</span> <span class="n">ResumeMatchPolicy</span> <span class="o">=</span> <span class="s2">"id_or_path"</span>
     <span class="n">skip_completed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">failed_policy</span><span class="p">:</span> <span class="n">ResumeFailedPolicy</span> <span class="o">=</span> <span class="s2">&quot;rerun&quot;</span>
-    <span class="n">cancelled_policy</span><span class="p">:</span> <span class="n">ResumeCancelledPolicy</span> <span class="o">=</span> <span class="s2">&quot;rerun&quot;</span>
+    <span class="n">failed_policy</span><span class="p">:</span> <span class="n">ResumeFailedPolicy</span> <span class="o">=</span> <span class="s2">"rerun"</span>
+    <span class="n">cancelled_policy</span><span class="p">:</span> <span class="n">ResumeCancelledPolicy</span> <span class="o">=</span> <span class="s2">"rerun"</span>
     <span class="n">hydrate_timestamps</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
@@ -387,19 +388,19 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_schedule_decision_for_state</span><span class="p">(</span><span class="n">state_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">ResumePolicy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="n">state_norm</span> <span class="o">=</span> <span class="n">state_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">&quot;completed&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">"completed"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">skip_completed</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;completed&quot;</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"completed"</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span>
 
-    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">&quot;failed&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">failed_policy</span> <span class="o">==</span> <span class="s2">&quot;skip&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span>
+    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">"failed"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">failed_policy</span> <span class="o">==</span> <span class="s2">"skip"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"failed"</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span>
 
-    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">cancelled_policy</span> <span class="o">==</span> <span class="s2">&quot;skip&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span>
+    <span class="k">if</span> <span class="n">state_norm</span> <span class="o">==</span> <span class="s2">"cancelled"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">cancelled_policy</span> <span class="o">==</span> <span class="s2">"skip"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"cancelled"</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span>
 
     <span class="c1"># draft, queued, preparing, running, restart, paused, unknown -&gt; runnable</span>
@@ -415,7 +416,7 @@
     <span class="n">rows_by_id</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">:</span> <span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">}</span>
     <span class="n">rows_by_path</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-        <span class="n">row_path</span> <span class="o">=</span> <span class="n">_normalize_path</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;model_path&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">row_path</span> <span class="o">=</span> <span class="n">_normalize_path</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">"model_path"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">row_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">rows_by_path</span><span class="p">[</span><span class="n">row_path</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
 
@@ -429,7 +430,7 @@
         <span class="n">model</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">model</span>
         <span class="n">matched_row</span> <span class="o">=</span> <span class="n">rows_by_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">matched_row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">policy</span><span class="o">.</span><span class="n">match_policy</span> <span class="o">==</span> <span class="s2">&quot;id_or_path&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">matched_row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">policy</span><span class="o">.</span><span class="n">match_policy</span> <span class="o">==</span> <span class="s2">"id_or_path"</span><span class="p">:</span>
             <span class="n">model_path_norm</span> <span class="o">=</span> <span class="n">_normalize_path</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">model_path_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">matched_row</span> <span class="o">=</span> <span class="n">rows_by_path</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_path_norm</span><span class="p">)</span>
@@ -440,28 +441,28 @@
                     <span class="n">reassigned</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">matched_row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">db_state</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">matched_row</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">db_state</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">matched_row</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">parsed_state</span> <span class="o">=</span> <span class="n">_coerce_model_state</span><span class="p">(</span><span class="n">db_state</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">parsed_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">parsed_state</span>
 
             <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">hydrate_timestamps</span><span class="p">:</span>
                 <span class="c1"># Only hydrate fields that actually exist on both objects.</span>
-                <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;started_at&quot;</span><span class="p">,</span> <span class="s2">&quot;updated_at&quot;</span><span class="p">,</span> <span class="s2">&quot;finished_at&quot;</span><span class="p">,</span> <span class="s2">&quot;snapshot_taken_at&quot;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"started_at"</span><span class="p">,</span> <span class="s2">"updated_at"</span><span class="p">,</span> <span class="s2">"finished_at"</span><span class="p">,</span> <span class="s2">"snapshot_taken_at"</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">matched_row</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
                         <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">matched_row</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
                             <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">attr_value</span><span class="p">)</span>
 
-        <span class="n">effective_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="n">effective_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">"unknown"</span>
         <span class="n">_setdefault_inc</span><span class="p">(</span><span class="n">state_counts</span><span class="p">,</span> <span class="n">effective_state</span><span class="p">)</span>
 
         <span class="n">run_it</span><span class="p">,</span> <span class="n">skip_reason</span> <span class="o">=</span> <span class="n">_schedule_decision_for_state</span><span class="p">(</span><span class="n">effective_state</span><span class="p">,</span> <span class="n">policy</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">run_it</span><span class="p">:</span>
             <span class="n">runnable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">item</span><span class="p">,</span> <span class="n">skip_reason</span> <span class="ow">or</span> <span class="s2">&quot;policy_skip&quot;</span><span class="p">))</span>
-            <span class="n">_setdefault_inc</span><span class="p">(</span><span class="n">skipped_by_reason</span><span class="p">,</span> <span class="n">skip_reason</span> <span class="ow">or</span> <span class="s2">&quot;policy_skip&quot;</span><span class="p">)</span>
+            <span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">item</span><span class="p">,</span> <span class="n">skip_reason</span> <span class="ow">or</span> <span class="s2">"policy_skip"</span><span class="p">))</span>
+            <span class="n">_setdefault_inc</span><span class="p">(</span><span class="n">skipped_by_reason</span><span class="p">,</span> <span class="n">skip_reason</span> <span class="ow">or</span> <span class="s2">"policy_skip"</span><span class="p">)</span>
 
     <span class="n">summary</span> <span class="o">=</span> <span class="n">ReconcileSummary</span><span class="p">(</span>
         <span class="n">total_items</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
@@ -482,15 +483,15 @@
     <span class="n">sync_before_run</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private function to gracefully deal with runs part of a grid run that fail.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private function to gracefully deal with runs part of a grid run that fail."""</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">RunResult</span><span class="p">(</span>
         <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">"failed"</span><span class="p">,</span>
         <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
         <span class="n">duration_seconds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">model_id</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
@@ -500,12 +501,12 @@
         <span class="n">cwd</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
         <span class="n">start_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
         <span class="n">end_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-        <span class="n">stdout</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
         <span class="n">sync_performed</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
         <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="n">backend</span><span class="p">,</span>
-            <span class="s2">&quot;error_type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">"backend"</span><span class="p">:</span> <span class="n">backend</span><span class="p">,</span>
+            <span class="s2">"error_type"</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
@@ -517,9 +518,9 @@
     <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span><span class="p">,</span>
     <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunResult</span><span class="p">:</span>
-    <span class="n">completed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">&quot;completed&quot;</span><span class="p">)</span>
-    <span class="n">failed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">&quot;failed&quot;</span><span class="p">)</span>
-    <span class="n">cancelled</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">)</span>
+    <span class="n">completed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">"completed"</span><span class="p">)</span>
+    <span class="n">failed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">"failed"</span><span class="p">)</span>
+    <span class="n">cancelled</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">"cancelled"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">GridRunResult</span><span class="p">(</span>
         <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">,</span>
         <span class="n">completed</span><span class="o">=</span><span class="n">completed</span><span class="p">,</span>
@@ -543,10 +544,10 @@
     <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">RunResult</span><span class="p">(</span>
         <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
+        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span>
         <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
         <span class="n">duration_seconds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">model_id</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
@@ -556,12 +557,12 @@
         <span class="n">cwd</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
         <span class="n">start_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
         <span class="n">end_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-        <span class="n">stdout</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
         <span class="n">sync_performed</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
         <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="n">backend</span><span class="p">,</span>
-            <span class="s2">&quot;cancel_reason&quot;</span><span class="p">:</span> <span class="n">reason</span><span class="p">,</span>
+            <span class="s2">"backend"</span><span class="p">:</span> <span class="n">backend</span><span class="p">,</span>
+            <span class="s2">"cancel_reason"</span><span class="p">:</span> <span class="n">reason</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
@@ -569,9 +570,9 @@
     <span class="k">if</span> <span class="n">reason</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">reason</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">return</span> <span class="s2">&quot;timeout&quot;</span> <span class="ow">in</span> <span class="n">text</span>
+    <span class="k">return</span> <span class="s2">"timeout"</span> <span class="ow">in</span> <span class="n">text</span>
 
-<span class="n">_RESTART_REQUEST_TAG</span> <span class="o">=</span> <span class="s2">&quot;stop_grid restart request&quot;</span>
+<span class="n">_RESTART_REQUEST_TAG</span> <span class="o">=</span> <span class="s2">"stop_grid restart request"</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_should_mark_restart</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">_is_timeout_reason</span><span class="p">(</span><span class="n">reason</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -618,12 +619,14 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">while</span> <span class="n">pending_items</span><span class="p">:</span>
         <span class="n">pending_item</span> <span class="o">=</span> <span class="n">pending_items</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pending_item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">ModelState</span><span class="o">.</span><span class="n">DRAFT</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># never launched, leave as draft for a clean resume</span>
         <span class="n">cancel_result</span> <span class="o">=</span> <span class="n">_cancelled_result</span><span class="p">(</span>
             <span class="n">pending_item</span><span class="p">,</span>
             <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
             <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
             <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Cancelled before launch: </span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Cancelled before launch: </span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cancel_result</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -632,8 +635,8 @@
             <span class="n">_mark_model_restart</span><span class="p">(</span>
                 <span class="n">pending_item</span><span class="p">,</span>
                 <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Marked restart after stop request (</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">cancel_result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">),</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Marked restart after stop request (</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">cancel_result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">),</span>
             <span class="p">)</span>
 
 
@@ -669,7 +672,7 @@
             <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
             <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
             <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">; finalise error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">; finalise error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">observer</span><span class="o">.</span><span class="n">on_process_finished</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -678,8 +681,8 @@
         <span class="n">_mark_model_restart</span><span class="p">(</span>
             <span class="n">item</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Marked restart after stop request (</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-            <span class="n">run_id</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">),</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Marked restart after stop request (</span><span class="si">{</span><span class="n">stop_reason</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+            <span class="n">run_id</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">),</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span>
@@ -761,9 +764,9 @@
     <span class="k">if</span> <span class="n">deadline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">deadline</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">is_grid_stop_requested</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">request_grid_stop</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Grid timeout after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">request_grid_stop</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Grid timeout after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">request_grid_stop</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Grid timeout&quot;</span><span class="p">)</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">request_grid_stop</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">"Grid timeout"</span><span class="p">)</span>
 
     <span class="n">stop_requested</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">is_grid_stop_requested</span><span class="p">()</span>
     <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_grid_stop_reason</span><span class="p">()</span> <span class="k">if</span> <span class="n">stop_requested</span> <span class="k">else</span> <span class="kc">None</span>
@@ -838,11 +841,11 @@
     <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-    <span class="n">run_id</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">)</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">)</span>
     <span class="n">transition</span> <span class="o">=</span> <span class="n">StateTransition</span><span class="p">(</span>
         <span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">,</span>
         <span class="n">from_state</span><span class="o">=</span><span class="n">from_state</span><span class="p">,</span>
-        <span class="n">to_state</span><span class="o">=</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
+        <span class="n">to_state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span>
         <span class="n">at</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
         <span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
         <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
@@ -850,7 +853,7 @@
     <span class="n">tracker</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">on_state_transition</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
 
     <span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
-    <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;cancel_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;recovery&quot;</span>
+    <span class="n">metadata</span><span class="p">[</span><span class="s2">"cancel_mode"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"recovery"</span>
 
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">start_time</span>
     <span class="k">if</span> <span class="n">start_time</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -862,7 +865,7 @@
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">RunResult</span><span class="p">(</span>
         <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
+        <span class="n">terminal_state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span>
         <span class="n">return_code</span><span class="o">=</span><span class="mi">130</span><span class="p">,</span>
         <span class="n">duration_seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span>
         <span class="n">model_id</span><span class="o">=</span><span class="n">latest_run</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
@@ -872,7 +875,7 @@
         <span class="n">cwd</span><span class="o">=</span><span class="n">latest_run</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span>
         <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
         <span class="n">end_time</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-        <span class="n">stdout</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
         <span class="n">sync_performed</span><span class="o">=</span><span class="n">latest_run</span><span class="o">.</span><span class="n">sync_performed</span><span class="p">,</span>
         <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
@@ -881,10 +884,10 @@
     <span class="k">if</span> <span class="n">_should_mark_restart</span><span class="p">(</span><span class="n">reason</span><span class="p">):</span>
         <span class="n">restart_transition</span> <span class="o">=</span> <span class="n">StateTransition</span><span class="p">(</span>
             <span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">,</span>
-            <span class="n">from_state</span><span class="o">=</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
+            <span class="n">from_state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span>
             <span class="n">to_state</span><span class="o">=</span><span class="n">ModelState</span><span class="o">.</span><span class="n">RESTART</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="n">at</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Marked restart after stop handling (</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Marked restart after stop handling (</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">tracker</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">on_state_transition</span><span class="p">(</span><span class="n">restart_transition</span><span class="p">)</span>
@@ -898,7 +901,7 @@
     <span class="n">skip_model_ids</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
     <span class="n">skip</span> <span class="o">=</span> <span class="n">skip_model_ids</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">running_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="s2">&quot;preparing&quot;</span><span class="p">,</span> <span class="s2">&quot;queued&quot;</span><span class="p">}</span>
+    <span class="n">running_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"running"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">}</span>
 
     <span class="n">candidates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">terminated_model_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -906,12 +909,12 @@
     <span class="n">missing_pid_model_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">failed_model_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">recovery_reason</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_grid_stop_reason</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by stop_grid recovery path&quot;</span>
+    <span class="n">recovery_reason</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_grid_stop_reason</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">"Cancelled by stop_grid recovery path"</span>
 
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">list_model_rows</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">model_id</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">running_states</span><span class="p">:</span>
             <span class="k">continue</span>
 
@@ -921,7 +924,7 @@
             <span class="n">missing_pid_model_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
             <span class="k">continue</span>
 
-        <span class="n">pid_text</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pid&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">pid_text</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pid_text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
             <span class="n">missing_pid_model_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
             <span class="k">continue</span>
@@ -939,22 +942,22 @@
             <span class="n">_mark_recovered_cancelled</span><span class="p">(</span>
                 <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
                 <span class="n">model_id</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
-                <span class="n">from_state</span><span class="o">=</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
+                <span class="n">from_state</span><span class="o">=</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">"running"</span><span class="p">,</span>
                 <span class="n">latest_run</span><span class="o">=</span><span class="n">latest_run</span><span class="p">,</span>
                 <span class="n">reason</span><span class="o">=</span><span class="n">recovery_reason</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">terminated_model_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="n">failed_model_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
-            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;candidates&quot;</span><span class="p">:</span> <span class="n">candidates</span><span class="p">,</span>
-        <span class="s2">&quot;terminated_model_ids&quot;</span><span class="p">:</span> <span class="n">terminated_model_ids</span><span class="p">,</span>
-        <span class="s2">&quot;already_exited_model_ids&quot;</span><span class="p">:</span> <span class="n">already_exited_model_ids</span><span class="p">,</span>
-        <span class="s2">&quot;missing_pid_model_ids&quot;</span><span class="p">:</span> <span class="n">missing_pid_model_ids</span><span class="p">,</span>
-        <span class="s2">&quot;failed_model_ids&quot;</span><span class="p">:</span> <span class="n">failed_model_ids</span><span class="p">,</span>
-        <span class="s2">&quot;errors&quot;</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span>
+        <span class="s2">"candidates"</span><span class="p">:</span> <span class="n">candidates</span><span class="p">,</span>
+        <span class="s2">"terminated_model_ids"</span><span class="p">:</span> <span class="n">terminated_model_ids</span><span class="p">,</span>
+        <span class="s2">"already_exited_model_ids"</span><span class="p">:</span> <span class="n">already_exited_model_ids</span><span class="p">,</span>
+        <span class="s2">"missing_pid_model_ids"</span><span class="p">:</span> <span class="n">missing_pid_model_ids</span><span class="p">,</span>
+        <span class="s2">"failed_model_ids"</span><span class="p">:</span> <span class="n">failed_model_ids</span><span class="p">,</span>
+        <span class="s2">"errors"</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span>
     <span class="p">}</span>
 
 <div class="viewcode-block" id="run_models_local">
@@ -963,13 +966,13 @@
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">,</span>
+    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">"fifo"</span><span class="p">,</span>
     <span class="n">sync_before_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">capture_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -977,17 +980,17 @@
     <span class="n">running_processes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">,</span> <span class="n">RunHandle</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">running_lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run many models locally with limit on parallel runs.</span>
+<span class="w">    </span><span class="sd">"""Run many models locally with limit on parallel runs.</span>
 
 <span class="sd">    Uses launch_model + wait_for_model so model lifecycle and</span>
 <span class="sd">    observer behaviour remains aligned with single-model runs.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        items: list of GridRunItem objects containing the models to run.</span>
-<span class="sd">        queue_policy: QueyePolicy type. Currently only &#39;fifo&#39; (= First In, First Out) available.</span>
+<span class="sd">        queue_policy: QueyePolicy type. Currently only 'fifo' (= First In, First Out) available.</span>
 <span class="sd">        max_workers: Maximum number of models to run in parallel.</span>
 <span class="sd">            WARNING: make sure that OMP_NUM_THREADS x max_workers does not exceed</span>
-<span class="sd">            your machine&#39;s number of available threads.</span>
+<span class="sd">            your machine's number of available threads.</span>
 <span class="sd">        sync_before_run: If True (default), the function calls work_setup.sync_model_with_disk</span>
 <span class="sd">            to update the inlist attributes of Model in case the user made any changes to</span>
 <span class="sd">            the inlist files themselves. This ensures that the inlist files themselves remain</span>
@@ -998,8 +1001,8 @@
 <span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
-<span class="sd">        command_name: Name of the &quot;rn&quot; script. Can be used for restarts by specifying &quot;re&quot;</span>
-<span class="sd">            or can be used for custom-named &quot;rn&quot; scripts.</span>
+<span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>
+<span class="sd">            or can be used for custom-named "rn" scripts.</span>
 <span class="sd">        capture_output: If True, capture stdout/stderr and include them in RunResult.</span>
 <span class="sd">            If False, wait without collecting output (stdout/stderr in result are empty strings).</span>
 <span class="sd">        timeout: Maximum time in seconds to wait before aborting.</span>
@@ -1008,12 +1011,12 @@
 <span class="sd">            tracker.live_tracker and StateTransitions via the tracker.observer</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        GridRunResult</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">max_workers</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;max_workers must be &gt;= 1&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">queue_policy</span> <span class="o">!=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported queue_policy: </span><span class="si">{</span><span class="n">queue_policy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"max_workers must be &gt;= 1"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">queue_policy</span> <span class="o">!=</span> <span class="s2">"fifo"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported queue_policy: </span><span class="si">{</span><span class="n">queue_policy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
     <span class="n">pending</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
@@ -1045,7 +1048,7 @@
                 <span class="n">stop_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
             <span class="n">stop_requested</span> <span class="o">=</span> <span class="n">stop_by_event</span> <span class="ow">or</span> <span class="n">stop_by_db</span>
-            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by grid stop request&quot;</span>
+            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">"Cancelled by grid stop request"</span>
             <span class="n">restart_triggered</span> <span class="o">=</span> <span class="n">_should_mark_restart</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">)</span>
 
             <span class="k">while</span> <span class="n">pending</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">running</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_workers</span><span class="p">:</span>
@@ -1072,7 +1075,7 @@
                     <span class="n">result</span> <span class="o">=</span> <span class="n">_exception_result</span><span class="p">(</span>
                         <span class="n">item</span><span class="p">,</span>
                         <span class="n">exc</span><span class="p">,</span>
-                        <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+                        <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
                         <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                         <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -1084,7 +1087,7 @@
                 <span class="n">_cancel_pending_items</span><span class="p">(</span>
                     <span class="n">pending</span><span class="p">,</span>
                     <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
-                    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
                     <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                     <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="n">stop_reason</span><span class="o">=</span><span class="n">stop_reason</span><span class="p">,</span>
@@ -1098,7 +1101,7 @@
                         <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span>
                         <span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span>
                         <span class="n">process</span><span class="o">=</span><span class="n">process</span><span class="p">,</span>
-                        <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+                        <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
                         <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                         <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                         <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
@@ -1140,7 +1143,7 @@
                         <span class="n">timeout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                         <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
                         <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
-                        <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+                        <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
                         <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                         <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                         <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
@@ -1165,7 +1168,7 @@
                     <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
                     <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
-                    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
                     <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                     <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
@@ -1186,7 +1189,7 @@
     <span class="k">return</span> <span class="n">_summarize</span><span class="p">(</span>
         <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
         <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
-        <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
         <span class="n">duration_seconds</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
     <span class="p">)</span></div>
 
@@ -1196,18 +1199,18 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">run_models_mpi</span><span class="p">(</span>
     <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">,</span>
+    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">"fifo"</span><span class="p">,</span>
     <span class="n">sync_before_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">capture_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run many models distributed across MPI ranks.</span>
+<span class="w">    </span><span class="sd">"""Run many models distributed across MPI ranks.</span>
 
 <span class="sd">    Work distribution is simple round-robin by rank for predictability.</span>
 
@@ -1217,7 +1220,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        items: list of GridRunItem objects containing the models to run.</span>
-<span class="sd">        queue_policy: QueyePolicy type. Currently only &#39;fifo&#39; (=First In, First Out) available.</span>
+<span class="sd">        queue_policy: QueyePolicy type. Currently only 'fifo' (=First In, First Out) available.</span>
 <span class="sd">        sync_before_run: If True (default), the function calls work_setup.sync_model_with_disk</span>
 <span class="sd">            to update the inlist attributes of Model in case the user made any changes to</span>
 <span class="sd">            the inlist files themselves. This ensures that the inlist files themselves remain</span>
@@ -1228,8 +1231,8 @@
 <span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
-<span class="sd">        command_name: Name of the &quot;rn&quot; script. Can be used for restarts by specifying &quot;re&quot;</span>
-<span class="sd">            or can be used for custom-named &quot;rn&quot; scripts.</span>
+<span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>
+<span class="sd">            or can be used for custom-named "rn" scripts.</span>
 <span class="sd">        capture_output: If True, capture stdout/stderr and include them in RunResult.</span>
 <span class="sd">            If False, wait without collecting output (stdout/stderr in result are empty strings).</span>
 <span class="sd">        timeout: Maximum time in seconds to wait before aborting.</span>
@@ -1238,15 +1241,15 @@
 <span class="sd">            tracker.live_tracker and StateTransitions via the tracker.observer</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        GridRunResult</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">queue_policy</span> <span class="o">!=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported queue_policy: </span><span class="si">{</span><span class="n">queue_policy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">queue_policy</span> <span class="o">!=</span> <span class="s2">"fifo"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported queue_policy: </span><span class="si">{</span><span class="n">queue_policy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>  <span class="c1"># type: ignore</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-            <span class="s2">&quot;run_models_mpi requires mpi4py. Install it or use backend=&#39;local&#39;.&quot;</span>
+            <span class="s2">"run_models_mpi requires mpi4py. Install it or use backend='local'."</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -1279,12 +1282,12 @@
 
         <span class="k">if</span> <span class="n">db_stop_requested</span><span class="p">:</span>
             <span class="n">stop_requested</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by grid stop request&quot;</span>
+            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">"Cancelled by grid stop request"</span>
             <span class="n">restart_triggered</span> <span class="o">=</span> <span class="n">_should_mark_restart</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">)</span>
             <span class="n">_cancel_pending_items</span><span class="p">(</span>
                 <span class="n">local_items</span><span class="p">,</span>
                 <span class="n">results</span><span class="o">=</span><span class="n">local_results</span><span class="p">,</span>
-                <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                 <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                 <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                 <span class="n">stop_reason</span><span class="o">=</span><span class="n">stop_reason</span><span class="p">,</span>
@@ -1311,7 +1314,7 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">_exception_result</span><span class="p">(</span>
                 <span class="n">item</span><span class="p">,</span>
                 <span class="n">exc</span><span class="p">,</span>
-                <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                 <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                 <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
             <span class="p">)</span>
@@ -1331,7 +1334,7 @@
                     <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
                     <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
-                    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                     <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                     <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
@@ -1350,13 +1353,13 @@
 
             <span class="k">if</span> <span class="n">db_stop_requested</span><span class="p">:</span>
                 <span class="n">stop_requested</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by grid stop request&quot;</span>
+                <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">"Cancelled by grid stop request"</span>
                 <span class="n">restart_triggered</span> <span class="o">=</span> <span class="n">_should_mark_restart</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">)</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">_cancel_running_item</span><span class="p">(</span>
                     <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span>
                     <span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span>
                     <span class="n">process</span><span class="o">=</span><span class="n">process</span><span class="p">,</span>
-                    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                     <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                     <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
@@ -1377,7 +1380,7 @@
                     <span class="n">timeout</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                     <span class="n">capture_output</span><span class="o">=</span><span class="n">capture_output</span><span class="p">,</span>
                     <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
-                    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                     <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                     <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                     <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
@@ -1390,12 +1393,12 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">stop_requested</span><span class="p">:</span>
-            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by grid stop request&quot;</span>
+            <span class="n">stop_reason</span> <span class="o">=</span> <span class="n">db_stop_reason</span> <span class="ow">or</span> <span class="s2">"Cancelled by grid stop request"</span>
             <span class="n">restart_triggered</span> <span class="o">=</span> <span class="n">_should_mark_restart</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">)</span>
             <span class="n">_cancel_pending_items</span><span class="p">(</span>
                 <span class="n">local_items</span><span class="p">,</span>
                 <span class="n">results</span><span class="o">=</span><span class="n">local_results</span><span class="p">,</span>
-                <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+                <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
                 <span class="n">command_name</span><span class="o">=</span><span class="n">command_name</span><span class="p">,</span>
                 <span class="n">sync_before_run</span><span class="o">=</span><span class="n">sync_before_run</span><span class="p">,</span>
                 <span class="n">stop_reason</span><span class="o">=</span><span class="n">stop_reason</span><span class="p">,</span>
@@ -1413,7 +1416,7 @@
             <span class="n">failed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">cancelled</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">results</span><span class="o">=</span><span class="p">[],</span>
-            <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+            <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
             <span class="n">duration_seconds</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -1424,7 +1427,7 @@
         <span class="k">return</span> <span class="n">_summarize</span><span class="p">(</span>
             <span class="n">results</span><span class="o">=</span><span class="n">flat_results</span><span class="p">,</span>
             <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
-            <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
+            <span class="n">backend</span><span class="o">=</span><span class="s2">"mpi"</span><span class="p">,</span>
             <span class="n">duration_seconds</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">finally</span><span class="p">:</span>
@@ -1437,21 +1440,21 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">run_grid</span><span class="p">(</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span> <span class="o">=</span> <span class="s2">"local"</span><span class="p">,</span>
     <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">,</span>
+    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">"fifo"</span><span class="p">,</span>
     <span class="n">sync_before_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">capture_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resume_policy</span><span class="p">:</span> <span class="n">ResumePolicy</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a grid of models with local workers or MPI.</span>
+<span class="w">    </span><span class="sd">"""Run a grid of models with local workers or MPI.</span>
 
 <span class="sd">    Dispatches to run_models_local or run_models_mpi based on backend.</span>
 
@@ -1473,12 +1476,12 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        GridRunResult with per-model results and aggregate counts.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">item_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">resume_policy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">resume_policy</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;resume_policy requires tracker to be provided.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"resume_policy requires tracker to be provided."</span><span class="p">)</span>
         <span class="n">item_list</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_reconcile_items_with_repository</span><span class="p">(</span><span class="n">item_list</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">resume_policy</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1492,7 +1495,7 @@
             <span class="n">duration_seconds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;local&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"local"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">run_models_local</span><span class="p">(</span>
             <span class="n">item_list</span><span class="p">,</span>
             <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -1508,7 +1511,7 @@
             <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;mpi&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"mpi"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">run_models_mpi</span><span class="p">(</span>
             <span class="n">item_list</span><span class="p">,</span>
             <span class="n">queue_policy</span><span class="o">=</span><span class="n">queue_policy</span><span class="p">,</span>
@@ -1523,7 +1526,7 @@
             <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span>
         <span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported backend: </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported backend: </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="launch_grid">
@@ -1531,34 +1534,34 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">launch_grid</span><span class="p">(</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="n">GridBackend</span> <span class="o">=</span> <span class="s2">"local"</span><span class="p">,</span>
     <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">&quot;fifo&quot;</span><span class="p">,</span>
+    <span class="n">queue_policy</span><span class="p">:</span> <span class="n">QueuePolicy</span> <span class="o">=</span> <span class="s2">"fifo"</span><span class="p">,</span>
     <span class="n">sync_before_run</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">capture_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">resume_policy</span><span class="p">:</span> <span class="n">ResumePolicy</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunHandle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Launch a grid run in the background and return immediately.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Launch a grid run in the background and return immediately."""</span>
     <span class="n">item_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">resume_policy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">resume_policy</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;resume_policy requires tracker to be provided.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"resume_policy requires tracker to be provided."</span><span class="p">)</span>
         <span class="n">item_list</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_reconcile_items_with_repository</span><span class="p">(</span><span class="n">item_list</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">resume_policy</span><span class="p">)</span>
 
-    <span class="n">executor</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;mesa-grid&quot;</span><span class="p">)</span>
+    <span class="n">executor</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">"mesa-grid"</span><span class="p">)</span>
     <span class="n">stop_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
     <span class="n">running_processes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">GridRunItem</span><span class="p">,</span> <span class="n">RunHandle</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">running_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;local&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"local"</span><span class="p">:</span>
         <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
             <span class="n">run_models_local</span><span class="p">,</span>
             <span class="n">item_list</span><span class="p">,</span>
@@ -1618,13 +1621,13 @@
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">shutdown_executor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridRunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait for a launched grid run to complete and return its result.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Wait for a launched grid run to complete and return its result."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">except</span> <span class="n">FutureTimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Grid run </span><span class="si">{</span><span class="n">handle</span><span class="o">.</span><span class="n">grid_id</span><span class="si">}</span><span class="s2"> did not finish within </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Grid run </span><span class="si">{</span><span class="n">handle</span><span class="o">.</span><span class="n">grid_id</span><span class="si">}</span><span class="s2"> did not finish within </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds."</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">shutdown_executor</span> <span class="ow">and</span> <span class="n">handle</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
@@ -1642,7 +1645,7 @@
     <span class="n">recover_from_dbfile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">restart</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stop a launched grid in live mode and/or repository recovery mode.</span>
+<span class="w">    </span><span class="sd">"""Stop a launched grid in live mode and/or repository recovery mode.</span>
 
 <span class="sd">    Behavior:</span>
 <span class="sd">        - If handle is provided, performs live-session cooperative cancellation.</span>
@@ -1652,15 +1655,15 @@
 <span class="sd">    Note:</span>
 <span class="sd">        In this project design, one DB file corresponds to one grid context, so</span>
 <span class="sd">        repository recovery targets all active models in that DB.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provide at least one of: handle or tracker.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Provide at least one of: handle or tracker."</span><span class="p">)</span>
 
     <span class="n">active_tracker</span> <span class="o">=</span> <span class="n">tracker</span> <span class="k">if</span> <span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">_tracker</span> <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="n">stop_request_persisted</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">active_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">reason</span> <span class="o">=</span> <span class="n">_RESTART_REQUEST_TAG</span> <span class="k">if</span> <span class="n">restart</span> <span class="k">else</span> <span class="s2">&quot;stop_grid called&quot;</span>
+        <span class="n">reason</span> <span class="o">=</span> <span class="n">_RESTART_REQUEST_TAG</span> <span class="k">if</span> <span class="n">restart</span> <span class="k">else</span> <span class="s2">"stop_grid called"</span>
         <span class="n">active_tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">request_grid_stop</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">)</span>
         <span class="n">stop_request_persisted</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1669,7 +1672,7 @@
     <span class="n">recovery_summary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mode_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;live&quot;</span><span class="p">)</span>
+        <span class="n">mode_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"live"</span><span class="p">)</span>
         <span class="n">handle</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
         <span class="n">cancelled_future</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
         <span class="n">handle</span><span class="o">.</span><span class="n">_executor</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cancel_futures</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1686,21 +1689,21 @@
                 <span class="n">terminated_model_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="n">termination_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
 
         <span class="n">live_summary</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;grid_id&quot;</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">grid_id</span><span class="p">,</span>
-            <span class="s2">&quot;future_cancelled&quot;</span><span class="p">:</span> <span class="n">cancelled_future</span><span class="p">,</span>
-            <span class="s2">&quot;future_done&quot;</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">done</span><span class="p">(),</span>
-            <span class="s2">&quot;terminated_model_ids&quot;</span><span class="p">:</span> <span class="n">terminated_model_ids</span><span class="p">,</span>
-            <span class="s2">&quot;termination_errors&quot;</span><span class="p">:</span> <span class="n">termination_errors</span><span class="p">,</span>
+            <span class="s2">"grid_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">grid_id</span><span class="p">,</span>
+            <span class="s2">"future_cancelled"</span><span class="p">:</span> <span class="n">cancelled_future</span><span class="p">,</span>
+            <span class="s2">"future_done"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">done</span><span class="p">(),</span>
+            <span class="s2">"terminated_model_ids"</span><span class="p">:</span> <span class="n">terminated_model_ids</span><span class="p">,</span>
+            <span class="s2">"termination_errors"</span><span class="p">:</span> <span class="n">termination_errors</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="k">if</span> <span class="n">recover_from_dbfile</span> <span class="ow">and</span> <span class="n">active_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mode_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;recovery&quot;</span><span class="p">)</span>
+        <span class="n">mode_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"recovery"</span><span class="p">)</span>
         <span class="n">skip_ids</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">live_summary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">live_summary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;terminated_model_ids&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">live_summary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"terminated_model_ids"</span><span class="p">,</span> <span class="p">[]):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="n">skip_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
         <span class="n">recovery_summary</span> <span class="o">=</span> <span class="n">_stop_from_repository</span><span class="p">(</span>
@@ -1711,12 +1714,12 @@
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;requested&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mode_parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">mode_parts</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="n">live_summary</span><span class="p">,</span>
-        <span class="s2">&quot;recovery&quot;</span><span class="p">:</span> <span class="n">recovery_summary</span><span class="p">,</span>
-        <span class="s2">&quot;stop_request_persisted&quot;</span><span class="p">:</span> <span class="n">stop_request_persisted</span><span class="p">,</span>
-        <span class="s2">&quot;restart&quot;</span><span class="p">:</span> <span class="n">restart</span>
+        <span class="s2">"requested"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"+"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mode_parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">mode_parts</span> <span class="k">else</span> <span class="s2">"none"</span><span class="p">,</span>
+        <span class="s2">"live"</span><span class="p">:</span> <span class="n">live_summary</span><span class="p">,</span>
+        <span class="s2">"recovery"</span><span class="p">:</span> <span class="n">recovery_summary</span><span class="p">,</span>
+        <span class="s2">"stop_request_persisted"</span><span class="p">:</span> <span class="n">stop_request_persisted</span><span class="p">,</span>
+        <span class="s2">"restart"</span><span class="p">:</span> <span class="n">restart</span>
     <span class="p">}</span></div>
 
 </pre></div>
@@ -1751,7 +1754,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

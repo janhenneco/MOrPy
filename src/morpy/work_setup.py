@@ -237,7 +237,8 @@ def sync_model_with_disk(model: Model, default_options: DefaultsOptions, config:
 
 def create_modeldir(model: Model, 
                     projectdir_path: Path | str, 
-                    overwrite: bool = False, 
+                    overwrite: bool = False,
+                    reuse_existing: bool = True,
                     include_additional_options: bool = False,
                     include_comment_blocks: bool = True, 
                     config: MesaConfig | None = None,) -> Path:
@@ -250,6 +251,9 @@ def create_modeldir(model: Model,
             This can technically be any path, but in order to run the run the model, the mdoel directory should
             be placed inside a project directory containing the /src folder and Fortran executable.
         overwrite: Overwrite the model directory if it already exists in the project directory.
+            Set this to False for restarts of existing grids.
+        reuse_existing: Reuse existing model directories if they exist. Set to True for restarts
+            of existing grids.
         include_additional_options: If present, include unclassified namelist blocks in all inlists written to storage
             (see options.Inlist and options.Unclassifiednamelist documentation)
         include_comment_blocks: Add Inlist.comment_block to the top of the inlist files
@@ -276,10 +280,17 @@ def create_modeldir(model: Model,
     
     model_dir = projectdir_path / model.name
 
-    # If path exists but is not a directory, fail with a clear error
-    if model_dir.exists() and not model_dir.is_dir():
-        raise FileExistsError(
-            f"Cannot create model directory because path exists and is not a directory: {model_dir}")
+    if model_dir.exists():
+        if reuse_existing:
+            model.model_path = model_dir
+            model.file_snapshot = _snapshot_model_inlists(model_dir)
+            model.snapshot_taken_at = datetime.now(timezone.utc)
+            return model_dir
+        if not overwrite:
+            raise FileExistsError(f"Cannot create model directory because path exists and is not a directory: {model_dir}\n " \
+                                  "If you wish to reuse existing model directories for grid reruns, use `reuse_exisiting = True`.")
+    
+        
 
     mode = detect_workdir_mode(model)
 

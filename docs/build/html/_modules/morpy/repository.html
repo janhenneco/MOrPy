@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
-        <title>morpy.repository - mesa-runner 0.1.0.dev0 documentation</title>
+        <title>morpy.repository - MOrPy Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -160,7 +160,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">mesa-runner 0.1.0.dev0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">MOrPy Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -181,7 +181,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
-  <span class="sidebar-brand-text">mesa-runner 0.1.0.dev0 documentation</span>
+  <span class="sidebar-brand-text">MOrPy Documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -189,10 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_cli.html">morpy.cli module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_compile.html">morpy.compile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
@@ -242,7 +243,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.repository</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;SQLite-backed persistence and live-process registry for run metadata.</span>
+<span></span><span class="sd">"""SQLite-backed persistence and live-process registry for run metadata.</span>
 
 <span class="sd">This module provides:</span>
 
@@ -254,7 +255,7 @@
 <span class="sd">Persistence and live process tracking are intentionally separated:</span>
 <span class="sd">the database stores durable history, while the live registry stores active</span>
 <span class="sd">Popen handles that cannot be persisted meaningfully.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -277,7 +278,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_dump_json</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">),</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_load_json_dict</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -308,7 +309,7 @@
 <div class="viewcode-block" id="Base">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.Base">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">(</span><span class="n">DeclarativeBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class that is required for SQL database interaction.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class that is required for SQL database interaction."""</span>
     <span class="k">pass</span></div>
 
 
@@ -316,8 +317,8 @@
 <div class="viewcode-block" id="ModelRow">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.ModelRow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelRow</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SQL database row for one model.&quot;&quot;&quot;</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;models&quot;</span>
+<span class="w">    </span><span class="sd">"""SQL database row for one model."""</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">"models"</span>
 
     <span class="n">model_id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -335,8 +336,8 @@
 <div class="viewcode-block" id="RunRow">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.RunRow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunRow</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SQL database row for one run.&quot;&quot;&quot;</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;runs&quot;</span>
+<span class="w">    </span><span class="sd">"""SQL database row for one run."""</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">"runs"</span>
 
     <span class="n">run_id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -362,8 +363,8 @@
 <div class="viewcode-block" id="StateTransitionRow">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.StateTransitionRow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StateTransitionRow</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SQL database row for one model state transition.&quot;&quot;&quot;</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;state_transitions&quot;</span>
+<span class="w">    </span><span class="sd">"""SQL database row for one model state transition."""</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">"state_transitions"</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -378,8 +379,8 @@
 <div class="viewcode-block" id="GridControlRow">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.GridControlRow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GridControlRow</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Single-row control table for project-scoped grid stop requests.&quot;&quot;&quot;</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;grid_control&quot;</span>
+<span class="w">    </span><span class="sd">"""Single-row control table for project-scoped grid stop requests."""</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">"grid_control"</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">stop_requested</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -471,7 +472,7 @@
 <div class="viewcode-block" id="SQLiteRunRepository">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.SQLiteRunRepository">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SQLiteRunRepository</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SQLite-backed implementation of RunRepository using SQLAlchemy.</span>
+<span class="w">    </span><span class="sd">"""SQLite-backed implementation of RunRepository using SQLAlchemy.</span>
 <span class="sd">    </span>
 <span class="sd">    Responsibilities:</span>
 <span class="sd">        Create schema on first use.</span>
@@ -484,10 +485,10 @@
 <span class="sd">        JSON-like fields are serialized to compact JSON text for SQLite storage.</span>
 <span class="sd">        Timestamp columns are stored as timezone-aware datetimes.</span>
 <span class="sd">        Writes are transaction-scoped using SessionLocal.begin().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">future</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="sa">f</span><span class="s2">"sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">future</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">,</span> <span class="n">expire_on_commit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">Session</span><span class="p">)</span>
         <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
 
@@ -502,13 +503,13 @@
 
             <span class="n">row</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">name</span>
             <span class="n">row</span><span class="o">.</span><span class="n">model_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;created_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;started_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;updated_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;finished_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">snapshot_taken_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;snapshot_taken_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">row</span><span class="o">.</span><span class="n">file_snapshot_json</span> <span class="o">=</span> <span class="n">_dump_json</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;file_snapshot&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
+            <span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"started_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"updated_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"finished_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">snapshot_taken_at</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"snapshot_taken_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">file_snapshot_json</span> <span class="o">=</span> <span class="n">_dump_json</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"file_snapshot"</span><span class="p">,</span> <span class="p">{}))</span></div>
 
 
 <div class="viewcode-block" id="SQLiteRunRepository.add_models_to_repo">
@@ -559,7 +560,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.SQLiteRunRepository.set_grid_timeout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_grid_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">timeout_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;timeout_seconds must be &gt; 0&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"timeout_seconds must be &gt; 0"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensure_grid_control_row</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">SessionLocal</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">GridControlRow</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -641,9 +642,9 @@
 
             <span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">transition</span><span class="o">.</span><span class="n">to_state</span>
             <span class="n">row</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">transition</span><span class="o">.</span><span class="n">at</span>
-            <span class="k">if</span> <span class="n">transition</span><span class="o">.</span><span class="n">to_state</span> <span class="o">==</span> <span class="s2">&quot;running&quot;</span> <span class="ow">and</span> <span class="n">row</span><span class="o">.</span><span class="n">started_at</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">transition</span><span class="o">.</span><span class="n">to_state</span> <span class="o">==</span> <span class="s2">"running"</span> <span class="ow">and</span> <span class="n">row</span><span class="o">.</span><span class="n">started_at</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">row</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="n">transition</span><span class="o">.</span><span class="n">at</span>
-            <span class="k">if</span> <span class="n">transition</span><span class="o">.</span><span class="n">to_state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">}:</span>
+            <span class="k">if</span> <span class="n">transition</span><span class="o">.</span><span class="n">to_state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"completed"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">}:</span>
                 <span class="n">row</span><span class="o">.</span><span class="n">finished_at</span> <span class="o">=</span> <span class="n">transition</span><span class="o">.</span><span class="n">at</span></div>
 
 
@@ -663,7 +664,7 @@
                     <span class="n">start_time</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
                     <span class="n">pid</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span>
                     <span class="n">log_file_name</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">log_file_name</span><span class="p">,</span>
-                    <span class="n">metadata_json</span><span class="o">=</span><span class="n">_dump_json</span><span class="p">({</span><span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)}),</span>
+                    <span class="n">metadata_json</span><span class="o">=</span><span class="n">_dump_json</span><span class="p">({</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)}),</span>
                 <span class="p">)</span>
                 <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -683,7 +684,7 @@
 
             <span class="n">model_row</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">model_name</span>
             <span class="n">model_row</span><span class="o">.</span><span class="n">model_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
-            <span class="n">model_row</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+            <span class="n">model_row</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">"running"</span>
             <span class="n">model_row</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">start_time</span> <span class="k">if</span> <span class="n">model_row</span><span class="o">.</span><span class="n">started_at</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">model_row</span><span class="o">.</span><span class="n">started_at</span>
             <span class="n">model_row</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">start_time</span></div>
 
@@ -691,12 +692,12 @@
 <div class="viewcode-block" id="SQLiteRunRepository.record_run_finished">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.SQLiteRunRepository.record_run_finished">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">record_run_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RunResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">run_id</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">)</span>
+        <span class="n">run_id</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">SessionLocal</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">RunRow</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">run_id</span> <span class="k">else</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="n">RunRow</span><span class="p">(</span>
-                    <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">model_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="n">model_id</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
                     <span class="n">model_name</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
                     <span class="n">model_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">model_path</span><span class="p">),</span>
@@ -720,9 +721,9 @@
             <span class="n">row</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
             <span class="n">row</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span>
             <span class="n">row</span><span class="o">.</span><span class="n">sync_performed</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sync_performed</span>
-            <span class="k">if</span> <span class="s2">&quot;pid&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"pid"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">row</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;pid&quot;</span><span class="p">])</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">"pid"</span><span class="p">])</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                     <span class="n">row</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">row</span><span class="o">.</span><span class="n">metadata_json</span> <span class="o">=</span> <span class="n">_dump_json</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
@@ -812,7 +813,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_row_to_run_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">RunRow</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RunResult</span><span class="p">(</span>
             <span class="n">success</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">success</span><span class="p">)</span> <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">success</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="n">terminal_state</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">terminal_state</span> <span class="ow">or</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+            <span class="n">terminal_state</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">terminal_state</span> <span class="ow">or</span> <span class="s2">"failed"</span><span class="p">,</span>
             <span class="n">return_code</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">return_code</span> <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">duration_seconds</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">duration_seconds</span> <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">duration_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="n">model_id</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
@@ -822,8 +823,8 @@
             <span class="n">cwd</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">cwd</span><span class="p">),</span>
             <span class="n">start_time</span><span class="o">=</span><span class="n">_ensure_utc</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_utc_now</span><span class="p">(),</span>
             <span class="n">end_time</span><span class="o">=</span><span class="n">_ensure_utc</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_ensure_utc</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_utc_now</span><span class="p">(),</span>
-            <span class="n">stdout</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">stderr</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stderr</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stderr</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">,</span>
             <span class="n">sync_performed</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">sync_performed</span><span class="p">)</span> <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">sync_performed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
             <span class="n">metadata</span><span class="o">=</span><span class="n">_load_json_dict</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">metadata_json</span><span class="p">),</span>
         <span class="p">)</span></div>
@@ -843,7 +844,7 @@
 <div class="viewcode-block" id="LiveProcessRegistry">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.LiveProcessRegistry">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LiveProcessRegistry</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;In-memory registry of currently running subprocesses by model_id.</span>
+<span class="w">    </span><span class="sd">"""In-memory registry of currently running subprocesses by model_id.</span>
 
 <span class="sd">    This registry is the real-time companion to SQLite history:</span>
 
@@ -855,7 +856,7 @@
 <span class="sd">    Lifecycle behavior:</span>
 <span class="sd">        - Stale entries are pruned lazily during lookups.</span>
 <span class="sd">        - Registry content is process-local and not durable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">LiveProcessEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -934,7 +935,7 @@
 <div class="viewcode-block" id="RepositoryObserver">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.RepositoryObserver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RepositoryObserver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Observer adapter that persists run lifecycle events.</span>
+<span class="w">    </span><span class="sd">"""Observer adapter that persists run lifecycle events.</span>
 
 <span class="sd">    This class implements the RunObserver callback shape and delegates each event</span>
 <span class="sd">    to a RunRepository implementation:</span>
@@ -945,7 +946,7 @@
 <span class="sd">    </span>
 <span class="sd">    Use this observer when running models so status queries can reconstruct</span>
 <span class="sd">    current and historical state from repository data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo</span><span class="p">:</span> <span class="n">RunRepository</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repo</span> <span class="o">=</span> <span class="n">repo</span>
@@ -973,7 +974,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.Tracker">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Tracker</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tracker object that holds the SQL repository (SQLiteRunRepository)</span>
+<span class="w">    </span><span class="sd">"""Tracker object that holds the SQL repository (SQLiteRunRepository)</span>
 <span class="sd">    instance that keeps track of the running models, the </span>
 <span class="sd">    live_tracker (LiveProcessRegistry) that tracks additional in-memory</span>
 <span class="sd">    information about the models (only available if initiated in same Python</span>
@@ -983,7 +984,7 @@
 <span class="sd">        repo: SQLiteRunRepository object</span>
 <span class="sd">        live_tracker: LiveProcessRegistry object</span>
 <span class="sd">        overver: RunObserver object</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">repo</span><span class="p">:</span> <span class="n">SQLiteRunRepository</span>
     <span class="n">live_tracker</span><span class="p">:</span> <span class="n">LiveProcessRegistry</span>
     <span class="n">observer</span><span class="p">:</span> <span class="n">RepositoryObserver</span>
@@ -991,13 +992,13 @@
 <div class="viewcode-block" id="Tracker.create">
 <a class="viewcode-back" href="../../api/module_morpy_repository.html#morpy.Tracker.create">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Tracker&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to initialise the Tracker object. </span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Tracker"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Method to initialise the Tracker object. </span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            db_path: Path to the location where the SQL database file</span>
 <span class="sd">            should be written to.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">repo</span> <span class="o">=</span> <span class="n">SQLiteRunRepository</span><span class="p">(</span><span class="n">db_path</span><span class="o">=</span><span class="n">db_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">repo</span> <span class="o">=</span> <span class="n">repo</span><span class="p">,</span>
@@ -1008,7 +1009,7 @@
 
 
 <span class="c1"># class ModelRepository(SQLiteRunRepository):</span>
-<span class="c1">#     &quot;&quot;&quot;Repository to keep track of initiated, running, and</span>
+<span class="c1">#     """Repository to keep track of initiated, running, and</span>
 <span class="c1">#     finished MESA models written on the disk as a SQL database</span>
 <span class="c1">#     file for persistence.</span>
 
@@ -1022,7 +1023,7 @@
 <span class="c1">#     Since the repository is persistent, re-initialising the same</span>
 <span class="c1">#     SQL database file (db_path) will append new models. To create</span>
 <span class="c1">#     a completely new database file (e.g. when you rerun a grid</span>
-<span class="c1">#     because sonething was wrong with the models and you don&#39;t</span>
+<span class="c1">#     because sonething was wrong with the models and you don't</span>
 <span class="c1">#     want to keep info about the old models), simply remove the </span>
 <span class="c1">#     database file:</span>
 <span class="c1">#     ```</span>
@@ -1043,11 +1044,11 @@
 <span class="c1">#     repo = ModelRepository(db_path=DB_PATH)</span>
 <span class="c1">#     ```</span>
 <span class="c1">#     (Call before model/grid launch/run calls.)</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     """</span>
 <span class="c1">#     pass</span>
 
 <span class="c1"># class LiveModelTracker(LiveProcessRegistry):</span>
-<span class="c1">#     &quot;&quot;&quot;Live tracker for currently running models.</span>
+<span class="c1">#     """Live tracker for currently running models.</span>
 
 <span class="c1">#     This object tracks live process handles for model objects </span>
 <span class="c1">#     currently in the RAM and loses its function if the </span>
@@ -1064,11 +1065,11 @@
 <span class="c1">#     live_tracker = LiveModelTracker()</span>
 <span class="c1">#     ```</span>
 <span class="c1">#     (Call before model/grid launch/run calls.)</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     """</span>
 <span class="c1">#     pass</span>
 
 <span class="c1"># class ModelObserver(RepositoryObserver):</span>
-<span class="c1">#     &quot;&quot;&quot;An observer that detects and records the lifecycles of </span>
+<span class="c1">#     """An observer that detects and records the lifecycles of </span>
 <span class="c1">#     model runs in the model repository (the SQL database file).</span>
 
 <span class="c1">#     This class is a wrapper for the internally used</span>
@@ -1081,7 +1082,7 @@
 <span class="c1">#     ```</span>
 <span class="c1">#     with repo a ModelRepository object.</span>
 <span class="c1">#     (Call before model/grid launch/run calls.)</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     """</span>
 <span class="c1">#     pass</span>
 </pre></div>
         </article>
@@ -1115,7 +1116,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=965fac30"></script>
+</div><script src="../../_static/documentation_options.js?v=4681f273"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

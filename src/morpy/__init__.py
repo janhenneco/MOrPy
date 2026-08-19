@@ -27,7 +27,8 @@ from .work_setup import (import_inlists_from_dir,
                          export_modeldir, 
                          sync_model_with_disk, 
                          detect_workdir_mode)
-from .project_setup import (create_projectdir)
+from .project_setup import (create_projectdir,
+                            prepare_grid)
 from .compile import(compile_project, 
                      CommandResult, 
                      CompileResult)
@@ -93,5 +94,6 @@ __all__ = [
     "GridRunHandle", 
     "Tracker",
     "stop_grid",
-    "ResumePolicy"
+    "ResumePolicy",
+    "prepare_grid"
 ]
