@@ -32,7 +32,7 @@ def import_inlists_from_dir(model: Model,
                             config: MesaConfig | None = None,
                             *,
                             allow_unknown_options : bool = False
-                            ) -> Model:
+                            ) -> None:
     """Function that looks for files with 'inlist' in their name in a given directory (non-recursively),
         parses them, and adds them to model.inlists.
     
@@ -44,7 +44,7 @@ def import_inlists_from_dir(model: Model,
         allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
             If False, raise an exception when inlist options are found that re not found in the defaults files.
     Returns:
-        Model object
+        None
     Raises:
         FileNotFoundError is source_dir does not exist.
     """
@@ -60,7 +60,7 @@ def import_inlists_from_dir(model: Model,
     for path in inlist_paths:
         model.add_inlist(parse_inlist(source_path=path, config=config, default_options=default_options, allow_unknown_options=allow_unknown_options))
 
-    return model
+    return
 
 def _link_into_model_dir(
     model_dir: Path,
@@ -143,29 +143,45 @@ def _columns_files_for_mode(mode: WorkdirMode) -> list[str]:
         ]
     return ["history_columns.list", "profile_columns.list"]
 
+_SHEBANG = b"#!/bin/bash\n"
+
+def _ensure_shebang(path: Path) -> None:
+    """Prepend a shebang line to a script file if it doesn't already have one.
+
+    Work-directory scripts (clean, mk, rn, re) shipped by some older MESA
+    releases have no shebang line. The OS then refuses to exec them directly
+    ("Exec format error"), even though a shell interprets them fine when
+    invoked explicitly (e.g. `bash clean`).
+    """
+    content = path.read_bytes()
+    if content.startswith(b"#!"):
+        return
+    path.write_bytes(_SHEBANG + content)
+
 def _ensure_scripts_in_project_dir(projectdir_path: Path, mode: WorkdirMode, config: MesaConfig) -> None:
     """Ensure rn and re scripts exist in projectdir. If not, copy from MESA_DIR."""
     for script_name in ["rn", "re"]:
         script_path = projectdir_path / script_name
-        
+
         # Already present in projectdir, skip
         if script_path.exists():
             continue
-        
+
         # Determine source in MESA_DIR based on mode
         if mode == "binary":
             src = config.mesa_dir / "binary" / "work" / script_name
         else:
             src = config.mesa_dir / "star" / "work" / script_name
-        
+
         if not src.exists():
             raise FileNotFoundError(
                 f"Script '{script_name}' not found in {src}. "
                 f"Ensure MESA is built or provide {script_name} in project directory."
             )
-        
+
         # Copy to projectdir, preserving permissions
         shutil.copy2(src, script_path)
+        _ensure_shebang(script_path)
 
 def _hash_file(path: Path, *, chunk_size: int = 1024 * 1024) -> str:
     """Return SHA-256 hash of a file."""

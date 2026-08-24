@@ -246,7 +246,7 @@ def compile_project(
     if mode not in ("star", "binary"):
         raise ValueError(f"mode must be 'star' or 'binary', got: {mode!r}")
 
-    projectdir_path = Path(projectdir_path)
+    projectdir_path = Path(projectdir_path).resolve()
     if not projectdir_path.is_dir():
         raise FileNotFoundError(f"Project directory does not exist: {projectdir_path}")
 

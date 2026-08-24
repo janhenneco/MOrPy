@@ -14,11 +14,12 @@ import uuid
 from .config import MesaConfig, require_active_config
 from .grid_run import GridRunItem, _normalize_path
 from .repository import Tracker
-from .work_setup import create_modeldir
+from .work_setup import create_modeldir, _ensure_shebang
 
 WorkdirMode = Literal["star", "binary"]
 
 _REQUIRED_CONTENT = ("src", "make", "clean", "mk", "rn", "re")
+_SCRIPT_NAMES = ("clean", "mk", "rn", "re")
 
 def _columns_files_for_mode(mode: WorkdirMode) -> list[str]:
     """Return optional files always needed"""
@@ -132,6 +133,8 @@ def create_projectdir(
                     f"Required template entry not found in {work_template}: {name}"
                 )
             _copy_entry(src, tmp_dir / name)
+            if name in _SCRIPT_NAMES:
+                _ensure_shebang(tmp_dir / name)
 
         src_to_copy = custom_src if custom_src is not None else (work_template / "src")
         if not src_to_copy.exists():

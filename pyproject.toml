@@ -21,7 +21,8 @@ classifiers = [
 [project.optional-dependencies]
 preview = ["pandas>=2.0"]
 mpi = ["mpi4py>=4.0"]
-notebooks = ["ipykernel", "jupyter"]
+ipykernel = ["ipykernel"]
+jupyter = ["jupyter"]
 docs = [
   "sphinx>=7.0",
   "furo>=2024.0.0",

@@ -26,7 +26,8 @@ Optional:
 - `pandas>=2.0` (preview)
 - `mpi4py>=4.0` (mpi)
 - `sphinx>=7.0`, `furo>=2024.0.0` and `myst-parser>=2.0` (docs)
-- `ipykernel`, `jupyter` (notebooks)
+- `ipykernel` (ipykernel)
+- `jupyter` (jupyter)
 - For MPI: OpenMPI/MPICH
 
 ### 1. Download the code
@@ -113,19 +114,7 @@ python -c "import morpy; print('MOrPy installed successfully')"
 
 ### 4. Install `ipykernel` (OPTIONAL)
 
-If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`. Installing `ipykernel` can be achieved by installing the optional `notebooks` dependency (see instructions above). If you only want to install `ipykernel`, simply do the following:
-
-With the `morpy` environment activated, install `ipykernel`
-
-```
-conda install ipykernel
-```
-
-or 
-
-```
-python -m pip install ipykernel
-```
+If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`. Installing `ipykernel` can be achieved by installing the optional `ipykernel` dependency (see instructions above).
 
 With `ipykernel` installed, create the kernel and give it a recognisable name (in this case "MOrPy")
 
