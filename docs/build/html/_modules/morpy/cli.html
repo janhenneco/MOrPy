@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,8 +247,8 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.cli</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""This module defines CLI functions for `morpy`.</span>
-<span class="sd">"""</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module defines CLI commands for `morpy`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -259,10 +263,13 @@
 <div class="viewcode-block" id="main_status">
 <a class="viewcode-back" href="../../api/module_morpy_cli.html#morpy.cli.main_status">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">"morpy_status"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Print MOrPy grid status."</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"project_dir"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the project directory."</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"db_name"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Database filename inside project_dir."</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"refresh_seconds"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Refresh interval for status in seconds."</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Function that defines the `morpy_status` CLI command.</span>
+<span class="sd">    Makes use of status.print_grid_status().</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;morpy_status&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Print MOrPy grid status.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;project_dir&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the project directory.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;db_name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Database filename inside project_dir.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;refresh_seconds&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Refresh interval for status in seconds.&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">tracker</span> <span class="o">=</span> <span class="n">_build_tracker</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>
@@ -273,9 +280,12 @@
 <div class="viewcode-block" id="main_stop">
 <a class="viewcode-back" href="../../api/module_morpy_cli.html#morpy.cli.main_stop">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main_stop</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">"morpy_stop"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Stop a running MOrPy grid."</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"project_dir"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to the project directory."</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"db_name"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Database filename inside project_dir."</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Function that defines the `morpy_stop` CLI command.</span>
+<span class="sd">    Makes use of grid_run.stop_grid().</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;morpy_stop&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Stop a running MOrPy grid.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;project_dir&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the project directory.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;db_name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Database filename inside project_dir.&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">tracker</span> <span class="o">=</span> <span class="n">_build_tracker</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">db_name</span><span class="p">)</span>

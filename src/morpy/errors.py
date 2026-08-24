@@ -5,10 +5,10 @@ preflight validation errors, launch/runtime failures, timeout failures,
 and persistence-related failures.
 """
 
-class MesaRunnerError(Exception):
+class MorPyError(Exception):
     pass
 
-class RunPreflightError(MesaRunnerError):
+class RunPreflightError(MorPyError):
     pass
 
 class ModelPathMissingError(RunPreflightError):
@@ -20,11 +20,11 @@ class RunScriptMissingError(RunPreflightError):
 class ExecutableMissingError(RunPreflightError):
     pass
 
-class RunLaunchError(MesaRunnerError):
+class RunLaunchError(MorPyError):
     pass
 
-class RunTimeoutError(MesaRunnerError):
+class RunTimeoutError(MorPyError):
     pass
 
-class PersistenceError(MesaRunnerError):
+class PersistenceError(MorPyError):
     pass

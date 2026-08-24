@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,7 +247,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.status</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Status read models backed by repository data plus optional live process map."""</span>
+<span></span><span class="sd">&quot;&quot;&quot;Status read models backed by repository data plus optional live process map.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -257,7 +261,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_status.html#morpy.ModelStatus">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelStatus</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Instance that holds run information about one model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instance that holds run information about one model.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        model_id: Unique ID of model</span>
@@ -267,10 +271,10 @@
 <span class="sd">        return_code: 0 for no errors, 1 for errors</span>
 <span class="sd">        run_id: Unique ID for model run</span>
 <span class="sd">        started_at/updated_at/finished_at: lifecycle timestamps</span>
-<span class="sd">        model_path: Location of the model's model directory</span>
+<span class="sd">        model_path: Location of the model&#39;s model directory</span>
 <span class="sd">        backend: Backend used to run this model grid, if part of a grid at all   </span>
 <span class="sd">        last_error: last found error fot this model, if any</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">state</span><span class="p">:</span> <span class="nb">str</span>
@@ -291,14 +295,14 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">live_tracker</span><span class="p">:</span> <span class="n">LiveProcessRegistry</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelStatus</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Return ModelStatus object associated with a specific model_id."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ModelStatus object associated with a specific model_id.&quot;&quot;&quot;</span>
     <span class="n">model_row</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">get_model_row</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
     <span class="n">latest_run</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">get_latest_run</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
     <span class="n">latest_transition</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">get_latest_transition</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
     <span class="n">live_entry</span> <span class="o">=</span> <span class="n">live_tracker</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">live_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">model_row</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_transition</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">live_entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No status information found for model_id '</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No status information found for model_id &#39;</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
     <span class="n">model_name</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">live_entry</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">model_name</span>
@@ -311,7 +315,7 @@
     <span class="p">)</span>
 
     <span class="n">state</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">"running"</span>
+        <span class="s2">&quot;running&quot;</span>
         <span class="k">if</span> <span class="n">live_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="n">model_row</span><span class="o">.</span><span class="n">state</span>
         <span class="k">if</span> <span class="n">model_row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">model_row</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -319,13 +323,13 @@
         <span class="k">if</span> <span class="n">latest_transition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">terminal_state</span>
         <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="s2">"unknown"</span>
+        <span class="k">else</span> <span class="s2">&quot;unknown&quot;</span>
     <span class="p">)</span>
 
     <span class="n">run_id</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">live_entry</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span>
         <span class="k">if</span> <span class="n">live_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="n">latest_transition</span><span class="o">.</span><span class="n">run_id</span>
         <span class="k">if</span> <span class="n">latest_transition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -335,8 +339,8 @@
     <span class="n">pid</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">live_entry</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span>
         <span class="k">if</span> <span class="n">live_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">"pid"</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+        <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;pid&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pid&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
         <span class="k">else</span> <span class="kc">None</span>
     <span class="p">)</span>
 
@@ -372,7 +376,7 @@
         <span class="n">model_row</span><span class="o">.</span><span class="n">finished_at</span>
         <span class="k">if</span> <span class="n">model_row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">end_time</span>
-        <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">terminal_state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"completed"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">terminal_state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">}</span>
         <span class="k">else</span> <span class="kc">None</span>
     <span class="p">)</span>
 
@@ -387,18 +391,18 @@
     <span class="p">)</span>
 
     <span class="n">backend</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend"</span><span class="p">)</span>
+        <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;backend&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="kc">None</span>
     <span class="p">)</span>
 
     <span class="n">last_error</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="n">last_error</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span>
+        <span class="n">last_error</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_error</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">160</span><span class="p">:</span>
-            <span class="n">last_error</span> <span class="o">=</span> <span class="n">last_error</span><span class="p">[:</span><span class="mi">157</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span>
+            <span class="n">last_error</span> <span class="o">=</span> <span class="n">last_error</span><span class="p">[:</span><span class="mi">157</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
 
-    <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"running"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">,</span> <span class="s2">"restart"</span><span class="p">}:</span>
+    <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="s2">&quot;queued&quot;</span><span class="p">,</span> <span class="s2">&quot;preparing&quot;</span><span class="p">,</span> <span class="s2">&quot;restart&quot;</span><span class="p">}:</span>
         <span class="n">return_code</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">ModelStatus</span><span class="p">(</span>
@@ -418,43 +422,43 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_resume_summary</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelStatus</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="n">counts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"total"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"completed"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"running"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"preparing"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"queued"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"restart"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"failed"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"cancelled"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"draft"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"paused"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"unknown"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"resume_candidates_strict"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">"resume_candidates_with_retries"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;completed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;running&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;preparing&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;queued&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;restart&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;cancelled&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;draft&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;unknown&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;resume_candidates_strict&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;resume_candidates_with_retries&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="n">strict_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"draft"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">,</span> <span class="s2">"running"</span><span class="p">,</span> <span class="s2">"restart"</span><span class="p">,</span> <span class="s2">"paused"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">}</span>
-    <span class="n">retry_extra_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">}</span>
+    <span class="n">strict_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;draft&quot;</span><span class="p">,</span> <span class="s2">&quot;queued&quot;</span><span class="p">,</span> <span class="s2">&quot;preparing&quot;</span><span class="p">,</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="s2">&quot;restart&quot;</span><span class="p">,</span> <span class="s2">&quot;paused&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">}</span>
+    <span class="n">retry_extra_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">"unknown"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">counts</span><span class="p">[</span><span class="s2">"total"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">counts</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
             <span class="n">counts</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">counts</span><span class="p">[</span><span class="s2">"unknown"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">counts</span><span class="p">[</span><span class="s2">&quot;unknown&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">strict_states</span><span class="p">:</span>
-            <span class="n">counts</span><span class="p">[</span><span class="s2">"resume_candidates_strict"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">counts</span><span class="p">[</span><span class="s2">&quot;resume_candidates_strict&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">strict_states</span> <span class="ow">or</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">retry_extra_states</span><span class="p">:</span>
-            <span class="n">counts</span><span class="p">[</span><span class="s2">"resume_candidates_with_retries"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">counts</span><span class="p">[</span><span class="s2">&quot;resume_candidates_with_retries&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">return</span> <span class="n">counts</span>
 
 <div class="viewcode-block" id="grid_status">
 <a class="viewcode-back" href="../../api/module_morpy_status.html#morpy.grid_status">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">grid_status</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModelStatus</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Return a list of ModelStatus objects."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of ModelStatus objects.&quot;&quot;&quot;</span>
     <span class="n">repo</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span>
     <span class="n">live_tracker</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">live_tracker</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">_resolve_model_status</span><span class="p">(</span><span class="n">model_row</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">live_tracker</span><span class="o">=</span><span class="n">live_tracker</span><span class="p">)</span> <span class="k">for</span> <span class="n">model_row</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">list_model_rows</span><span class="p">()]</span>
@@ -471,7 +475,7 @@
     <span class="n">clear_screen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">show_resume_summary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Print the status of all grid models once or as a refreshing view.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the status of all grid models once or as a refreshing view.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tracker: Tracker object with Model repo and live tracker.</span>
@@ -479,19 +483,19 @@
 <span class="sd">            with specified interval</span>
 <span class="sd">        notebook: Set to True for clear screen functionality in Jupyter notebooks</span>
 <span class="sd">        clear_screen: If True (and not notebook), clear terminal between refreshes.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">if</span> <span class="n">refresh_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">refresh_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"refresh_seconds must be &gt; 0"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;refresh_seconds must be &gt; 0&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_state_order</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">"running"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;running&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">"restart"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;restart&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"queued"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;queued&quot;</span><span class="p">,</span> <span class="s2">&quot;preparing&quot;</span><span class="p">}:</span>
             <span class="k">return</span> <span class="mi">2</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"completed"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">}:</span>
             <span class="k">return</span> <span class="mi">3</span>
         <span class="k">return</span> <span class="mi">4</span>
 
@@ -505,14 +509,14 @@
                 <span class="c1"># Fall back to ANSI if IPython is unavailable.</span>
                 <span class="k">pass</span>
         <span class="k">if</span> <span class="n">clear_screen</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[H</span><span class="se">\033</span><span class="s2">[2J</span><span class="se">\033</span><span class="s2">[3J"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># also clears scrollback (3J)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[H</span><span class="se">\033</span><span class="s2">[2J</span><span class="se">\033</span><span class="s2">[3J&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># also clears scrollback (3J)</span>
 
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_render_once</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="n">grid_status</span><span class="p">(</span><span class="n">tracker</span><span class="p">)</span>
     
         <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"No models found."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No models found.&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span>
     
         <span class="n">rows</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="p">(</span><span class="n">_state_order</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">state</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">r</span><span class="o">.</span><span class="n">model_id</span><span class="p">))</span>
@@ -520,31 +524,31 @@
         <span class="k">if</span> <span class="n">show_resume_summary</span><span class="p">:</span>
             <span class="n">summary</span> <span class="o">=</span> <span class="n">_build_resume_summary</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">"Summary: "</span>
-                <span class="sa">f</span><span class="s2">"total=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'total'</span><span class="p">]</span><span class="si">}</span><span class="s2">  "</span>
-                <span class="sa">f</span><span class="s2">"completed=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'completed'</span><span class="p">]</span><span class="si">}</span><span class="s2">  "</span>
-                <span class="sa">f</span><span class="s2">"strict_resume=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'resume_candidates_strict'</span><span class="p">]</span><span class="si">}</span><span class="s2">  "</span>
-                <span class="sa">f</span><span class="s2">"resume_with_retries=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'resume_candidates_with_retries'</span><span class="p">]</span><span class="si">}</span><span class="s2">  "</span>
-                <span class="sa">f</span><span class="s2">"failed=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'failed'</span><span class="p">]</span><span class="si">}</span><span class="s2">  "</span>
-                <span class="sa">f</span><span class="s2">"cancelled=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">'cancelled'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="s2">&quot;Summary: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;total=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;completed=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;strict_resume=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;resume_candidates_strict&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;resume_with_retries=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;resume_candidates_with_retries&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;failed=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;cancelled=</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;cancelled&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">astimezone</span><span class="p">()</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%z'</span><span class="p">)</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">now</span><span class="si">:</span><span class="s2">%Y-%m-%d %H:%M:%S</span><span class="si">}</span><span class="s2"> UTC</span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%z&#39;</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">now</span><span class="si">:</span><span class="s2">%Y-%m-%d %H:%M:%S</span><span class="si">}</span><span class="s2"> UTC</span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     
-        <span class="c1"># Build one formatted cell string per row: "MODEL STATE PID/RC"</span>
-        <span class="n">model_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="s2">"MODEL"</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">))</span>
-        <span class="n">state_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="s2">"STATE"</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">))</span>
+        <span class="c1"># Build one formatted cell string per row: &quot;MODEL STATE PID/RC&quot;</span>
+        <span class="n">model_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;MODEL&quot;</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">))</span>
+        <span class="n">state_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;STATE&quot;</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">))</span>
     
         <span class="k">def</span><span class="w"> </span><span class="nf">_cell</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-            <span class="n">pid</span> <span class="o">=</span> <span class="s2">""</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">pid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">pid</span><span class="p">)</span>
-            <span class="n">rc</span> <span class="o">=</span> <span class="s2">""</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">return_code</span><span class="p">)</span>
-            <span class="n">pidrc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="ow">or</span> <span class="n">rc</span><span class="p">)</span> <span class="k">else</span> <span class="s2">""</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">model_name</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">model_w</span><span class="si">}}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">state</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">state_w</span><span class="si">}}</span><span class="s2"> </span><span class="si">{</span><span class="n">pidrc</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">pid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">pid</span><span class="p">)</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">return_code</span><span class="p">)</span>
+            <span class="n">pidrc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="ow">or</span> <span class="n">rc</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">model_name</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">model_w</span><span class="si">}}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">state</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">state_w</span><span class="si">}}</span><span class="s2"> </span><span class="si">{</span><span class="n">pidrc</span><span class="si">}</span><span class="s2">&quot;</span>
     
         <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">_cell</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
         <span class="n">cell_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1"># padding between columns</span>
@@ -558,27 +562,27 @@
         <span class="n">n_rows_per_col</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span> <span class="o">//</span> <span class="n">n_cols</span><span class="p">)</span>  <span class="c1"># ceil</span>
     
         <span class="c1"># Pad cells list to fill the grid evenly</span>
-        <span class="n">padded</span> <span class="o">=</span> <span class="n">cells</span> <span class="o">+</span> <span class="p">[</span><span class="s2">""</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_rows_per_col</span> <span class="o">*</span> <span class="n">n_cols</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">))</span>
+        <span class="n">padded</span> <span class="o">=</span> <span class="n">cells</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_rows_per_col</span> <span class="o">*</span> <span class="n">n_cols</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">))</span>
     
         <span class="k">for</span> <span class="n">row_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows_per_col</span><span class="p">):</span>
             <span class="n">line_parts</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">col_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">):</span>
                 <span class="n">idx</span> <span class="o">=</span> <span class="n">col_i</span> <span class="o">*</span> <span class="n">n_rows_per_col</span> <span class="o">+</span> <span class="n">row_i</span>
-                <span class="n">line_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">padded</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">cell_w</span><span class="si">}}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line_parts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\033</span><span class="s2">[K"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">line_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">padded</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">cell_w</span><span class="si">}}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line_parts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[K&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refresh_seconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_render_once</span><span class="p">()</span>
         <span class="k">return</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[?1049h"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># enter alt screen</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[?1049h&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># enter alt screen</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\033</span><span class="s2">[H"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># just move cursor home, no need to clear — new content overwrites old</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[H&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># just move cursor home, no need to clear — new content overwrites old</span>
             <span class="n">_render_once</span><span class="p">()</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">refresh_seconds</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Stopped status refresh."</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Stopped status refresh.&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 

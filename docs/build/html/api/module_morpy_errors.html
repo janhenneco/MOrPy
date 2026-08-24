@@ -190,7 +190,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="module_morpy.html">morpy module</a></li>
@@ -269,32 +273,32 @@ and persistence-related failures.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">MesaRunnerError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#MesaRunnerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">ModelPathMissingError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#ModelPathMissingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RunPreflightError</span></code></p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">MorPyError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#MorPyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">PersistenceError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#PersistenceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MorPyError</span></code></p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">RunLaunchError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#RunLaunchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MorPyError</span></code></p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">RunPreflightError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#RunPreflightError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MorPyError</span></code></p>
 </dd></dl>
 
 <dl class="py exception">
@@ -306,7 +310,7 @@ and persistence-related failures.</p>
 <dl class="py exception">
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.errors.</span></span><span class="sig-name descname"><span class="pre">RunTimeoutError</span></span><a class="reference internal" href="../_modules/morpy/errors.html#RunTimeoutError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MorPyError</span></code></p>
 </dd></dl>
 
 </section>
@@ -318,10 +322,10 @@ and persistence-related failures.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExecutableMissingError</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MesaRunnerError</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelPathMissingError</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelPathMissingError</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MorPyError</span></code></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">PersistenceError</span></code></p></td>

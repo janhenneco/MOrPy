@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,7 +247,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.work_setup</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Work-directory setup, synchronization, and export utilities for models.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Work-directory setup, synchronization, and export utilities for models.</span>
 
 <span class="sd">This module handles disk-facing model directory operations.</span>
 
@@ -254,7 +258,7 @@
 
 <span class="sd">It forms the bridge between in-memory model objects and MESA-compatible</span>
 <span class="sd">directory layouts on disk.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -269,7 +273,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MesaConfig</span><span class="p">,</span> <span class="n">require_active_config</span>
 
 <span class="c1"># Custom type for MESA workdir mode: star or binary</span>
-<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">]</span>
+<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="import_inlists_from_dir">
 <a class="viewcode-back" href="../../api/module_morpy_work_setup.html#morpy.import_inlists_from_dir">[docs]</a>
@@ -280,7 +284,7 @@
                             <span class="o">*</span><span class="p">,</span>
                             <span class="n">allow_unknown_options</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Function that looks for files with 'inlist' in their name in a given directory (non-recursively),</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function that looks for files with &#39;inlist&#39; in their name in a given directory (non-recursively),</span>
 <span class="sd">        parses them, and adds them to model.inlists.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -294,15 +298,15 @@
 <span class="sd">        Model object</span>
 <span class="sd">    Raises:</span>
 <span class="sd">        FileNotFoundError is source_dir does not exist.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span>
 
     <span class="n">source_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Inlist directory does not exist: </span><span class="si">{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inlist directory does not exist: </span><span class="si">{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
-    <span class="n">inlist_paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">"inlist"</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">inlist_paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;inlist&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">inlist_paths</span><span class="p">:</span>
         <span class="n">model</span><span class="o">.</span><span class="n">add_inlist</span><span class="p">(</span><span class="n">parse_inlist</span><span class="p">(</span><span class="n">source_path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">default_options</span><span class="o">=</span><span class="n">default_options</span><span class="p">,</span> <span class="n">allow_unknown_options</span><span class="o">=</span><span class="n">allow_unknown_options</span><span class="p">))</span>
@@ -318,28 +322,28 @@
     <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">require_exists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Helper function that creates symbolic links for files in the project directory</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function that creates symbolic links for files in the project directory</span>
 <span class="sd">        that are shared by all models. This makes sure that e.g. the history_columns.list</span>
 <span class="sd">        files are read by MESA and that the rn and re</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
     <span class="n">src</span> <span class="o">=</span> <span class="n">project_dir</span> <span class="o">/</span> <span class="n">name</span>
     <span class="n">dst</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="n">name</span>
 
     <span class="k">if</span> <span class="n">require_exists</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Shared asset not found in project dir: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shared asset not found in project dir: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Handle existing destination</span>
     <span class="k">if</span> <span class="n">dst</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">dst</span><span class="o">.</span><span class="n">is_symlink</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Path already exists in model dir: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Path already exists in model dir: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dst</span><span class="o">.</span><span class="n">is_symlink</span><span class="p">()</span> <span class="ow">or</span> <span class="n">dst</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="n">dst</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">dst</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot replace unsupported path type: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot replace unsupported path type: </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Use relative symlink so project tree remains movable</span>
     <span class="n">rel_target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">model_dir</span><span class="p">))</span>
@@ -349,22 +353,22 @@
 <div class="viewcode-block" id="detect_workdir_mode">
 <a class="viewcode-back" href="../../api/module_morpy_work_setup.html#morpy.detect_workdir_mode">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">detect_workdir_mode</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorkdirMode</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Infer whether a model should run in star or binary work mode.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Infer whether a model should run in star or binary work mode.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model object.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        "star" or "binary".</span>
+<span class="sd">        &quot;star&quot; or &quot;binary&quot;.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If neither star nor binary namelist options are detected.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">saw_binary</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">saw_star</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">binary_namelists</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"binary_job"</span><span class="p">}</span>
-    <span class="n">star_namelists</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"star_job"</span><span class="p">}</span>
+    <span class="n">binary_namelists</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;binary_job&quot;</span><span class="p">}</span>
+    <span class="n">star_namelists</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;star_job&quot;</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">inlist</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">inlists</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">inlist</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -374,29 +378,29 @@
                 <span class="n">saw_star</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="n">saw_binary</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"binary"</span>
+        <span class="k">return</span> <span class="s2">&quot;binary&quot;</span>
     <span class="k">if</span> <span class="n">saw_star</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"star"</span>
+        <span class="k">return</span> <span class="s2">&quot;star&quot;</span>
 
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"Could not infer workdir mode for model '</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">'. "</span>
-        <span class="s2">"No star or binary namelist options were found."</span>
+        <span class="sa">f</span><span class="s2">&quot;Could not infer workdir mode for model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+        <span class="s2">&quot;No star or binary namelist options were found.&quot;</span>
     <span class="p">)</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_columns_files_for_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Return optional files always needed"""</span>
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"binary"</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return optional files always needed&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="s2">"binary_history_columns.list"</span><span class="p">,</span>
-            <span class="s2">"history_columns.list"</span><span class="p">,</span>
-            <span class="s2">"profile_columns.list"</span><span class="p">,</span>
+            <span class="s2">&quot;binary_history_columns.list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;history_columns.list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;profile_columns.list&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s2">"history_columns.list"</span><span class="p">,</span> <span class="s2">"profile_columns.list"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;history_columns.list&quot;</span><span class="p">,</span> <span class="s2">&quot;profile_columns.list&quot;</span><span class="p">]</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_scripts_in_project_dir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Ensure rn and re scripts exist in projectdir. If not, copy from MESA_DIR."""</span>
-    <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"rn"</span><span class="p">,</span> <span class="s2">"re"</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure rn and re scripts exist in projectdir. If not, copy from MESA_DIR.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rn&quot;</span><span class="p">,</span> <span class="s2">&quot;re&quot;</span><span class="p">]:</span>
         <span class="n">script_path</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">script_name</span>
         
         <span class="c1"># Already present in projectdir, skip</span>
@@ -404,39 +408,39 @@
             <span class="k">continue</span>
         
         <span class="c1"># Determine source in MESA_DIR based on mode</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"binary"</span><span class="p">:</span>
-            <span class="n">src</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="s2">"binary"</span> <span class="o">/</span> <span class="s2">"work"</span> <span class="o">/</span> <span class="n">script_name</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="s2">&quot;binary&quot;</span> <span class="o">/</span> <span class="s2">&quot;work&quot;</span> <span class="o">/</span> <span class="n">script_name</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">src</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="s2">"star"</span> <span class="o">/</span> <span class="s2">"work"</span> <span class="o">/</span> <span class="n">script_name</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">mesa_dir</span> <span class="o">/</span> <span class="s2">&quot;star&quot;</span> <span class="o">/</span> <span class="s2">&quot;work&quot;</span> <span class="o">/</span> <span class="n">script_name</span>
         
         <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Script '</span><span class="si">{</span><span class="n">script_name</span><span class="si">}</span><span class="s2">' not found in </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">. "</span>
-                <span class="sa">f</span><span class="s2">"Ensure MESA is built or provide </span><span class="si">{</span><span class="n">script_name</span><span class="si">}</span><span class="s2"> in project directory."</span>
+                <span class="sa">f</span><span class="s2">&quot;Script &#39;</span><span class="si">{</span><span class="n">script_name</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Ensure MESA is built or provide </span><span class="si">{</span><span class="n">script_name</span><span class="si">}</span><span class="s2"> in project directory.&quot;</span>
             <span class="p">)</span>
         
         <span class="c1"># Copy to projectdir, preserving permissions</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">script_path</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_hash_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Return SHA-256 hash of a file."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return SHA-256 hash of a file.&quot;&quot;&quot;</span>
     <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">),</span> <span class="sa">b</span><span class="s2">""</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">),</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
             <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_snapshot_model_inlists</span><span class="p">(</span><span class="n">model_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Create a stable snapshot of inlist files in a model directory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a stable snapshot of inlist files in a model directory.</span>
 
 <span class="sd">    Snapshot format:</span>
-<span class="sd">        { "&lt;filename&gt;": "&lt;sha256&gt;" }</span>
-<span class="sd">    """</span>
+<span class="sd">        { &quot;&lt;filename&gt;&quot;: &quot;&lt;sha256&gt;&quot; }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
     <span class="n">snapshot</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">inlist_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">"inlist"</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;inlist&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">inlist_files</span><span class="p">:</span>
         <span class="n">snapshot</span><span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_hash_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -446,25 +450,25 @@
 <div class="viewcode-block" id="sync_model_with_disk">
 <a class="viewcode-back" href="../../api/module_morpy_work_setup.html#morpy.sync_model_with_disk">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sync_model_with_disk</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Ensure model.inlists matches current files in model.model_path.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure model.inlists matches current files in model.model_path.</span>
 
 <span class="sd">    Disk is treated as source of truth. If drift is detected compared to the</span>
 <span class="sd">    stored model.file_snapshot, model.inlists is reloaded from disk.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        True if a reload was performed, False if model was already in sync.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Model '</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">' has no model_path; cannot sync from disk."</span>
+            <span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; has no model_path; cannot sync from disk.&quot;</span>
         <span class="p">)</span>
 
     <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">current_snapshot</span> <span class="o">=</span> <span class="n">_snapshot_model_inlists</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
 
@@ -498,7 +502,7 @@
                     <span class="n">include_additional_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                     <span class="n">include_comment_blocks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
                     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Function to create a model directory in storage for a given Model object. This model</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to create a model directory in storage for a given Model object. This model</span>
 <span class="sd">        directory contains the inlists and rn &amp; re scripts appropriate to run it.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -522,17 +526,17 @@
 <span class="sd">        OSError if rm command fails when clearing out model_dirs that need to be overwritten.</span>
 <span class="sd">        ValueError if model has no inlists.</span>
 <span class="sd">        FileExistsError if path directory already exists and overwite=False or if file exists at same path.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span>
 
     <span class="n">projectdir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">inlists</span><span class="p">):</span>
-         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model '</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">' has no inlists to write. Add inlists before calling create_modeldir()."</span><span class="p">)</span>
+         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; has no inlists to write. Add inlists before calling create_modeldir().&quot;</span><span class="p">)</span>
     
     <span class="n">model_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">model</span><span class="o">.</span><span class="n">name</span>
 
@@ -543,8 +547,8 @@
             <span class="n">model</span><span class="o">.</span><span class="n">snapshot_taken_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">model_dir</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot create model directory because path exists and is not a directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="se">\n</span><span class="s2"> "</span> \
-                                  <span class="s2">"If you wish to reuse existing model directories for grid reruns, use `reuse_exisiting = True`."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot create model directory because path exists and is not a directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="se">\n</span><span class="s2"> &quot;</span> \
+                                  <span class="s2">&quot;If you wish to reuse existing model directories for grid reruns, use `reuse_exisiting = True`.&quot;</span><span class="p">)</span>
     
         
 
@@ -554,10 +558,10 @@
     <span class="n">_ensure_scripts_in_project_dir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="o">=</span><span class="n">projectdir_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># executable is allowed to be missing (dangling symlink is okay)</span>
-    <span class="n">executable</span> <span class="o">=</span> <span class="s2">"binary"</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"binary"</span> <span class="k">else</span> <span class="s2">"star"</span>
+    <span class="n">executable</span> <span class="o">=</span> <span class="s2">&quot;binary&quot;</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span> <span class="k">else</span> <span class="s2">&quot;star&quot;</span>
 
     <span class="c1"># Create tmp dir that will only be commited if nothing fails, deleted if something fails</span>
-    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">committed</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">tmp_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -587,14 +591,14 @@
                 <span class="p">)</span>
 
         <span class="c1"># copy rn/re into temp and make executable</span>
-        <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"rn"</span><span class="p">,</span> <span class="s2">"re"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rn&quot;</span><span class="p">,</span> <span class="s2">&quot;re&quot;</span><span class="p">):</span>
             <span class="n">src_script</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">script_name</span>
             <span class="n">dst_script</span> <span class="o">=</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="n">script_name</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src_script</span><span class="p">,</span> <span class="n">dst_script</span><span class="p">)</span>
             <span class="n">dst_script</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o755</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.bak-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.bak-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
 
             <span class="k">if</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="c1"># 1) Move current good dir out of the way (fast rename, same parent fs)</span>
@@ -615,7 +619,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2"> already exists. Use overwrite=True to replace it."</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2"> already exists. Use overwrite=True to replace it.&quot;</span>
                 <span class="p">)</span>
             <span class="n">tmp_dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
 
@@ -642,7 +646,7 @@
     <span class="n">keep_executable_symlinks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Function that creates a self-contained MESA work directory for a given model</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function that creates a self-contained MESA work directory for a given model</span>
 <span class="sd">        directory and project directory. This function creates a copy of the model</span>
 <span class="sd">        directroy and copies over all the files and folders from the project directory</span>
 <span class="sd">        required to compile and run this model on its own. This essentially creates</span>
@@ -660,39 +664,39 @@
 <span class="sd">        overwite: If True, overwrite export_dir if it exists already.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Path to the exported workdir.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_dir</span><span class="p">)</span>
     <span class="n">export_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">export_dir</span><span class="p">)</span>
     <span class="n">projectdir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span>  <span class="n">export_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Export directory already exists: </span><span class="si">{</span><span class="n">export_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export directory already exists: </span><span class="si">{</span><span class="n">export_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
-    <span class="c1"># To allow for overwriting, we're using the same tmp dir structre</span>
+    <span class="c1"># To allow for overwriting, we&#39;re using the same tmp dir structre</span>
     <span class="c1"># as in create_modeldir.</span>
-    <span class="c1"># First, check if the export_dir's parent is a valid directory</span>
+    <span class="c1"># First, check if the export_dir&#39;s parent is a valid directory</span>
     <span class="c1"># (we need to place the tmp dir there)</span>
     <span class="n">export_parent</span> <span class="o">=</span> <span class="n">export_dir</span><span class="o">.</span><span class="n">parent</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">export_parent</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Export directory parent does not exist: </span><span class="si">{</span><span class="n">export_parent</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export directory parent does not exist: </span><span class="si">{</span><span class="n">export_parent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">export_parent</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Export directory parent is not a directory: </span><span class="si">{</span><span class="n">export_parent</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export directory parent is not a directory: </span><span class="si">{</span><span class="n">export_parent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Chech that tmp_dir does not exist yet</span>
-    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">export_parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">export_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">export_parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">export_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">committed</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">export_parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">export_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.bak-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">export_parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">export_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.bak-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">tmp_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         
-        <span class="n">executable_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">}</span>
+        <span class="n">executable_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">}</span>
 
         <span class="c1"># 1) Copy model_dir content; dereference non-executable symlinks</span>
         <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
@@ -717,13 +721,13 @@
                 <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
         <span class="c1"># 2) Always copy required build scaffold from projectdir (mandatory)</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"src"</span><span class="p">,</span> <span class="s2">"mk"</span><span class="p">,</span> <span class="s2">"make"</span><span class="p">,</span> <span class="s2">"clean"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;mk&quot;</span><span class="p">,</span> <span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;clean&quot;</span><span class="p">):</span>
             <span class="n">src</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">name</span>
             <span class="n">dst</span> <span class="o">=</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="n">name</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"Required build scaffold entry is missing in project directory: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="sa">f</span><span class="s2">&quot;Required build scaffold entry is missing in project directory: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
@@ -731,7 +735,7 @@
             <span class="k">elif</span> <span class="n">src</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported scaffold path type: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported scaffold path type: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">export_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -739,7 +743,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">tmp_dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">export_dir</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="c1"># Rollback if export_dir wasn't created successfully</span>
+                <span class="c1"># Rollback if export_dir wasn&#39;t created successfully</span>
                 <span class="k">if</span> <span class="n">backup_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">export_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                     <span class="n">backup_dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">export_dir</span><span class="p">)</span>
                 <span class="k">raise</span>

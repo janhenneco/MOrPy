@@ -15,8 +15,8 @@ Classes
    :nosignatures:
 
    ExecutableMissingError
-   MesaRunnerError
    ModelPathMissingError
+   MorPyError
    PersistenceError
    RunLaunchError
    RunPreflightError

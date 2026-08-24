@@ -12,7 +12,7 @@ OUT_DIR = Path("docs/source/api")    # <-- change if needed
 
 # You can tweak how module pages are named:
 def module_to_page(mod_name: str) -> str:
-    # e.g. mesa_runner.options -> module_mesa_runner_options
+    # e.g. morpy.options -> module_morpy_options
     # keep it simple and stable
     return "module_" + mod_name.replace(".", "_")
 

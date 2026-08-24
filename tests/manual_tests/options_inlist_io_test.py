@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 
 version_name = 'r12778'
 
-test_data_dir_general = Path('/Users/janhenneco/GitHub/mesa-runner/tests/data_for_tests') 
+test_data_dir_general = Path('/Users/janhenneco/GitHub/MOrPy/tests/data_for_tests')
 
 with TemporaryDirectory() as tmp:
     mesa_dir = Path(tmp) / version_name

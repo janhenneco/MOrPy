@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,22 +247,22 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.errors</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Shared exception hierarchy for run, orchestration, and persistence layers.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Shared exception hierarchy for run, orchestration, and persistence layers.</span>
 
 <span class="sd">This module defines domain-specific exception classes used to distinguish</span>
 <span class="sd">preflight validation errors, launch/runtime failures, timeout failures,</span>
 <span class="sd">and persistence-related failures.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MesaRunnerError">
-<a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.MesaRunnerError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MesaRunnerError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MorPyError">
+<a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.MorPyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MorPyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="RunPreflightError">
 <a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.RunPreflightError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RunPreflightError</span><span class="p">(</span><span class="n">MesaRunnerError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunPreflightError</span><span class="p">(</span><span class="n">MorPyError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
@@ -282,19 +286,19 @@
 
 <div class="viewcode-block" id="RunLaunchError">
 <a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.RunLaunchError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RunLaunchError</span><span class="p">(</span><span class="n">MesaRunnerError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunLaunchError</span><span class="p">(</span><span class="n">MorPyError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="RunTimeoutError">
 <a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.RunTimeoutError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RunTimeoutError</span><span class="p">(</span><span class="n">MesaRunnerError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunTimeoutError</span><span class="p">(</span><span class="n">MorPyError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="PersistenceError">
 <a class="viewcode-back" href="../../api/module_morpy_errors.html#morpy.errors.PersistenceError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PersistenceError</span><span class="p">(</span><span class="n">MesaRunnerError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PersistenceError</span><span class="p">(</span><span class="n">MorPyError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 </pre></div>

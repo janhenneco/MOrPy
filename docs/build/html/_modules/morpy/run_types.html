@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,7 +247,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.run_types</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Shared runtime data types for model execution workflows.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Shared runtime data types for model execution workflows.</span>
 
 <span class="sd">This module contains lightweight, dependency-safe contracts shared across</span>
 <span class="sd">run, grid orchestration, persistence, and status layers.</span>
@@ -252,7 +256,7 @@
 <span class="sd">- RunResult for terminal run outcomes.</span>
 <span class="sd">- StateTransition for lifecycle event records.</span>
 <span class="sd">- RunObserver protocol for event subscribers.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -262,17 +266,17 @@
 
 <span class="c1"># Terminal state label for a model run.</span>
 <span class="c1"># Semantics:</span>
-<span class="c1"># - "completed": run finished successfully.</span>
-<span class="c1"># - "failed": run finished with an error or non-zero return code.</span>
-<span class="c1"># - "cancelled": run was stopped intentionally (for example user interruption).</span>
-<span class="n">RunTerminalState</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"completed"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">]</span>
+<span class="c1"># - &quot;completed&quot;: run finished successfully.</span>
+<span class="c1"># - &quot;failed&quot;: run finished with an error or non-zero return code.</span>
+<span class="c1"># - &quot;cancelled&quot;: run was stopped intentionally (for example user interruption).</span>
+<span class="n">RunTerminalState</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="RunResult">
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Contains the results of a completed MESA model run.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the results of a completed MESA model run.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        success: True if the run completed successfully.</span>
@@ -290,7 +294,7 @@
 <span class="sd">        stderr: Captured standard error.</span>
 <span class="sd">        sync_performed: Whether a pre-run disk-to-memory inlist sync was performed.</span>
 <span class="sd">        metadata: Optional extra key-value metadata (for example run_id, pid, backend tags).</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">terminal_state</span><span class="p">:</span> <span class="n">RunTerminalState</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span>
@@ -312,7 +316,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunHandle">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunHandle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Contains tracking information for a launched MESA model run.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains tracking information for a launched MESA model run.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        run_id: Unique identifier for this run instance.</span>
@@ -325,7 +329,7 @@
 <span class="sd">        pid: Operating-system process ID of the launched run.</span>
 <span class="sd">        log_file_name: Name of the terminal log file.</span>
 <span class="sd">        sync_performed: True if sync of inlist was performed with disk</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -343,7 +347,7 @@
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.StateTransition">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">StateTransition</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Contains the payload for a model lifecycle state transition event.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the payload for a model lifecycle state transition event.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        model_id: Stable model identifier for the model whose state changed.</span>
@@ -353,7 +357,7 @@
 <span class="sd">        reason: Optional human-readable reason for the transition.</span>
 <span class="sd">        run_id: Optional run identifier associated with this transition.</span>
 <span class="sd">        metadata: Optional extra key-value metadata for persistence, logging, or status systems.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">from_state</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">to_state</span><span class="p">:</span> <span class="nb">str</span>
@@ -366,31 +370,31 @@
 <div class="viewcode-block" id="RunObserver">
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunObserver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunObserver</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Observer interface for model run lifecycle events.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Observer interface for model run lifecycle events.</span>
 
 <span class="sd">    Methods:</span>
 <span class="sd">        on_state_transition: Called whenever a model state changes.</span>
 <span class="sd">        on_process_started: Called after a run process is successfully launched.</span>
 <span class="sd">        on_process_finished: Called when a run reaches a terminal result.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="RunObserver.on_state_transition">
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunObserver.on_state_transition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">on_state_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transition</span><span class="p">:</span> <span class="n">StateTransition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Handle a model state transition event."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle a model state transition event.&quot;&quot;&quot;</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="RunObserver.on_process_started">
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunObserver.on_process_started">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">on_process_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">:</span> <span class="n">RunHandle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Handle notification that a run process has started."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle notification that a run process has started.&quot;&quot;&quot;</span>
         <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="RunObserver.on_process_finished">
 <a class="viewcode-back" href="../../api/module_morpy_run_types.html#morpy.run_types.RunObserver.on_process_finished">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">on_process_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RunResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Handle notification that a run process has finished."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle notification that a run process has finished.&quot;&quot;&quot;</span>
         <span class="o">...</span></div>
 </div>
 

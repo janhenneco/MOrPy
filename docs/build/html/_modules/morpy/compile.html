@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,17 +247,19 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.compile</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Compilation helpers for project-level MESA executables.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module for compiling the MESA binaries (executables) </span>
+<span class="sd">`star` and `binary` with morpy.</span>
 
 <span class="sd">This module runs clean and mk scripts to create the Fortran executables</span>
 <span class="sd">for a project directory and reports structured compile outcomes.</span>
 
-<span class="sd">- CommandResult for individual script executions.</span>
-<span class="sd">- CompileResult for overall compile status.</span>
-<span class="sd">- compile_project as the main compile entrypoint.</span>
-
-<span class="sd">It also ensures relevant scripts and produced executables are executable.</span>
-<span class="sd">"""</span>
+<span class="sd">- CommandResult contains the result of individual commands.</span>
+<span class="sd">- CompileResult contains the result of the entire MESA </span>
+<span class="sd">    compilation process. </span>
+<span class="sd">- compile_project is the main function to be used by the </span>
+<span class="sd">    user to compile the MESA executables. It also ensures</span>
+<span class="sd">    that the relevant scripts are executable.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -264,13 +270,16 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 
-<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">]</span>
+<span class="c1"># For projects with single- or binary-star models.</span>
+<span class="n">WorkdirMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="CommandResult">
 <a class="viewcode-back" href="../../api/module_morpy_compile.html#morpy.CommandResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CommandResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object that stores information about a single executed command.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_path</span><span class="p">:</span> <span class="n">Path</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">float</span>
@@ -283,14 +292,14 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">_clip</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">max_output_chars</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_output_chars</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">text</span>
-            <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">max_output_chars</span><span class="p">]</span> <span class="o">+</span> <span class="s2">" ... [truncated]"</span>
+            <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">max_output_chars</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; ... [truncated]&quot;</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">"command_path"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command_path</span><span class="p">),</span>
-            <span class="s2">"return_code"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
-            <span class="s2">"duration_seconds"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span><span class="p">,</span>
-            <span class="s2">"stdout"</span><span class="p">:</span> <span class="n">_clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">),</span>
-            <span class="s2">"stderr"</span><span class="p">:</span> <span class="n">_clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stderr</span><span class="p">),</span>
+            <span class="s2">&quot;command_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command_path</span><span class="p">),</span>
+            <span class="s2">&quot;return_code&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
+            <span class="s2">&quot;duration_seconds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span><span class="p">,</span>
+            <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="n">_clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">),</span>
+            <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="n">_clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stderr</span><span class="p">),</span>
         <span class="p">}</span></div>
 </div>
 
@@ -300,6 +309,9 @@
 <a class="viewcode-back" href="../../api/module_morpy_compile.html#morpy.CompileResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompileResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object that stores information about the whole MESA</span>
+<span class="sd">    compilation procedure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">float</span>
@@ -318,12 +330,12 @@
         <span class="n">max_output_chars</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"success"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
-            <span class="s2">"return_code"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
-            <span class="s2">"duration_seconds"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span><span class="p">,</span>
-            <span class="s2">"mode"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-            <span class="s2">"executable_path"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">"model_scripts_updated"</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_scripts_updated</span><span class="p">],</span>
+            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+            <span class="s2">&quot;return_code&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span>
+            <span class="s2">&quot;duration_seconds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration_seconds</span><span class="p">,</span>
+            <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+            <span class="s2">&quot;executable_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_path</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;model_scripts_updated&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_scripts_updated</span><span class="p">],</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">flatten</span><span class="p">:</span>
@@ -335,20 +347,20 @@
             <span class="n">mk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mk_result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">max_output_chars</span><span class="o">=</span><span class="n">max_output_chars</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">clean</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">out</span><span class="p">[</span><span class="s2">"clean"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">out</span><span class="p">[</span><span class="s2">&quot;clean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">clean</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">out</span><span class="p">[</span><span class="sa">f</span><span class="s2">"clean_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                    <span class="n">out</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;clean_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mk</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">out</span><span class="p">[</span><span class="sa">f</span><span class="s2">"mk_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="n">out</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mk_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">out</span><span class="p">[</span><span class="s2">"clean_result"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;clean_result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">clean_result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">max_output_chars</span><span class="o">=</span><span class="n">max_output_chars</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="k">else</span> <span class="kc">None</span>
             <span class="p">)</span>
-            <span class="n">out</span><span class="p">[</span><span class="s2">"mk_result"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mk_result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">max_output_chars</span><span class="o">=</span><span class="n">max_output_chars</span><span class="p">)</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;mk_result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mk_result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">max_output_chars</span><span class="o">=</span><span class="n">max_output_chars</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">out</span></div>
 
@@ -356,9 +368,17 @@
 <div class="viewcode-block" id="CompileResult.pretty">
 <a class="viewcode-back" href="../../api/module_morpy_compile.html#morpy.CompileResult.pretty">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pretty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_output_chars</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;Function to display the contents of a CompileResult object</span>
+<span class="sd">        in a more human-readable way.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_output_chars: Maximum numbers of characters</span>
+<span class="sd">                to be displayed. Set to lower number to avoid</span>
+<span class="sd">                cluttering the output/terminal.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_output_chars</span><span class="o">=</span><span class="n">max_output_chars</span><span class="p">)</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -368,62 +388,62 @@
 
 
 <span class="n">_PROJECT_LEVEL_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"src"</span><span class="p">,</span>
-    <span class="s2">"make"</span><span class="p">,</span>
-    <span class="s2">"clean"</span><span class="p">,</span>
-    <span class="s2">"mk"</span><span class="p">,</span>
-    <span class="s2">"rn"</span><span class="p">,</span>
-    <span class="s2">"re"</span><span class="p">,</span>
-    <span class="s2">"star"</span><span class="p">,</span>
-    <span class="s2">"binary"</span><span class="p">,</span>
-    <span class="s2">"history_columns.list"</span><span class="p">,</span>
-    <span class="s2">"profile_columns.list"</span><span class="p">,</span>
-    <span class="s2">"binary_history_columns.list"</span><span class="p">,</span>
+    <span class="s2">&quot;src&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;make&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;clean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;re&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;star&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;history_columns.list&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;profile_columns.list&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;binary_history_columns.list&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_executable</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Private helper function to add execute bits to a file."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to add execute bits to a file.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">IsADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected a file, got a directory: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IsADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected a file, got a directory: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">mode</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span>
     <span class="n">path</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">mode</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXUSR</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXGRP</span> <span class="o">|</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXOTH</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_looks_like_model_dir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Private helper function to detect model directories in projectdir."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to detect model directories in project directory.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">_PROJECT_LEVEL_NAMES</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="c1"># Model dirs contain one or more inlist files in this codebase.</span>
     <span class="n">has_inlist</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
-        <span class="n">child</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">"inlist"</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;inlist&quot;</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">has_inlist</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_collect_model_dirs</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Private helper function to collect model directories in projectdir."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to collect model directories in project directories.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
         <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">_looks_like_model_dir</span><span class="p">(</span><span class="n">p</span><span class="p">)],</span>
-        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_make_model_scripts_executable</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Private helper function to make rn/re executable inside model directories."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to make rn/re executable inside model directories.&quot;&quot;&quot;</span>
     <span class="n">updated</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">model_dir</span> <span class="ow">in</span> <span class="n">_collect_model_dirs</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"rn"</span><span class="p">,</span> <span class="s2">"re"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">script_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rn&quot;</span><span class="p">,</span> <span class="s2">&quot;re&quot;</span><span class="p">):</span>
             <span class="n">script_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="n">script_name</span>
             <span class="k">if</span> <span class="n">script_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">script_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="n">_ensure_executable</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span>
@@ -437,9 +457,8 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">cwd</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">env</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Private helper function to run build script and capture output."""</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to run build script and capture output.&quot;&quot;&quot;</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 
     <span class="n">merged_env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -477,33 +496,33 @@
     <span class="n">env</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompileResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Compile a MESA project directory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a MESA project directory.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        projectdir_path: path to project directory containing clean/mk scripts.</span>
-<span class="sd">        mode: "star" or "binary".</span>
+<span class="sd">        mode: &quot;star&quot; or &quot;binary&quot;.</span>
 <span class="sd">        clean_rebuild: if True run clean then mk, else run mk only.</span>
 <span class="sd">        env: optional extra environment variables passed to subprocess.</span>
 <span class="sd">        timeout: optional timeout in seconds for each command.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        CompileResult with command outputs and final executable path.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"star"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mode must be 'star' or 'binary', got: </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;star&quot;</span><span class="p">,</span> <span class="s2">&quot;binary&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mode must be &#39;star&#39; or &#39;binary&#39;, got: </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">projectdir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project directory does not exist: </span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">clean_path</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="s2">"clean"</span>
-    <span class="n">mk_path</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="s2">"mk"</span>
+    <span class="n">clean_path</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="s2">&quot;clean&quot;</span>
+    <span class="n">mk_path</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="s2">&quot;mk&quot;</span>
 
     <span class="k">if</span> <span class="n">clean_rebuild</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"clean script not found: </span><span class="si">{</span><span class="n">clean_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;clean script not found: </span><span class="si">{</span><span class="n">clean_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">mk_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mk script not found: </span><span class="si">{</span><span class="n">mk_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mk script not found: </span><span class="si">{</span><span class="n">mk_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">clean_rebuild</span><span class="p">:</span>
         <span class="n">_ensure_executable</span><span class="p">(</span><span class="n">clean_path</span><span class="p">)</span>

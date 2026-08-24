@@ -25,14 +25,14 @@ rank = comm.Get_rank()
 ### 2.1 GENERAL SETTINGS ###
 
 # Adjust these paths to match your local desired MESA installation.
-MESA_DIR = Path('/Users/janhenneco/software/mesa/mesa-r24.08.1')
-MESASDK_ROOT = Path('/Applications/mesasdk-25.12.1/')
+MESA_DIR = Path('<PATH_TO_MESA_DIR>')
+MESASDK_ROOT = Path('<PATH_TO_MESASDK>')
 OMP_THREADS  = 1 # Number of threads used per MESA model. Can be specified on a model-per-model basis when running/launching the models.
 MESA_VERSION = 'r24.08.1'
 
 ### 2.2 USER SETTINGS ###
-# RESTART? --   set this to True of you want to restart earlier computations.
-#               this will make sure noring is overwritten!
+# RESTART? --   set this to True if you want to restart earlier computations.
+#               this will make sure nothing is overwritten!
 RESTART = True
 DB_NAME = 'runs.db'
 
@@ -141,7 +141,7 @@ tracker = mp.Tracker.create(db_path=project_dir / DB_NAME)
 At this point, let's check if the tracker works. Since we'll have to track the progress of the grid in another
 Python session with the MPI backend anyway, let's try to get the grid status from an interactive Python session.
 
-Load the `morpy` environment and run `ipython`. In there, run the following liens of code:
+Load the `morpy` environment and run `ipython`. In there, run the following lines of code:
 
 ```
 import morpy as mp
@@ -157,7 +157,7 @@ tracker = mp.Tracker.create(db_path=DB_PATH)
 mp.print_grid_status(tracker=tracker)
 ```
 
-This should give teh follwoign result when the grid is not running yet:
+This should give the following result when the grid is not running yet:
 
 Summary: total=99  completed=0  strict_resume=99  resume_with_retries=99  failed=0  cancelled=0
 
@@ -175,7 +175,7 @@ mi10_qi0p5  draft
 We can also let this status view update once every X seconds for real-time status reports:
 
 ```
-mp.print_grid_status(tracker=tracker, refresh_seconds=5, clear_screen=true)
+mp.print_grid_status(tracker=tracker, refresh_seconds=5, clear_screen=True)
 ```
 
 '''
@@ -213,7 +213,7 @@ where N = the number of models to run in parallel
 ### 10. TRACK GRID STATUS OR STOP GRID
 
 '''
-To make life easier, there are two CLI function available to see the live status or stop the grid.
+To make life easier, there are two CLI functions available to see the live status or stop the grid.
 They need to be called from an active `morpy` environment and you need to know the location of the 
 project directory and the name of the database file.
 

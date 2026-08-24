@@ -189,7 +189,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">API (Modules)</a><input aria-label="Toggle navigation of API (Modules)" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy.html">morpy module</a></li>
@@ -243,7 +247,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.model</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Model objects and lifecycle state for individual MESA runs.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Model objects and lifecycle state for individual MESA runs.</span>
 
 <span class="sd">This module defines:</span>
 
@@ -253,7 +257,7 @@
 
 <span class="sd">Model instances are the central objects passed between setup, run, grid,</span>
 <span class="sd">and persistence/status layers.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
@@ -266,22 +270,22 @@
 <div class="viewcode-block" id="ModelState">
 <a class="viewcode-back" href="../../api/module_morpy_model.html#morpy.ModelState">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">DRAFT</span> <span class="o">=</span> <span class="s2">"draft"</span>
-    <span class="n">QUEUED</span> <span class="o">=</span> <span class="s2">"queued"</span>
-    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">"preparing"</span>
-    <span class="n">RUNNING</span> <span class="o">=</span> <span class="s2">"running"</span>
-    <span class="n">PAUSED</span> <span class="o">=</span> <span class="s2">"paused"</span>
-    <span class="n">COMPLETED</span> <span class="o">=</span> <span class="s2">"completed"</span>
-    <span class="n">FAILED</span> <span class="o">=</span> <span class="s2">"failed"</span>
-    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
-    <span class="n">RESTART</span> <span class="o">=</span> <span class="s2">"restart"</span></div>
+    <span class="n">DRAFT</span> <span class="o">=</span> <span class="s2">&quot;draft&quot;</span>
+    <span class="n">QUEUED</span> <span class="o">=</span> <span class="s2">&quot;queued&quot;</span>
+    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">&quot;preparing&quot;</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">PAUSED</span> <span class="o">=</span> <span class="s2">&quot;paused&quot;</span>
+    <span class="n">COMPLETED</span> <span class="o">=</span> <span class="s2">&quot;completed&quot;</span>
+    <span class="n">FAILED</span> <span class="o">=</span> <span class="s2">&quot;failed&quot;</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+    <span class="n">RESTART</span> <span class="o">=</span> <span class="s2">&quot;restart&quot;</span></div>
 
 
 <div class="viewcode-block" id="Model">
 <a class="viewcode-back" href="../../api/module_morpy_model.html#morpy.Model">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Class that represents a MESA model with its inlists, execution files, IDs etc.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that represents a MESA model with its inlists, execution files, IDs etc.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        name: Name of the model, which will be the name of the model directory.</span>
@@ -302,7 +306,7 @@
 <span class="sd">            Only set when work_setup.create_modeldir is called with this instance</span>
 <span class="sd">            as an argument.</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">model_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -318,21 +322,21 @@
     <span class="n">snapshot_taken_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Method looking for mesa_version from active MesaConfig if mesa_version is not specified.</span>
-<span class="sd">        """</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method looking for mesa_version from active MesaConfig if mesa_version is not specified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesa_version</span> <span class="o">=</span> <span class="n">require_active_config</span><span class="p">()</span><span class="o">.</span><span class="n">mesa_version</span>
 
 <div class="viewcode-block" id="Model.add_inlist">
 <a class="viewcode-back" href="../../api/module_morpy_model.html#morpy.Model.add_inlist">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_inlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inlist</span><span class="p">:</span> <span class="n">Inlist</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Method to add an Inlist object to the inlists attribute.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to add an Inlist object to the inlists attribute.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            inlist: Inlist opject to be added to the Model.inlist attribute.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inlists</span><span class="p">[</span><span class="n">inlist</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">inlist</span></div>
 
@@ -340,14 +344,14 @@
 <div class="viewcode-block" id="Model.remove_inlist">
 <a class="viewcode-back" href="../../api/module_morpy_model.html#morpy.Model.remove_inlist">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_inlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inlist_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Remove an inlist from the model by name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an inlist from the model by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            inlist_name: Name of the inlist to remove.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if removed, False if no matching inlist exists.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">is_removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inlists</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">inlist_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">is_removed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
@@ -355,8 +359,8 @@
 <div class="viewcode-block" id="Model.empty">
 <a class="viewcode-back" href="../../api/module_morpy_model.html#morpy.Model.empty">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Model"</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Method to initiate and empty Model object which can be populated later.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mesa_version</span><span class="p">:</span> <span class="n">MesaVersion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to initiate and empty Model object which can be populated later.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: Name for this Model object, which will be the directory name when writing </span>
@@ -365,7 +369,7 @@
 <span class="sd">            </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Model object</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">mesa_version</span><span class="o">=</span><span class="n">mesa_version</span><span class="p">)</span></div>
 
     
@@ -377,8 +381,8 @@
         <span class="n">model_copy_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">deep_copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Model"</span><span class="p">:</span>
-        <span class="n">new_name</span> <span class="o">=</span> <span class="n">model_copy_name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_copy"</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="n">model_copy_name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_copy&quot;</span>
 
         <span class="n">new_model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
