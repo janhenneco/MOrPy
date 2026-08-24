@@ -287,7 +287,7 @@ def create_modeldir(model: Model,
     if config is None:
         config = require_active_config()
 
-    projectdir_path = Path(projectdir_path)
+    projectdir_path = Path(projectdir_path).resolve()
     if not projectdir_path.is_dir():
         raise FileNotFoundError(f"project directory does not exist: {projectdir_path}")
     

@@ -85,7 +85,7 @@ def _resolve_model_dir(model: Model) -> Path:
             f"Model '{model.name}' has no model_path. "
             "Create a model directory first with create_modeldir()."
         )
-    model_dir = Path(model.model_path)
+    model_dir = Path(model.model_path).resolve()
     if not model_dir.is_dir():
         raise ModelPathMissingError(f"Model directory does not exist: {model_dir}")
     return model_dir

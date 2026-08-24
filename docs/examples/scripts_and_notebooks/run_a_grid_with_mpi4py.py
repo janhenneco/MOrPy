@@ -137,49 +137,6 @@ grid_list = comm.bcast(grid_list, root=0)
 # Here we let each rank connect to the prebuilt and fully populated DB file
 tracker = mp.Tracker.create(db_path=project_dir / DB_NAME)
 
-'''
-At this point, let's check if the tracker works. Since we'll have to track the progress of the grid in another
-Python session with the MPI backend anyway, let's try to get the grid status from an interactive Python session.
-
-Load the `morpy` environment and run `ipython`. In there, run the following lines of code:
-
-```
-import morpy as mp
-
-from pathlib import Path
-
-project_dir = Path('/home/njh462/software/MOrPy/docs/examples/example_output/run_a_grid_with_mpi4py/project_dir')
-
-DB_PATH = project_dir / 'runs.db'
-
-tracker = mp.Tracker.create(db_path=DB_PATH)
-
-mp.print_grid_status(tracker=tracker)
-```
-
-This should give the following result when the grid is not running yet:
-
-Summary: total=99  completed=0  strict_resume=99  resume_with_retries=99  failed=0  cancelled=0
-
-[2026-08-18 16:07:28 UTC+01:00]
-
-MODEL       STATE  PID  RC
-----------  -----  ---  --
-mi10_qi0p1  draft         
-mi10_qi0p2  draft         
-mi10_qi0p3  draft         
-mi10_qi0p4  draft         
-mi10_qi0p5  draft         
-... and so on ...
-
-We can also let this status view update once every X seconds for real-time status reports:
-
-```
-mp.print_grid_status(tracker=tracker, refresh_seconds=5, clear_screen=True)
-```
-
-'''
-
 ### 8. SETTING UP GRID RUN FUNCTION
 
 grid_handle = mp.run_grid(grid_list,

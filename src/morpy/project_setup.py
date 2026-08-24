@@ -85,7 +85,7 @@ def create_projectdir(
     if mode not in ("star", "binary"):
         raise ValueError(f"mode must be 'star' or 'binary', got: {mode!r}")
 
-    projectdir_path = Path(projectdir_path)
+    projectdir_path = Path(projectdir_path).resolve()
     work_template = config.mesa_dir / mode / "work"
     defaults_template = config.mesa_dir / mode / "defaults"
     # We need this because the history and profile columns files always live in star, never in binary.
