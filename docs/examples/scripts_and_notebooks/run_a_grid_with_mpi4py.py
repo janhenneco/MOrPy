@@ -33,12 +33,12 @@ MESA_VERSION = 'r24.08.1'
 ### 2.2 USER SETTINGS ###
 # RESTART? --   set this to True if you want to restart earlier computations.
 #               this will make sure nothing is overwritten!
-RESTART = True
+RESTART = False
 DB_NAME = 'runs.db'
 
-# Resume (restart) policy
-resume_policy = mp.ResumePolicy(
-    enabled=True,                 # turn resume logic on/off
+# Restart policy
+restart_policy = mp.RestartPolicy(
+    enabled=True,                 # turn restart logic on/off
     match_policy="id_or_path",    # "id_only" or "id_or_path" (fallback match by model_path)
     skip_completed=True,          # don't rerun models already marked "completed"
     failed_policy="rerun",        # "rerun" or "skip" for models that ended "failed"
@@ -146,7 +146,9 @@ grid_handle = mp.run_grid(grid_list,
                             config=mconf,
                             capture_output=True,
                             tracker=tracker,
-                            command_name='rn', timeout=300, resume_policy=resume_policy)
+                            command_name='rn', 
+                            timeout=300, 
+                            restart_policy=restart_policy)
 
 if rank == 0:
     print(grid_handle)

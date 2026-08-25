@@ -386,13 +386,13 @@ If False, raise an exception when inlist options are found that re not found in 
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model object</p>
+<dd class="field-even"><p>None</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>FileNotFoundError is source_dir does not exist.</strong> – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Model</em></p>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -437,28 +437,31 @@ stored model.file_snapshot, model.inlists is reloaded from disk.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ensure_scripts_in_project_dir</span></code></p></td>
 <td><p>Ensure rn and re scripts exist in projectdir.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_hash_file</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ensure_shebang</span></code></p></td>
+<td><p>Prepend a shebang line to a script file if it doesn't already have one.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_hash_file</span></code></p></td>
 <td><p>Return SHA-256 hash of a file.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_link_into_model_dir</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_link_into_model_dir</span></code></p></td>
 <td><p>Helper function that creates symbolic links for files in the project directory that are shared by all models.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_snapshot_model_inlists</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_snapshot_model_inlists</span></code></p></td>
 <td><p>Create a stable snapshot of inlist files in a model directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_modeldir</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_modeldir</span></code></p></td>
 <td><p>Function to create a model directory in storage for a given Model object. This model</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">detect_workdir_mode</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">detect_workdir_mode</span></code></p></td>
 <td><p>Infer whether a model should run in star or binary work mode.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_modeldir</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_modeldir</span></code></p></td>
 <td><p>Function that creates a self-contained MESA work directory for a given model</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_inlists_from_dir</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_inlists_from_dir</span></code></p></td>
 <td><p>Function that looks for files with 'inlist' in their name in a given directory (non-recursively),</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync_model_with_disk</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync_model_with_disk</span></code></p></td>
 <td><p>Ensure model.inlists matches current files in model.model_path.</p></td>
 </tr>
 </tbody>

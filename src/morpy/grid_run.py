@@ -88,7 +88,7 @@ class GridRunHandle:
     _tracker: Tracker | None = field(default=None, repr=False)
 
 @dataclass
-class ResumePolicy:
+class RestartPolicy:
     enabled: bool = True
     match_policy: ResumeMatchPolicy = "id_or_path"
     skip_completed: bool = True
@@ -125,7 +125,7 @@ def _coerce_model_state(state_text: str | None) -> ModelState | None:
 def _setdefault_inc(counter: dict[str, int], key: str) -> None:
     counter[key] = counter.get(key, 0) + 1
 
-def _schedule_decision_for_state(state_text: str, policy: ResumePolicy) -> tuple[bool, str | None]:
+def _schedule_decision_for_state(state_text: str, policy: RestartPolicy) -> tuple[bool, str | None]:
     state_norm = state_text.strip().lower()
 
     if state_norm == "completed":
@@ -149,7 +149,7 @@ def _schedule_decision_for_state(state_text: str, policy: ResumePolicy) -> tuple
 def _reconcile_items_with_repository(
     items: list[GridRunItem],
     tracker: Tracker,
-    policy: ResumePolicy,
+    policy: RestartPolicy,
 ) -> tuple[list[GridRunItem], ReconcileSummary]:
     rows = tracker.repo.list_model_rows()
 
@@ -1184,7 +1184,7 @@ def run_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     tracker: Tracker | None = None,
-    resume_policy: ResumePolicy | None = None,
+    restart_policy: RestartPolicy | None = None,
     ) -> GridRunResult:
     """Run a grid of models with local workers or MPI.
 
@@ -1204,17 +1204,17 @@ def run_grid(
         capture_output: Whether to capture stdout/stderr in results.
         timeout: Optional timeout in seconds.
         tracker: Optional persistence/live-status tracker.
-        resume_policy: Optional repository-based resume policy.
+        restart_policy: Optional repository-based restrat policy.
 
     Returns:
         GridRunResult with per-model results and aggregate counts.
     """
     item_list = list(items)
 
-    if resume_policy is not None and resume_policy.enabled:
+    if restart_policy is not None and restart_policy.enabled:
         if tracker is None:
-            raise ValueError("resume_policy requires tracker to be provided.")
-        item_list, _ = _reconcile_items_with_repository(item_list, tracker, resume_policy)
+            raise ValueError("restart_policy requires tracker to be provided.")
+        item_list, _ = _reconcile_items_with_repository(item_list, tracker, restart_policy)
 
     if len(item_list) == 0:
         return GridRunResult(
@@ -1275,15 +1275,15 @@ def launch_grid(
     capture_output: bool = True,
     timeout: float | None = None,
     tracker: Tracker | None = None,
-    resume_policy: ResumePolicy | None = None
+    restart_policy: RestartPolicy | None = None
     ) -> GridRunHandle:
     """Launch a grid run in the background and return immediately."""
     item_list = list(items)
 
-    if resume_policy is not None and resume_policy.enabled:
+    if restart_policy is not None and restart_policy.enabled:
         if tracker is None:
-            raise ValueError("resume_policy requires tracker to be provided.")
-        item_list, _ = _reconcile_items_with_repository(item_list, tracker, resume_policy)
+            raise ValueError("restart_policy requires tracker to be provided.")
+        item_list, _ = _reconcile_items_with_repository(item_list, tracker, restart_policy)
 
     executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="mesa-grid")
     stop_event = threading.Event()
@@ -1325,7 +1325,7 @@ def launch_grid(
             capture_output=capture_output,
             timeout=timeout,
             tracker=tracker,
-            resume_policy=resume_policy
+            restart_policy=restart_policy
         )
 
     return GridRunHandle(

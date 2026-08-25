@@ -21,6 +21,7 @@ Functions
 
    _columns_files_for_mode
    _ensure_scripts_in_project_dir
+   _ensure_shebang
    _hash_file
    _link_into_model_dir
    _snapshot_model_inlists

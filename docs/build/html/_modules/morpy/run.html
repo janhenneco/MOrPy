@@ -247,7 +247,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for morpy.run</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Single-model run orchestration for foreground and background execution.</span>
+<span></span><span class="sd">"""Single-model run orchestration for foreground and background execution.</span>
 
 <span class="sd">This module provides:</span>
 
@@ -257,7 +257,7 @@
 
 <span class="sd">It performs preflight checks, optional model/inlist sync, lifecycle state</span>
 <span class="sd">updates, timeout handling, and observer event emission.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
@@ -289,7 +289,7 @@
     <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StateTransition</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private method to change the state of a Model object.</span>
+<span class="w">    </span><span class="sd">"""Private method to change the state of a Model object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model object to change the ModelState of.</span>
@@ -299,7 +299,7 @@
 <span class="sd">        run_id: Identification number of the run associated with this model</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        StateTransition</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">previous_state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
@@ -328,55 +328,55 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_model_dir</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to resolve model directory associated with Model object.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private helper function to resolve model directory associated with Model object."""</span>
     <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">model_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ModelPathMissingError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; has no model_path. &quot;</span>
-            <span class="s2">&quot;Create a model directory first with create_modeldir().&quot;</span>
+            <span class="sa">f</span><span class="s2">"Model '</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">' has no model_path. "</span>
+            <span class="s2">"Create a model directory first with create_modeldir()."</span>
         <span class="p">)</span>
-    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span>
+    <span class="n">model_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">model_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="n">ModelPathMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ModelPathMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model directory does not exist: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model_dir</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_run_script</span><span class="p">(</span><span class="n">model_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private helper function to locate rn script in the model directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private helper function to locate rn script in the model directory."""</span>
     <span class="n">script</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="n">command_name</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">script</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="k">raise</span> <span class="n">RunScriptMissingError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Run script &#39;</span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">&#39; not found in model directory: </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Run script '</span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">' not found in model directory: </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">script</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_executable</span><span class="p">(</span><span class="n">model_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Private helper to locate symlink to Fortran executable and check consistency with WorkdirMode.&#39;&#39;&#39;</span>
-    <span class="n">star</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;star&quot;</span>
-    <span class="n">binary</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">&quot;binary&quot;</span>
+<span class="w">    </span><span class="sd">'''Private helper to locate symlink to Fortran executable and check consistency with WorkdirMode.'''</span>
+    <span class="n">star</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"star"</span>
+    <span class="n">binary</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="s2">"binary"</span>
 
     <span class="k">if</span> <span class="n">star</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">binary</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;star&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'star'</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">star</span>
-        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;binary&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'binary'</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">binary</span>
     <span class="k">if</span> <span class="n">star</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;star&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'star'</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">star</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExecutableMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;star&#39; executable found but WorkdirMode is not &#39;star&#39; for model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExecutableMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'star' executable found but WorkdirMode is not 'star' for model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">binary</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;binary&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'binary'</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">binary</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExecutableMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;binary&#39; executable found but WorkdirMode is not &#39;binary&#39; for model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExecutableMissingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'binary' executable found but WorkdirMode is not 'binary' for model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">raise</span> <span class="n">ExecutableMissingError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Neither &#39;star&#39; nor &#39;binary&#39; executable found in model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="sa">f</span><span class="s2">"Neither 'star' nor 'binary' executable found in model directory: </span><span class="si">{</span><span class="n">model_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_command_name_for_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use re automatically for models marked as restart when caller asks for rn.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">command_name</span> <span class="o">==</span> <span class="s2">&quot;rn&quot;</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">ModelState</span><span class="o">.</span><span class="n">RESTART</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;re&quot;</span>
+<span class="w">    </span><span class="sd">"""Use re automatically for models marked as restart when caller asks for rn."""</span>
+    <span class="k">if</span> <span class="n">command_name</span> <span class="o">==</span> <span class="s2">"rn"</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">ModelState</span><span class="o">.</span><span class="n">RESTART</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"re"</span>
     <span class="k">return</span> <span class="n">command_name</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_emit_transition</span><span class="p">(</span>
@@ -387,7 +387,7 @@
     <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StateTransition</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Private wrapper around _set_model_state that notifies the observer.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Private wrapper around _set_model_state that notifies the observer."""</span>
     <span class="n">transition</span> <span class="o">=</span> <span class="n">_set_model_state</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">new_state</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">observer</span><span class="o">.</span><span class="n">on_state_transition</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
@@ -395,7 +395,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_terminate_process_posix</span><span class="p">(</span><span class="n">process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Terminate or kill a process group on POSIX.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Terminate or kill a process group on POSIX."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">pgid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpgid</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ProcessLookupError</span><span class="p">:</span>
@@ -427,7 +427,7 @@
     <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">grace_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Terminate a launched run process and descendants when possible.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Terminate a launched run process and descendants when possible."""</span>
     <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
 
@@ -456,14 +456,14 @@
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span>  <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">RunHandle</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to launch a single model in a non-blocking way. </span>
+<span class="w">    </span><span class="sd">"""Function to launch a single model in a non-blocking way. </span>
 <span class="sd">        The function performs preflight checks, starts the MESA model run and</span>
 <span class="sd">        immediately returns with the RunHandle and process ID for tracking.</span>
-<span class="sd">        Use this if you want to run a MESA model &quot;in the background&quot;.</span>
+<span class="sd">        Use this if you want to run a MESA model "in the background".</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to launch.</span>
@@ -478,10 +478,10 @@
 <span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
-<span class="sd">        command_name: Name of the &quot;rn&quot; script. Can be used for restarts by specifying &quot;re&quot;</span>
-<span class="sd">            or can be used for custom-named &quot;rn&quot; scripts.</span>
+<span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>
+<span class="sd">            or can be used for custom-named "rn" scripts.</span>
 <span class="sd">        log_file_name: Name of the terminal log file that will be placed inside the model directory.</span>
-<span class="sd">            Default is &quot;log.out&quot;</span>
+<span class="sd">            Default is "log.out"</span>
 <span class="sd">        tracker: Optional Tracker object for in-memory information through</span>
 <span class="sd">            tracker.live_tracker and StateTransitions via the tracker.observer</span>
 <span class="sd">    Returns:</span>
@@ -489,7 +489,7 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If sync_before_run is True and no DefaultsOptions object is passed</span>
 <span class="sd">        RunLaunchError: If model failed to launch</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">model_dir</span> <span class="o">=</span> <span class="n">_resolve_model_dir</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">resolved_command_name</span> <span class="o">=</span> <span class="n">_resolve_command_name_for_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">command_name</span><span class="p">)</span>
@@ -505,8 +505,8 @@
     <span class="k">if</span> <span class="n">sync_before_run</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">default_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;default_options is required when sync_before_run=True &quot;</span>
-                <span class="s2">&quot;because sync_model_with_disk needs it.&quot;</span>
+                <span class="s2">"default_options is required when sync_before_run=True "</span>
+                <span class="s2">"because sync_model_with_disk needs it."</span>
             <span class="p">)</span>
         <span class="n">sync_model_with_disk</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
@@ -521,31 +521,31 @@
         <span class="n">merged_env</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
     <span class="n">log_path</span> <span class="o">=</span> <span class="n">model_dir</span> <span class="o">/</span> <span class="n">log_file_name</span>
-    <span class="n">is_restart_run</span> <span class="o">=</span> <span class="n">resolved_command_name</span> <span class="o">==</span> <span class="s2">&quot;re&quot;</span>
-    <span class="n">log_open_mode</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="n">is_restart_run</span> <span class="k">else</span> <span class="s2">&quot;w&quot;</span>
+    <span class="n">is_restart_run</span> <span class="o">=</span> <span class="n">resolved_command_name</span> <span class="o">==</span> <span class="s2">"re"</span>
+    <span class="n">log_open_mode</span> <span class="o">=</span> <span class="s2">"a"</span> <span class="k">if</span> <span class="n">is_restart_run</span> <span class="k">else</span> <span class="s2">"w"</span>
     <span class="n">log_start_offset</span> <span class="o">=</span> <span class="n">log_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="k">if</span> <span class="p">(</span><span class="n">is_restart_run</span> <span class="ow">and</span> <span class="n">log_path</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">log_file</span> <span class="o">=</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">log_open_mode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">log_open_mode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">is_restart_run</span> <span class="ow">and</span> <span class="n">log_start_offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">restart_banner</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> ===== RESTART | run_id=</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> | utc=</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2"> =====</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">restart_banner</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> ===== RESTART | run_id=</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> | utc=</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2"> =====</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">restart_banner</span><span class="p">)</span>
         <span class="n">log_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">popen_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">script_path</span><span class="p">)],</span>
-            <span class="s2">&quot;cwd&quot;</span><span class="p">:</span> <span class="n">model_dir</span><span class="p">,</span>
-            <span class="s2">&quot;env&quot;</span><span class="p">:</span> <span class="n">merged_env</span><span class="p">,</span>
-            <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="n">log_file</span><span class="p">,</span>
-            <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
-            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">script_path</span><span class="p">)],</span>
+            <span class="s2">"cwd"</span><span class="p">:</span> <span class="n">model_dir</span><span class="p">,</span>
+            <span class="s2">"env"</span><span class="p">:</span> <span class="n">merged_env</span><span class="p">,</span>
+            <span class="s2">"stdout"</span><span class="p">:</span> <span class="n">log_file</span><span class="p">,</span>
+            <span class="s2">"stderr"</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+            <span class="s2">"text"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Ensure each run has its own process group/session for reliable stop.</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;posix&quot;</span><span class="p">:</span>
-            <span class="n">popen_kwargs</span><span class="p">[</span><span class="s2">&quot;start_new_session&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;nt&quot;</span><span class="p">:</span>
-            <span class="n">popen_kwargs</span><span class="p">[</span><span class="s2">&quot;creationflags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CREATE_NEW_PROCESS_GROUP</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"posix"</span><span class="p">:</span>
+            <span class="n">popen_kwargs</span><span class="p">[</span><span class="s2">"start_new_session"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"nt"</span><span class="p">:</span>
+            <span class="n">popen_kwargs</span><span class="p">[</span><span class="s2">"creationflags"</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CREATE_NEW_PROCESS_GROUP</span>
 
         <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="o">**</span><span class="n">popen_kwargs</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
@@ -553,10 +553,10 @@
             <span class="n">model</span><span class="p">,</span>
             <span class="n">ModelState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Launch error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Launch error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">raise</span> <span class="n">RunLaunchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to launch run command &#39;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="k">raise</span> <span class="n">RunLaunchError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to launch run command '</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">log_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -598,7 +598,7 @@
     <span class="n">cancel_requested</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cancel_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait for a launched model process to finish and return its final run result.</span>
+<span class="w">    </span><span class="sd">"""Wait for a launched model process to finish and return its final run result.</span>
 
 <span class="sd">    This function is the completion step of the non-blocking workflow:</span>
 
@@ -629,7 +629,7 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        RunTimeoutError: If timeout is reached before process completion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">start_perf</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
 
@@ -645,13 +645,13 @@
             <span class="n">model</span><span class="p">,</span>
             <span class="n">ModelState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Timeout after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Timeout after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2">s"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">live_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">live_tracker</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">RunTimeoutError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Run timed out for model &#39;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Run timed out for model '</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">' after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds."</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     
     <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
@@ -661,13 +661,13 @@
             <span class="n">model</span><span class="p">,</span>
             <span class="n">ModelState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Interrupted by user&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="s2">"Interrupted by user"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">RunResult</span><span class="p">(</span>
             <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">terminal_state</span><span class="o">=</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
+            <span class="n">terminal_state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span>
             <span class="n">return_code</span><span class="o">=</span><span class="mi">130</span><span class="p">,</span>
             <span class="n">duration_seconds</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_perf</span><span class="p">,</span>
             <span class="n">model_id</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
@@ -677,10 +677,10 @@
             <span class="n">cwd</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span>
             <span class="n">start_time</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
             <span class="n">end_time</span><span class="o">=</span><span class="n">end_time</span><span class="p">,</span>
-            <span class="n">stdout</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="n">stderr</span><span class="o">=</span><span class="s2">&quot;Interrupted by user&quot;</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="s2">"Interrupted by user"</span><span class="p">,</span>
             <span class="n">sync_performed</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">sync_performed</span><span class="p">,</span>
-            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)},</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)},</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">observer</span><span class="o">.</span><span class="n">on_process_finished</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -694,42 +694,42 @@
     <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_perf</span>
 
     <span class="k">if</span> <span class="n">cancel_requested</span><span class="p">:</span>
-        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
         <span class="n">_emit_transition</span><span class="p">(</span>
             <span class="n">model</span><span class="p">,</span>
             <span class="n">ModelState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="n">cancel_reason</span> <span class="ow">or</span> <span class="s2">&quot;Cancelled by request&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">cancel_reason</span> <span class="ow">or</span> <span class="s2">"Cancelled by request"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">elif</span> <span class="n">return_code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">&quot;completed&quot;</span>
+        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">"completed"</span>
         <span class="n">_emit_transition</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> 
                          <span class="n">ModelState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">,</span> 
                          <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span> 
                          <span class="n">run_id</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">&quot;failed&quot;</span>
+        <span class="n">terminal_state</span> <span class="o">=</span> <span class="s2">"failed"</span>
         <span class="n">_emit_transition</span><span class="p">(</span>
             <span class="n">model</span><span class="p">,</span>
             <span class="n">ModelState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
             <span class="n">observer</span><span class="o">=</span><span class="n">observer</span><span class="p">,</span>
-            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Non-zero return code: </span><span class="si">{</span><span class="n">return_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Non-zero return code: </span><span class="si">{</span><span class="n">return_code</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="n">log_path</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">model_path</span> <span class="o">/</span> <span class="n">handle</span><span class="o">.</span><span class="n">log_file_name</span>
     <span class="k">if</span> <span class="n">capture_output</span> <span class="ow">and</span> <span class="n">log_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">handle</span><span class="o">.</span><span class="n">log_start_offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">log_start_offset</span><span class="p">)</span>
             <span class="n">stdout</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">stdout</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">stderr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="n">stderr</span> <span class="o">=</span> <span class="s2">""</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">RunResult</span><span class="p">(</span>
-        <span class="n">success</span><span class="o">=</span><span class="p">(</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">&quot;completed&quot;</span><span class="p">),</span>
+        <span class="n">success</span><span class="o">=</span><span class="p">(</span><span class="n">terminal_state</span> <span class="o">==</span> <span class="s2">"completed"</span><span class="p">),</span>
         <span class="n">terminal_state</span><span class="o">=</span><span class="n">terminal_state</span><span class="p">,</span>
         <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
         <span class="n">duration_seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span>
@@ -743,7 +743,7 @@
         <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="n">stderr</span><span class="p">,</span>
         <span class="n">sync_performed</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">sync_performed</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)},</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)},</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -764,19 +764,19 @@
     <span class="n">default_options</span><span class="p">:</span> <span class="n">DefaultsOptions</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span>  <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_unknown_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rn&quot;</span><span class="p">,</span>
-    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;log.out&quot;</span><span class="p">,</span>
+    <span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"rn"</span><span class="p">,</span>
+    <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"log.out"</span><span class="p">,</span>
     <span class="n">capture_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunResult</span><span class="p">:</span>
 <span class="w">    </span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to launch a single model in a blocking way. </span>
+<span class="w">    </span><span class="sd">"""Function to launch a single model in a blocking way. </span>
 <span class="sd">        The function calls launch_model and </span>
 <span class="sd">        wait_for_model immediately afterwards.</span>
 <span class="sd">        It will only return once the model has finished running.</span>
-<span class="sd">        Use this to run a MESA model &quot;on the foreground&quot; as you</span>
-<span class="sd">        would do with a regular MESA &quot;./rn&quot; call in the terminal.</span>
+<span class="sd">        Use this to run a MESA model "on the foreground" as you</span>
+<span class="sd">        would do with a regular MESA "./rn" call in the terminal.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to run.</span>
@@ -791,8 +791,8 @@
 <span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
-<span class="sd">        command_name: Name of the &quot;rn&quot; script. Can be used for restarts by specifying &quot;re&quot;</span>
-<span class="sd">            or can be used for custom-named &quot;rn&quot; scripts.</span>
+<span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>
+<span class="sd">            or can be used for custom-named "rn" scripts.</span>
 <span class="sd">        capture_output: If True, capture stdout/stderr and include them in RunResult.</span>
 <span class="sd">            If False, wait without collecting output (stdout/stderr in result are empty strings).</span>
 <span class="sd">        timeout: Maximum time in seconds to wait before aborting.</span>
@@ -801,7 +801,7 @@
 <span class="sd">            tracker.live_tracker and StateTransitions via the tracker.observer</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        RunResult object containing information about the run after finishing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">handle</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">launch_model</span><span class="p">(</span>
         <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>

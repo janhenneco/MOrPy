@@ -18,7 +18,7 @@ Classes
    GridRunItem
    GridRunResult
    ReconcileSummary
-   ResumePolicy
+   RestartPolicy
 
 Functions
 ---------
