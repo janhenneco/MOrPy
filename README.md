@@ -12,7 +12,7 @@ This software is currently still a work in progress and any feedback or feature 
 
 ## Installation Instructions
 
-### 0. Requirements
+### 1. Requirements
 
 Core:
 - Operating system: Linux or macOS
@@ -30,13 +30,13 @@ Optional:
 - `jupyter` (jupyter)
 - For MPI: OpenMPI/MPICH
 
-### 1. Download the code
+### 2. Download the code
 
 Clone or download the repository, if necessary extract it, and move into the root directory of the repository.
 
-### 2. Installation
+### 3. Installation
 
-#### 2.1 Basic Installation
+#### 3.1 Basic Installation
 
 1. Create a `Python` environment:
 
@@ -65,7 +65,7 @@ or install with all optional dependencies:
 python -m pip install ".[preview,mpi,docs,notebooks]"
 ```
 
-#### 2.2 MPI-aware installation (for HPC users)
+#### 3.2 MPI-aware installation (for HPC users)
 
 In some cases, the installed `mpi4py` package and the `MPI` installation are not compatible by default. If this is the case for you, follow these instructions:
 
@@ -104,7 +104,7 @@ The `no-binary` option prevents `pip` from installing a pre-built version of `mp
 python -m pip install -e ".[preview,docs,notebooks]"
 ``` 
 
-### 3. Verify installation
+### 4. Verify installation
 
 To verify if `morpy` was installed successfully, just run
 
@@ -112,7 +112,7 @@ To verify if `morpy` was installed successfully, just run
 python -c "import morpy; print('MOrPy installed successfully')"
 ```
 
-### 4. Install `ipykernel` (OPTIONAL)
+### 5. Install `ipykernel` (OPTIONAL)
 
 If you are already running a Jupyter server and want to be able to use `morpy` environment without installing Jupyter in said environment and running an additional server, you can avoid this by creating a kernel for `morpy`. Installing `ipykernel` can be achieved by installing the optional `ipykernel` dependency (see instructions above).
 
