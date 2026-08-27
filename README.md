@@ -154,7 +154,7 @@ The `morpy` package's main modules are:
 
 - `project_setup.py`: Project-directory creation utilities for MESA runs.
 
-- `compile.py`: Compilation helpers for project-level MESA executables.
+- `compile.py`: Function to compile the MESA executables.
 
 - `run.py`: Single-model run orchestration for foreground and background execution.
 
@@ -162,11 +162,11 @@ The `morpy` package's main modules are:
 
 - `errors.py`: Shared exception hierarchy for run, orchestration, and persistence layers.
 
-- `grid_run.py`: Grid orchestration contracts for multi-model execution.
+- `grid_run.py`: Grid orchestration classes and objects for multi-model execution.
 
-- `repository.py`: Persistence abstraction and adapter hooks for run metadata.
+- `repository.py`: Persistence handling, fucntions related to database files.
 
-- `status.py`: Status view contracts for live and persisted model execution state.
+- `status.py`: Model and grid status view functions.
 
 - `cli.py`: CLI functions for status and grid termination.
 
