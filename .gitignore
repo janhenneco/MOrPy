@@ -240,3 +240,6 @@ docs/examples/example_output/
 
 # misc
 .virtual_documents
+
+# macos
+.DS_Store
