@@ -179,6 +179,8 @@ The general idea and many of the concepts of a `Python`-based tool to run grids 
 
 A very big thank you to all the people who tested out `MOrPy` and provided valuable feedback: *... list of testers ...*.
 
+I gratefully acknowledge UK Research and Innovation (UKRI) in the form of a Frontier Research grant under the UK government’s ERC Horizon Europe funding guarantee (SYMPHONY; PI Bowman; grant number: EP/Y031059/1).
+
 
 ## Generative AI Disclosure
 Some code was drafted using generative AI tools. All prompts were provided by the author, and all AI-generated content was reviewed and approved by the author before being included. No generative AI was used without human review. `MOrPy`'s concept, design, and artwork are entirely the author's own work.
