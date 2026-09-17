@@ -39,6 +39,16 @@ PGBINARY_SPLIT_VERSION = MesaVersion.parse_mesa_version("r23.05.1")
 # MESA version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
 
+
+def _canonical_option_name(requested_name: str, template_name: str) -> str:
+    """Return a recognized option name using its defaults-file spelling."""
+    canonical_base = template_name.partition("(")[0].strip()
+    requested_name = requested_name.strip()
+    index_start = requested_name.find("(")
+    if index_start == -1:
+        return canonical_base
+    return canonical_base + requested_name[index_start:].strip()
+
 @dataclass
 class MesaOption:
    """Represents a single MESA inlist option parsed from a defaults file.
@@ -200,15 +210,16 @@ class DefaultsOptions:
         name: str,
         defaults_file: DefaultsFile,
     ) -> MesaOption | None:
-        # Exact match first.
-        if name in defaults_file.options:
-            return defaults_file.options[name]
+        # Exact match first, ignoring Fortran identifier case.
+        for option_name, option in defaults_file.options.items():
+            if name.casefold() == option_name.casefold():
+                return option
 
-        base = self._base_option_name(name)
+        base = self._base_option_name(name).casefold()
         matches = [
             opt
             for opt in defaults_file.options.values()
-            if self._base_option_name(opt.name) == base
+            if self._base_option_name(opt.name).casefold() == base
         ]
 
         if not matches:
@@ -342,6 +353,13 @@ class Inlist:
 
         self.options[opt.name] = opt
 
+    def _stored_option_name(self, name: str) -> str | None:
+        """Find an inlist option key without regard to Fortran identifier case."""
+        for stored_name in self.options:
+            if stored_name.casefold() == name.casefold():
+                return stored_name
+        return None
+
     def _remove_option(self, option_name: str) -> bool:
         """Method to remove an option from the options attribute.
 
@@ -351,7 +369,10 @@ class Inlist:
         Returns:
             Boolean, True if removed, false if not present and, therefore, not removed
         """
-        is_removed = self.options.pop(option_name, None)
+        stored_name = self._stored_option_name(option_name)
+        if stored_name is None:
+            return False
+        is_removed = self.options.pop(stored_name)
         return is_removed is not None
     
     @classmethod
@@ -397,8 +418,9 @@ class Inlist:
         # the MesaOption template if so
         template = defaults.find_option(name=name, namelist=namelist)
 
+        canonical_name = _canonical_option_name(name, template.name)
         new_option = MesaOption(
-            name=name,
+            name=canonical_name,
             default_option=template.default_option,
             description=template.description,
             namelist=template.namelist,
@@ -772,7 +794,10 @@ class Inlist:
             Structured string with information about the MesaOption corresponding to
             the provided name.
         """
-        opt = self.options[name]
+        stored_name = self._stored_option_name(name)
+        if stored_name is None:
+            raise KeyError(f"Option '{name}' is not present in this inlist.")
+        opt = self.options[stored_name]
         current = f"\ncurrent: {opt.current_value}" if opt.current_value is not None else ""
         return (
             f"{opt.name}\n"
@@ -783,7 +808,10 @@ class Inlist:
         )
     
     def get_python_value(self, name: str, use_current: bool = True) -> bool | int | float | str:
-        return self.options[name].to_python_value(use_current=use_current)
+        stored_name = self._stored_option_name(name)
+        if stored_name is None:
+            raise KeyError(f"Option '{name}' is not present in this inlist.")
+        return self.options[stored_name].to_python_value(use_current=use_current)
     
     def copy(
         self,

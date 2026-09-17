@@ -85,6 +85,44 @@ def test_set_option_float_coercion(defaults_r24081):
     assert inlist.options["initial_mass"].current_value == "10"
 
 
+def test_set_option_case_insensitively_uses_canonical_name(defaults_r24081):
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
+
+    inlist.set_option(
+        name="INITIAL_MASS",
+        value=10,
+        defaults=defaults,
+        namelist="controls",
+    )
+    inlist.set_option(
+        name="initial_mass",
+        value=12,
+        defaults=defaults,
+        namelist="controls",
+    )
+
+    assert list(inlist.options) == ["initial_mass"]
+    assert inlist.options["initial_mass"].current_value == "12"
+    assert inlist.get_python_value("INITIAL_MASS") == 12
+    assert inlist.remove_option("INITIAL_MASS") is True
+    assert not inlist.options
+
+
+def test_set_option_case_insensitively_preserves_array_index(defaults_r24081):
+    _, defaults = defaults_r24081
+    inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))
+
+    inlist.set_option(
+        name="OVERSHOOT_F(2)",
+        value=0.014,
+        defaults=defaults,
+        namelist="controls",
+    )
+
+    assert "overshoot_f(2)" in inlist.options
+
+
 def test_set_options_bulk_grouped_and_flat(defaults_r24081):
     _, defaults = defaults_r24081
     inlist = Inlist.empty(name="inlist_test", source_path=Path("inlist_test"))

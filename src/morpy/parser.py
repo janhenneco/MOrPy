@@ -21,7 +21,8 @@ from .options import (Inlist,
                       DefaultsFile, 
                       MesaOption, 
                       UnclassifiedNamelist, 
-                      MesaNameList)
+                      MesaNameList,
+                      _canonical_option_name)
 
 # MESA version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
@@ -45,15 +46,16 @@ def _base_option_name(name: str) -> str:
 def _resolve_defaults_option(name: str, defaults_file: DefaultsFile) -> MesaOption | None:
     """Resolve an inlist option name against defaults, with array-aware matching."""
 
-    # Exact match first.
-    if name in defaults_file.options:
-        return defaults_file.options[name]
+    # Exact match first, ignoring Fortran identifier case.
+    for option_name, option in defaults_file.options.items():
+        if name.casefold() == option_name.casefold():
+            return option
 
-    base = _base_option_name(name)
+    base = _base_option_name(name).casefold()
     matches = [
         opt
         for opt in defaults_file.options.values()
-        if _base_option_name(opt.name) == base
+        if _base_option_name(opt.name).casefold() == base
     ]
 
     if not matches:
@@ -388,12 +390,14 @@ def parse_inlist(source_path: Path | str,
 
             description = ""
             default_value = ""
+            canonical_name = name
             if resolved_default is not None:
                 description = resolved_default.description
                 default_value = resolved_default.default_option
+                canonical_name = _canonical_option_name(name, resolved_default.name)
 
-            il.options[name] = MesaOption(
-                name=name,
+            il.options[canonical_name] = MesaOption(
+                name=canonical_name,
                 default_option=default_value,
                 current_value=value,
                 description=description,

@@ -68,6 +68,34 @@ def test_parse_inlist_allow_mode_warns_and_keeps_unknown_option(tmp_path):
     assert "definitely_not_a_real_option" in inlist.options
 
 
+def test_parse_inlist_case_insensitively_canonicalizes_known_options(tmp_path):
+    mesa_dir = make_fake_mesa_dir(tmp_path)
+    config = mrun.MesaConfig.setup(mesa_dir=mesa_dir)
+    defaults = make_defaults(config)
+
+    inlist_path = tmp_path / "inlist"
+    inlist_path.write_text(
+        "&controls\n"
+        "   INITIAL_MASS = 1.0d0\n"
+        "   OVERSHOOT_F(2) = 0.014d0\n"
+        "   UNKNOWN_Option = 42\n"
+        "/\n",
+        encoding="utf-8",
+    )
+
+    with pytest.warns(RuntimeWarning, match="Unknown inlist options found"):
+        inlist = mrun.parse_inlist(
+            source_path=inlist_path,
+            config=config,
+            default_options=defaults,
+            allow_unknown_options=True,
+        )
+
+    assert "initial_mass" in inlist.options
+    assert "overshoot_f(2)" in inlist.options
+    assert "UNKNOWN_Option" in inlist.options
+
+
 def test_import_inlists_from_dir_strict_mode_raises(tmp_path):
     mesa_dir = make_fake_mesa_dir(tmp_path)
     config = mrun.MesaConfig.setup(mesa_dir=mesa_dir)
