@@ -700,6 +700,94 @@ def _stop_from_repository(
         "errors": errors,
     }
 
+def find_active_model_id_by_pid(tracker: Tracker, pid: int) -> str | None:
+    """Return the model_id of the active (running/preparing/queued) model currently using pid, if any."""
+    for row in tracker.repo.list_model_rows():
+        state = (row.state or "").lower()
+        if state not in {"running", "preparing", "queued"}:
+            continue
+        latest_run = tracker.repo.get_latest_run(row.model_id)
+        if latest_run is None:
+            continue
+        pid_text = latest_run.metadata.get("pid", "")
+        if pid_text.isdigit() and int(pid_text) == pid:
+            return row.model_id
+    return None
+
+def cancel_model(
+    model_id: str,
+    *,
+    tracker: Tracker,
+    handle: GridRunHandle | None = None,
+    force: bool = True,
+    grace_seconds: float = 3.0,
+) -> dict[str, object]:
+    """Cancel a single model by model_id: terminate its process and record cancellation in the DB.
+
+    Behavior:
+        - If `handle` is provided and the model is still tracked live in that
+          in-process grid session, terminates it cooperatively.
+        - Otherwise falls back to DB-recovery mode: reads the PID from the model's
+          latest run row, terminates the process (group), and records a
+          "cancelled" state transition plus a terminal RunResult.
+
+    Note:
+        This only cancels the single given model_id, unlike stop_grid() which
+        targets every active model tracked by the given tracker/handle.
+    """
+    if handle is not None:
+        with handle._running_lock:
+            entry = handle._running_processes.get(model_id)
+        if entry is not None:
+            _, _, process = entry
+            terminate_run_process(process, force=force, grace_seconds=grace_seconds)
+            return {"model_id": model_id, "mode": "live", "terminated": True}
+
+    row = tracker.repo.get_model_row(model_id)
+    if row is None:
+        raise KeyError(f"No model found with model_id '{model_id}'.")
+
+    state = (row.state or "").lower()
+    if state not in {"running", "preparing", "queued"}:
+        return {
+            "model_id": model_id,
+            "mode": "recovery",
+            "terminated": False,
+            "reason": f"model is not active (state={state!r})",
+        }
+
+    latest_run = tracker.repo.get_latest_run(model_id)
+    if latest_run is None:
+        raise ValueError(f"No run record found for model_id '{model_id}'; cannot resolve PID.")
+
+    pid_text = latest_run.metadata.get("pid", "")
+    if not pid_text.isdigit():
+        raise ValueError(f"No PID recorded for model_id '{model_id}'.")
+
+    pid = int(pid_text)
+    if not _pid_exists(pid):
+        _mark_recovered_cancelled(
+            tracker=tracker,
+            model_id=model_id,
+            from_state=state,
+            latest_run=latest_run,
+            reason="Process already exited; marked cancelled on recovery",
+        )
+        return {"model_id": model_id, "mode": "recovery", "terminated": True, "already_exited": True, "pid": pid}
+
+    ok = _terminate_pid_tree(pid, force=force, grace_seconds=grace_seconds)
+    if not ok:
+        return {"model_id": model_id, "mode": "recovery", "terminated": False, "pid": pid}
+
+    _mark_recovered_cancelled(
+        tracker=tracker,
+        model_id=model_id,
+        from_state=state,
+        latest_run=latest_run,
+        reason="Cancelled via cancel_model()",
+    )
+    return {"model_id": model_id, "mode": "recovery", "terminated": True, "pid": pid}
+
 def run_models_local(
     items: list[GridRunItem],
     *,

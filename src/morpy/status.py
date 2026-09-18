@@ -283,15 +283,20 @@ def print_grid_status(
         offset = offset[:3] + ":" + offset[3:]
         print(f"[{now:%Y-%m-%d %H:%M:%S} UTC{offset}]\n")
     
-        # Build one formatted cell string per row: "MODEL STATE PID/RC"
+        # Build one formatted cell string per row: "MODEL STATE id=MODEL_ID PID=... RC=..."
         model_w = max(len("MODEL"), *(len(r.model_name) for r in rows))
         state_w = max(len("STATE"), *(len(r.state) for r in rows))
+        id_w = max(len(r.model_id) for r in rows)
+        pid_w = max(len("-" if r.pid is None else str(r.pid)) for r in rows)
+        rc_w = max(len("-" if r.return_code is None else str(r.return_code)) for r in rows)
     
         def _cell(r) -> str:
-            pid = "" if r.pid is None else str(r.pid)
-            rc = "" if r.return_code is None else str(r.return_code)
-            pidrc = f"{pid}/{rc}" if (pid or rc) else ""
-            return f"{r.model_name:<{model_w}} {r.state:<{state_w}} {pidrc}"
+            pid = "-" if r.pid is None else str(r.pid)  # process ID, only set while the model is running
+            rc = "-" if r.return_code is None else str(r.return_code)  # exit code of the last run: 0 = success
+            return (
+                f"{r.model_name:<{model_w}} {r.state:<{state_w}} "
+                f"id={r.model_id:<{id_w}} PID={pid:<{pid_w}} RC={rc:<{rc_w}}"
+            )
     
         cells = [_cell(r) for r in rows]
         cell_w = max(len(c) for c in cells) + 2  # padding between columns

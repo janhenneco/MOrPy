@@ -37,6 +37,7 @@ Issues = "https://github.com/janhenneco/MOrPy/issues"
 [project.scripts]
 morpy_status = "morpy.cli:main_status"
 morpy_stop = "morpy.cli:main_stop"
+morpy_cancel_model = "morpy.cli:main_cancel_model"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -64,7 +64,7 @@ def create_projectdir(
     mode: WorkdirMode,
     *,
     include_columns_files: bool = True,
-     src_path: Path | str | None = None,
+    src_path: Path | str | None = None,
     config: MesaConfig | None = None,
 ) -> Path:
     """Create a MESA project directory from star/work or binary/work.
