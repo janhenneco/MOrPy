@@ -59,12 +59,52 @@ def _has_run_binary_extras(src_dir: Path) -> bool:
             return True
     return False
 
+def _refresh_src(projectdir_path: Path, src_to_copy: Path) -> None:
+    """Overwrite an existing project's src with src_to_copy, atomically with rollback on failure."""
+    if not src_to_copy.exists():
+        raise FileNotFoundError(f"src directory not found: {src_to_copy}")
+    tmp_src = projectdir_path / f".src.tmp-{uuid.uuid4().hex}"
+    _copy_entry(src_to_copy, tmp_src)
+    old_src = projectdir_path / "src"
+    backup = projectdir_path / f".src.bak-{uuid.uuid4().hex}"
+    old_src.replace(backup)
+    try:
+        tmp_src.replace(old_src)
+    except Exception:
+        backup.replace(old_src)
+        raise
+    finally:
+        shutil.rmtree(backup, ignore_errors=True)
+
+def _refresh_columns_files(
+    projectdir_path: Path,
+    mode: WorkdirMode,
+    include_columns_files: bool,
+    custom_columns_dir: Path | None,
+    defaults_template: Path,
+    star_defaults_template: Path,
+) -> None:
+    """Overwrite an existing project's *_columns.list files from the resolved source."""
+    if custom_columns_dir is not None:
+        for src in custom_columns_dir.glob("*_columns.list"):
+            _copy_entry(src, projectdir_path / src.name)
+    elif include_columns_files:
+        for name in _columns_files_for_mode(mode):
+            src = (
+                star_defaults_template / name
+                if name in ("history_columns.list", "profile_columns.list")
+                else defaults_template / name
+            )
+            if src.exists():
+                _copy_entry(src, projectdir_path / name)
+
 def create_projectdir(
     projectdir_path: Path | str,
     mode: WorkdirMode,
     *,
     include_columns_files: bool = True,
     src_path: Path | str | None = None,
+    columns_files_path: Path | str | None = None,
     config: MesaConfig | None = None,
 ) -> Path:
     """Create a MESA project directory from star/work or binary/work.
@@ -72,8 +112,10 @@ def create_projectdir(
     Args:
         projectdir_path: Path to the project directory to create.
         mode: "star" or "binary"
-        include_columns_files: Add applicable \*_columns.list files to the project directory.
+        include_columns_files: Add applicable *_columns.list files to the project directory.
         src_path: Use this src folder instead of the template src folder.
+        columns_files_path: Copy all *_columns.list files from this folder instead, overriding
+            include_columns_files and the template defaults.
         config: MesaConfig
 
     Returns:
@@ -94,18 +136,6 @@ def create_projectdir(
     if not work_template.is_dir():
         raise FileNotFoundError(f"Template work directory does not exist: {work_template}")
 
-    # Idempotent path: existing directory is validated then returned.
-    if projectdir_path.exists():
-        if not projectdir_path.is_dir():
-            raise FileExistsError(
-                f"Cannot create project directory because path exists and is not a directory: "
-                f"{projectdir_path}"
-            )
-        _validate_existing_projectdir(projectdir_path)
-        return projectdir_path
-
-    projectdir_path.parent.mkdir(parents=True, exist_ok=True)
-
     custom_src: Path | None = None
     if src_path is not None:
         custom_src = Path(src_path)
@@ -117,6 +147,29 @@ def create_projectdir(
                 "Binary mode with custom src requires a run_binary_extras file "
                 "in the provided src directory."
             )
+
+    custom_columns_dir: Path | None = None
+    if columns_files_path is not None:
+        custom_columns_dir = Path(columns_files_path)
+        if not custom_columns_dir.is_dir():
+            raise FileNotFoundError(f"Provided columns_files_path is not a directory: {custom_columns_dir}")
+
+    # Existing directory: validate scaffold, then refresh src/columns files from the supplied sources.
+    if projectdir_path.exists():
+        if not projectdir_path.is_dir():
+            raise FileExistsError(
+                f"Cannot create project directory because path exists and is not a directory: "
+                f"{projectdir_path}"
+            )
+        _validate_existing_projectdir(projectdir_path)
+        _refresh_src(projectdir_path, custom_src if custom_src is not None else (work_template / "src"))
+        _refresh_columns_files(
+            projectdir_path, mode, include_columns_files,
+            custom_columns_dir, defaults_template, star_defaults_template,
+        )
+        return projectdir_path
+
+    projectdir_path.parent.mkdir(parents=True, exist_ok=True)
 
     tmp_dir = projectdir_path.parent / f".{projectdir_path.name}.tmp-{uuid.uuid4().hex}"
     committed = False
@@ -141,8 +194,11 @@ def create_projectdir(
             raise FileNotFoundError(f"src directory not found: {src_to_copy}")
         _copy_entry(src_to_copy, tmp_dir / "src")
 
-        # Optional assets
-        if include_columns_files:
+        # Optional assets: an explicit columns_files_path overrides include_columns_files.
+        if custom_columns_dir is not None:
+            for src in custom_columns_dir.glob("*_columns.list"):
+                _copy_entry(src, tmp_dir / src.name)
+        elif include_columns_files:
             for name in _columns_files_for_mode(mode):
                 if name in ("history_columns.list", "profile_columns.list"):
                     src = star_defaults_template / name
