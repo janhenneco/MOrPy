@@ -1,9 +1,9 @@
 """Status read models backed by repository data plus optional live process map."""
 
+import curses
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-import shutil
 
 from .repository import LiveProcessRegistry, RunRepository, Tracker
 
@@ -220,6 +220,116 @@ def grid_status(tracker: Tracker) -> list[ModelStatus]:
     rows.sort(key=lambda row: (row.model_name.lower(), row.model_id))
     return rows
 
+def _state_order(state: str) -> int:
+    if state == "running":
+        return 0
+    if state == "restart":
+        return 1
+    if state in {"queued", "preparing"}:
+        return 2
+    if state in {"completed", "failed", "cancelled"}:
+        return 3
+    return 4
+
+def _build_status_lines(tracker: Tracker, show_resume_summary: bool) -> list[str]:
+    """Build the status view as a flat list of single-column text lines."""
+    rows = grid_status(tracker)
+
+    if not rows:
+        return ["No models found."]
+
+    rows.sort(key=lambda r: (_state_order(r.state), r.model_name.lower(), r.model_id))
+
+    lines: list[str] = []
+
+    if show_resume_summary:
+        summary = _build_resume_summary(rows)
+        lines.append(
+            "Summary: "
+            f"total={summary['total']}  "
+            f"completed={summary['completed']}  "
+            f"strict_resume={summary['resume_candidates_strict']}  "
+            f"resume_with_retries={summary['resume_candidates_with_retries']}  "
+            f"failed={summary['failed']}  "
+            f"cancelled={summary['cancelled']}"
+        )
+        lines.append("")
+
+    now = datetime.now().astimezone()
+    offset = now.strftime('%z')
+    offset = offset[:3] + ":" + offset[3:]
+    lines.append(f"[{now:%Y-%m-%d %H:%M:%S} UTC{offset}]")
+    lines.append("")
+
+    model_w = max(len("MODEL"), *(len(r.model_name) for r in rows))
+    state_w = max(len("STATE"), *(len(r.state) for r in rows))
+    id_w = max(len(r.model_id) for r in rows)
+    pid_w = max(len("-" if r.pid is None else str(r.pid)) for r in rows)
+    rc_w = max(len("-" if r.return_code is None else str(r.return_code)) for r in rows)
+
+    show_reason = any(r.termination_reason for r in rows)
+    if show_reason:
+        reason_w = max(len(r.termination_reason or "-") for r in rows)
+
+    def _cell(r) -> str:
+        pid = "-" if r.pid is None else str(r.pid)  # process ID, only set while the model is running
+        rc = "-" if r.return_code is None else str(r.return_code)  # exit code of the last run: 0 = success
+        base = (
+            f"{r.model_name:<{model_w}} {r.state:<{state_w}} "
+            f"id={r.model_id:<{id_w}} PID={pid:<{pid_w}} RC={rc:<{rc_w}}"
+        )
+        if show_reason:
+            reason = r.termination_reason or "-"
+            base += f" REASON={reason:<{reason_w}}"
+        return base
+
+    lines.extend(_cell(r) for r in rows)
+    return lines
+
+def _curses_status_loop(
+    stdscr,
+    tracker: Tracker,
+    refresh_seconds: float,
+    show_resume_summary: bool
+) -> None:
+    """Render a scrollable, auto-refreshing status view inside a curses screen."""
+    curses.curs_set(0)  # hide cursor
+    stdscr.timeout(int(refresh_seconds * 1000))
+    scroll = 0
+
+    while True:
+        lines = _build_status_lines(tracker, show_resume_summary)
+        max_w = max((len(line) for line in lines), default=0) + 1
+        pad = curses.newpad(max(len(lines), 1), max(max_w, 1))
+        for i, line in enumerate(lines):
+            pad.addnstr(i, 0, line, max_w - 1)
+
+        screen_h, screen_w = stdscr.getmaxyx()
+        max_scroll = max(0, len(lines) - screen_h)
+        scroll = min(scroll, max_scroll)
+
+        stdscr.erase()
+        stdscr.noutrefresh()
+        pad.noutrefresh(scroll, 0, 0, 0, max(screen_h - 1, 0), max(screen_w - 1, 0))
+        curses.doupdate()
+
+        key = stdscr.getch()
+        if key in (ord('q'), 27):  # q or Esc
+            break
+        elif key in (curses.KEY_DOWN, ord('j')):
+            scroll = min(scroll + 1, max_scroll)
+        elif key in (curses.KEY_UP, ord('k')):
+            scroll = max(scroll - 1, 0)
+        elif key == curses.KEY_NPAGE:
+            scroll = min(scroll + screen_h, max_scroll)
+        elif key == curses.KEY_PPAGE:
+            scroll = max(scroll - screen_h, 0)
+        elif key in (curses.KEY_HOME, ord('g')):
+            scroll = 0
+        elif key in (curses.KEY_END, ord('G')):
+            scroll = max_scroll
+        # curses.KEY_RESIZE and timeouts (-1) just fall through to re-render
+
 def print_grid_status(
     tracker: Tracker,
     refresh_seconds: float | None = None,
@@ -232,27 +342,24 @@ def print_grid_status(
     Args:
         tracker: Tracker object with Model repo and live tracker.
         refresh_seconds: If None, print once (snapshot). If >0 , refresh
-            with specified interval
+            with specified interval. In an interactive terminal (notebook=False)
+            this opens a scrollable curses view: Up/Down/j/k to scroll one line,
+            PageUp/PageDown for a page, g/Home and G/End to jump to top/bottom,
+            q/Esc to quit.
         notebook: Set to True for clear screen functionality in Jupyter notebooks
         clear_screen: If True (and not notebook), clear terminal between refreshes.
     """
-    
+
     if refresh_seconds is not None and refresh_seconds <= 0:
         raise ValueError("refresh_seconds must be > 0")
 
-    def _state_order(state: str) -> int:
-        if state == "running":
-            return 0
-        if state == "restart":
-            return 1
-        if state in {"queued", "preparing"}:
-            return 2
-        if state in {"completed", "failed", "cancelled"}:
-            return 3
-        return 4
+    if refresh_seconds is None:
+        for line in _build_status_lines(tracker, show_resume_summary):
+            print(line, flush=True)
+        return
 
-    def _clear_output() -> None:
-        if notebook:
+    if notebook:
+        def _clear_output() -> None:
             try:
                 from IPython.display import clear_output as ipy_clear_output
                 ipy_clear_output(wait=True)
@@ -260,93 +367,24 @@ def print_grid_status(
             except Exception:
                 # Fall back to ANSI if IPython is unavailable.
                 pass
-        if clear_screen:
-            print("\033[H\033[2J\033[3J", end="")  # also clears scrollback (3J)
+            if clear_screen:
+                print("\033[H\033[2J\033[3J", end="")  # also clears scrollback (3J)
 
-    
-    def _render_once() -> None:
-        rows = grid_status(tracker)
-    
-        if not rows:
-            print("No models found.", flush=True)
-            return
-    
-        rows.sort(key=lambda r: (_state_order(r.state), r.model_name.lower(), r.model_id))
-    
-        if show_resume_summary:
-            summary = _build_resume_summary(rows)
-            print(
-                "Summary: "
-                f"total={summary['total']}  "
-                f"completed={summary['completed']}  "
-                f"strict_resume={summary['resume_candidates_strict']}  "
-                f"resume_with_retries={summary['resume_candidates_with_retries']}  "
-                f"failed={summary['failed']}  "
-                f"cancelled={summary['cancelled']}",
-                flush=True,
-            )
-            print("", flush=True)
-    
-        now = datetime.now().astimezone()
-        offset = now.strftime('%z')
-        offset = offset[:3] + ":" + offset[3:]
-        print(f"[{now:%Y-%m-%d %H:%M:%S} UTC{offset}]\n")
-    
-        # Build one formatted cell string per row: "MODEL STATE id=MODEL_ID PID=... RC=..."
-        model_w = max(len("MODEL"), *(len(r.model_name) for r in rows))
-        state_w = max(len("STATE"), *(len(r.state) for r in rows))
-        id_w = max(len(r.model_id) for r in rows)
-        pid_w = max(len("-" if r.pid is None else str(r.pid)) for r in rows)
-        rc_w = max(len("-" if r.return_code is None else str(r.return_code)) for r in rows)
-
-        show_reason = any(r.termination_reason for r in rows)
-        if show_reason:
-            reason_w = max(len(r.termination_reason or "-") for r in rows)
-    
-        def _cell(r) -> str:
-            pid = "-" if r.pid is None else str(r.pid)  # process ID, only set while the model is running
-            rc = "-" if r.return_code is None else str(r.return_code)  # exit code of the last run: 0 = success
-            base = (
-                f"{r.model_name:<{model_w}} {r.state:<{state_w}} "
-                f"id={r.model_id:<{id_w}} PID={pid:<{pid_w}} RC={rc:<{rc_w}}"
-            )
-            if show_reason:
-                reason = r.termination_reason or "-"
-                base += f" REASON={reason:<{reason_w}}"
-            return base
-    
-        cells = [_cell(r) for r in rows]
-        cell_w = max(len(c) for c in cells) + 2  # padding between columns
-    
-        term_size = shutil.get_terminal_size(fallback=(120, 40))
-        # Reserve a few lines for summary/timestamp/prompt
-        available_lines = max(term_size.lines - 6, 5)
-        max_cols = max(term_size.columns // cell_w, 1)
-        n_cols = min(max_cols, -(-len(cells) // available_lines))  # ceil division for rows-per-col
-        n_cols = max(n_cols, 1)
-        n_rows_per_col = -(-len(cells) // n_cols)  # ceil
-    
-        # Pad cells list to fill the grid evenly
-        padded = cells + [""] * (n_rows_per_col * n_cols - len(cells))
-    
-        for row_i in range(n_rows_per_col):
-            line_parts = []
-            for col_i in range(n_cols):
-                idx = col_i * n_rows_per_col + row_i
-                line_parts.append(f"{padded[idx]:<{cell_w}}")
-            print("".join(line_parts) + "\033[K", flush=True)
-
-    if refresh_seconds is None:
-        _render_once()
+        try:
+            while True:
+                _clear_output()
+                for line in _build_status_lines(tracker, show_resume_summary):
+                    print(line, flush=True)
+                time.sleep(refresh_seconds)
+        except KeyboardInterrupt:
+            print("\nStopped status refresh.", flush=True)
         return
 
     try:
-        print("\033[?1049h", end="")  # enter alt screen
-        while True:
-            print("\033[H", end="")  # just move cursor home, no need to clear — new content overwrites old
-            _render_once()
-            time.sleep(refresh_seconds)
+        curses.wrapper(_curses_status_loop, tracker, refresh_seconds, show_resume_summary)
     except KeyboardInterrupt:
-        print("\nStopped status refresh.", flush=True)
+        pass
+    print("Stopped status refresh.", flush=True)
+
 
 
