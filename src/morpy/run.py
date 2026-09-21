@@ -100,6 +100,17 @@ def _resolve_run_script(model_dir: Path, command_name: str) -> Path:
         )
     return script
 
+def _find_termination_line(log_path: Path, start_offset: int = 0) -> str | None:
+    """Scan a MESA terminal output file from the end for the last line mentioning termination."""
+    with log_path.open("r", encoding="utf-8", errors="replace") as f:
+        if start_offset > 0:
+            f.seek(start_offset)
+        lines = f.readlines()
+    for line in reversed(lines):
+        if ("termination" in line.lower()) or ("terminate" in line.lower()):
+            return line.strip()
+    return None
+
 
 def _resolve_executable(model_dir: Path, mode: WorkdirMode) -> Path:
     '''Private helper to locate symlink to Fortran executable and check consistency with WorkdirMode.'''
@@ -467,8 +478,10 @@ def wait_for_model(
             if handle.log_start_offset > 0:
                 f.seek(handle.log_start_offset)
             stdout = f.read()
+        termination_reason = _find_termination_line(log_path, handle.log_start_offset)
     else:
         stdout = ""
+        termination_reason = None
     stderr = ""
 
     result = RunResult(
@@ -486,7 +499,7 @@ def wait_for_model(
         stdout=stdout,
         stderr=stderr,
         sync_performed=handle.sync_performed,
-        metadata={"run_id": handle.run_id, "pid": str(handle.pid)},
+        metadata={"run_id": handle.run_id, "pid": str(handle.pid), **({"termination_reason": termination_reason} if termination_reason else {})},
     )
 
     if observer is not None:

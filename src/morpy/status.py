@@ -23,6 +23,7 @@ class ModelStatus:
         model_path: Location of the model's model directory
         backend: Backend used to run this model grid, if part of a grid at all   
         last_error: last found error fot this model, if any
+        termination_reason: termination code/reason, if model finished naturally
     """
     model_id: str
     model_name: str
@@ -36,6 +37,7 @@ class ModelStatus:
     model_path: str | None
     backend: str | None
     last_error: str | None
+    termination_reason: str | None
 
 def _resolve_model_status(
     model_id: str,
@@ -150,6 +152,12 @@ def _resolve_model_status(
         if len(last_error) > 160:
             last_error = last_error[:157] + "..."
 
+    termination_reason = (
+        latest_run.metadata.get("termination_reason")
+        if latest_run is not None
+        else None
+    )
+
     if state in {"running", "queued", "preparing", "restart"}:
         return_code = None
 
@@ -166,6 +174,7 @@ def _resolve_model_status(
         model_path=model_path,
         backend=backend,
         last_error=last_error,
+        termination_reason=termination_reason
     )
 
 def _build_resume_summary(rows: list[ModelStatus]) -> dict[str, int]:
@@ -289,14 +298,22 @@ def print_grid_status(
         id_w = max(len(r.model_id) for r in rows)
         pid_w = max(len("-" if r.pid is None else str(r.pid)) for r in rows)
         rc_w = max(len("-" if r.return_code is None else str(r.return_code)) for r in rows)
+
+        show_reason = any(r.termination_reason for r in rows)
+        if show_reason:
+            reason_w = max(len(r.termination_reason or "-") for r in rows)
     
         def _cell(r) -> str:
             pid = "-" if r.pid is None else str(r.pid)  # process ID, only set while the model is running
             rc = "-" if r.return_code is None else str(r.return_code)  # exit code of the last run: 0 = success
-            return (
+            base = (
                 f"{r.model_name:<{model_w}} {r.state:<{state_w}} "
                 f"id={r.model_id:<{id_w}} PID={pid:<{pid_w}} RC={rc:<{rc_w}}"
             )
+            if show_reason:
+                reason = r.termination_reason or "-"
+                base += f" REASON={reason:<{reason_w}}"
+            return base
     
         cells = [_cell(r) for r in rows]
         cell_w = max(len(c) for c in cells) + 2  # padding between columns
