@@ -220,8 +220,6 @@ __marimo__/
 .vscode/
 
 # Explicitly include:
-!docs/build/
-!docs/build/**
 !docs/examples/**
 docs/examples/**/.ipynb_checkpoints/
 
@@ -237,9 +235,11 @@ notes.md
 
 # docs output
 docs/examples/example_output/
+docs/build/
 
 # misc
 .virtual_documents
 
 # macos
 .DS_Store
+
