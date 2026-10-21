@@ -28,6 +28,7 @@ from .utils import (
     python_value_to_inlist_value, 
     fortran_value_to_python_value
 )
+from .log import logger
 
 
 # Custom type for the MESA defaults namelist files
@@ -498,14 +499,10 @@ class Inlist:
         Returns:
             True if an option was removed, False otherwise.
         """
-        if not self._remove_option(name):
-            warnings.warn(
-                f"Option '{name}' is not present in this inlist; nothing was removed.",
-                UserWarning,
-                stacklevel=2,
-            )
-            return False
-        return True
+        removed = self._remove_option(name)
+        if not removed:
+            logger.info(f"Option '{name}' is not present in the inlist '{self.name}'; nothing was removed.")
+        return removed
     
     def _option_snapshot(self, *, ignore_default_valued: bool = False) -> dict[str, tuple[MesaNameList, str]]:
         """Build a normalized option snapshot for semantic comparisons between inlists.
@@ -602,11 +599,7 @@ class Inlist:
             
         empty_drift = self.empty_namelists != parsed.empty_namelists
         if not changed and empty_drift:
-            warnings.warn(
-                "Only empty known namelist blocks changed on disk; refreshing from source.",
-                UserWarning,
-                stacklevel=2,
-            )
+            # Only changes in empty namelist blocks were detected. Nothing to worry about.
             self.options = parsed.options
             self.additional_options = parsed.additional_options
             self.empty_namelists = set(parsed.empty_namelists)

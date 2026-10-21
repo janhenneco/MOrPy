@@ -48,7 +48,7 @@ def test_parse_inlist_strict_mode_raises_on_unknown_option(tmp_path):
         )
 
 
-def test_parse_inlist_allow_mode_warns_and_keeps_unknown_option(tmp_path):
+def test_parse_inlist_allow_mode_logs_and_keeps_unknown_option(tmp_path, morpy_caplog):
     mesa_dir = make_fake_mesa_dir(tmp_path)
     config = mrun.MesaConfig.setup(mesa_dir=mesa_dir)
     defaults = make_defaults(config)
@@ -56,19 +56,25 @@ def test_parse_inlist_allow_mode_warns_and_keeps_unknown_option(tmp_path):
     inlist_path = tmp_path / "inlist"
     write_inlist_with_unknown_option(inlist_path)
 
-    with pytest.warns(RuntimeWarning, match="Unknown inlist options found"):
-        inlist = mrun.parse_inlist(
-            source_path=inlist_path,
-            config=config,
-            default_options=defaults,
-            allow_unknown_options=True,
-        )
+    inlist = mrun.parse_inlist(
+        source_path=inlist_path,
+        config=config,
+        default_options=defaults,
+        allow_unknown_options=True,
+    )
 
+    assert any(
+        "At least one unknown option" in record.message
+        and "definitely_not_a_real_option" in record.message
+        for record in morpy_caplog.records
+    )
     assert "initial_mass" in inlist.options
     assert "definitely_not_a_real_option" in inlist.options
 
 
-def test_parse_inlist_case_insensitively_canonicalizes_known_options(tmp_path):
+def test_parse_inlist_case_insensitively_canonicalizes_known_options(
+    tmp_path, morpy_caplog
+):
     mesa_dir = make_fake_mesa_dir(tmp_path)
     config = mrun.MesaConfig.setup(mesa_dir=mesa_dir)
     defaults = make_defaults(config)
@@ -83,14 +89,18 @@ def test_parse_inlist_case_insensitively_canonicalizes_known_options(tmp_path):
         encoding="utf-8",
     )
 
-    with pytest.warns(RuntimeWarning, match="Unknown inlist options found"):
-        inlist = mrun.parse_inlist(
-            source_path=inlist_path,
-            config=config,
-            default_options=defaults,
-            allow_unknown_options=True,
-        )
+    inlist = mrun.parse_inlist(
+        source_path=inlist_path,
+        config=config,
+        default_options=defaults,
+        allow_unknown_options=True,
+    )
 
+    assert any(
+        "At least one unknown option" in record.message
+        and "UNKNOWN_Option" in record.message
+        for record in morpy_caplog.records
+    )
     assert "initial_mass" in inlist.options
     assert "overshoot_f(2)" in inlist.options
     assert "UNKNOWN_Option" in inlist.options
@@ -116,7 +126,7 @@ def test_import_inlists_from_dir_strict_mode_raises(tmp_path):
         )
 
 
-def test_import_inlists_from_dir_allow_mode_warns_and_imports(tmp_path):
+def test_import_inlists_from_dir_allow_mode_logs_and_imports(tmp_path, morpy_caplog):
     mesa_dir = make_fake_mesa_dir(tmp_path)
     config = mrun.MesaConfig.setup(mesa_dir=mesa_dir)
     defaults = make_defaults(config)
@@ -127,14 +137,18 @@ def test_import_inlists_from_dir_allow_mode_warns_and_imports(tmp_path):
 
     model = mrun.Model.empty(name="m_allow")
 
-    with pytest.warns(RuntimeWarning, match="Unknown inlist options found"):
-        mrun.import_inlists_from_dir(
-            model=model,
-            source_dir=inlist_dir,
-            default_options=defaults,
-            config=config,
-            allow_unknown_options=True,
-        )
+    mrun.import_inlists_from_dir(
+        model=model,
+        source_dir=inlist_dir,
+        default_options=defaults,
+        config=config,
+        allow_unknown_options=True,
+    )
 
+    assert any(
+        "At least one unknown option" in record.message
+        and "definitely_not_a_real_option" in record.message
+        for record in morpy_caplog.records
+    )
     assert "inlist_1" in model.inlists
     assert "definitely_not_a_real_option" in model.inlists["inlist_1"].options

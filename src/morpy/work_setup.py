@@ -41,7 +41,7 @@ def import_inlists_from_dir(model: Model,
         source_dir: path to the directory in which the function will look for inlists
         config: MesaConfig object
         default_options: DefaultsOptions object
-        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
+        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults files. 
             If False, raise an exception when inlist options are found that re not found in the defaults files.
     Returns:
         None

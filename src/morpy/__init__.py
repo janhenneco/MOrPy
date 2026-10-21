@@ -49,6 +49,7 @@ from .repository import(SQLiteRunRepository,
                         RepositoryObserver, 
                         Tracker)
 from .status import(print_grid_status)
+from .log import (print_info_msgs)
 
 __all__ = [
     "MesaConfig",
@@ -96,5 +97,6 @@ __all__ = [
     "cancel_model",
     "find_active_model_id_by_pid",
     "RestartPolicy",
-    "prepare_grid"
+    "prepare_grid",
+    "print_info_msgs"
 ]

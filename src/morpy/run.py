@@ -232,7 +232,7 @@ def launch_model(
         default_options: DefaultOptions object. Should be passed if sync_before_run == True.
         config: MesaConfig object. Will be reconstructed on the fly 
             if not passed.
-        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults
+        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults
             files when syncing Model.inlists with inlists in the model directory. If False, raise an exception 
             when inlist options are found that are not found in the defaults files.
         command_name: Name of the "rn" script. Can be used for restarts by specifying "re"
@@ -541,7 +541,7 @@ def run_model(
         default_options: DefaultOptions object. Should be passed if sync_before_run == True.
         config: MesaConfig object. Will be reconstructed on the fly 
             if not passed.
-        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults
+        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults
             files when syncing Model.inlists with inlists in the model directory. If False, raise an exception 
             when inlist options are found that are not found in the defaults files.
         command_name: Name of the "rn" script. Can be used for restarts by specifying "re"
