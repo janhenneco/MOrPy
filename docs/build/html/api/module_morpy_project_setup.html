@@ -203,6 +203,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
@@ -268,15 +269,17 @@ including required build/run scripts and optional columns-list assets.</p>
 be used by create_modeldir, compile, and run workflows.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">morpy.project_setup.</span></span><span class="sig-name descname"><span class="pre">create_projectdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_columns_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/project_setup.html#create_projectdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">morpy.project_setup.</span></span><span class="sig-name descname"><span class="pre">create_projectdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_columns_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_files_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/project_setup.html#create_projectdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Create a MESA project directory from star/work or binary/work.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – Path to the project directory to create.</p></li>
 <li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>'star'</em><em>, </em><em>'binary'</em><em>]</em>) – “star” or “binary”</p></li>
-<li><p><strong>include_columns_files</strong> (<em>bool</em>) – Add applicable *_columns.list files to the project directory.</p></li>
+<li><p><strong>include_columns_files</strong> (<em>bool</em>) – Add applicable <a href="#id1"><span class="problematic" id="id2">*</span></a>_columns.list files to the project directory.</p></li>
 <li><p><strong>src_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Use this src folder instead of the template src folder.</p></li>
+<li><p><strong>columns_files_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Copy all <a href="#id3"><span class="problematic" id="id4">*</span></a>_columns.list files from this folder instead, overriding
+include_columns_files and the template defaults.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig</p></li>
 </ul>
 </dd>
@@ -338,6 +341,12 @@ only the new ones.</p>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_has_run_binary_extras</span></code></p></td>
 <td><p>Return True if src contains a file named run_binary_extras, ignoring extension.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_refresh_columns_files</span></code></p></td>
+<td><p>Overwrite an existing project's <a href="#id5"><span class="problematic" id="id6">*</span></a>_columns.list files from the resolved source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_refresh_src</span></code></p></td>
+<td><p>Overwrite an existing project's src with src_to_copy, atomically with rollback on failure.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_existing_projectdir</span></code></p></td>
 <td><p>Private helper function to validate if project directory creation was successful</p></td>

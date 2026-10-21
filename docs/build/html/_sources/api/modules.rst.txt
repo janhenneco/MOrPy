@@ -10,6 +10,7 @@ API (Modules)
    module_morpy_config
    module_morpy_errors
    module_morpy_grid_run
+   module_morpy_log
    module_morpy_model
    module_morpy_options
    module_morpy_parser

@@ -20,5 +20,6 @@ Functions
    :nosignatures:
 
    _build_tracker
+   main_cancel_model
    main_status
    main_stop

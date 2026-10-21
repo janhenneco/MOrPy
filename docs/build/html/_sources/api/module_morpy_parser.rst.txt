@@ -20,6 +20,7 @@ Functions
    :nosignatures:
 
    _base_option_name
+   _is_known_namelist
    _resolve_defaults_option
    build_defaults_options
    build_defaults_options_from_config

@@ -202,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_parser.html">morpy.parser module</a></li>
@@ -349,6 +350,17 @@
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">script</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_termination_line</span><span class="p">(</span><span class="n">log_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Scan a MESA terminal output file from the end for the last line mentioning termination."""</span>
+    <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">start_offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start_offset</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">"termination"</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">"terminate"</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_executable</span><span class="p">(</span><span class="n">model_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">'''Private helper to locate symlink to Fortran executable and check consistency with WorkdirMode.'''</span>
@@ -475,7 +487,7 @@
 <span class="sd">        default_options: DefaultOptions object. Should be passed if sync_before_run == True.</span>
 <span class="sd">        config: MesaConfig object. Will be reconstructed on the fly </span>
 <span class="sd">            if not passed.</span>
-<span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
+<span class="sd">        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
 <span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>
@@ -724,8 +736,10 @@
             <span class="k">if</span> <span class="n">handle</span><span class="o">.</span><span class="n">log_start_offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">log_start_offset</span><span class="p">)</span>
             <span class="n">stdout</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">termination_reason</span> <span class="o">=</span> <span class="n">_find_termination_line</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="n">handle</span><span class="o">.</span><span class="n">log_start_offset</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stdout</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="n">termination_reason</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">stderr</span> <span class="o">=</span> <span class="s2">""</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">RunResult</span><span class="p">(</span>
@@ -743,7 +757,7 @@
         <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span>
         <span class="n">stderr</span><span class="o">=</span><span class="n">stderr</span><span class="p">,</span>
         <span class="n">sync_performed</span><span class="o">=</span><span class="n">handle</span><span class="o">.</span><span class="n">sync_performed</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">)},</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">pid</span><span class="p">),</span> <span class="o">**</span><span class="p">({</span><span class="s2">"termination_reason"</span><span class="p">:</span> <span class="n">termination_reason</span><span class="p">}</span> <span class="k">if</span> <span class="n">termination_reason</span> <span class="k">else</span> <span class="p">{})},</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">observer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -788,7 +802,7 @@
 <span class="sd">        default_options: DefaultOptions object. Should be passed if sync_before_run == True.</span>
 <span class="sd">        config: MesaConfig object. Will be reconstructed on the fly </span>
 <span class="sd">            if not passed.</span>
-<span class="sd">        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults</span>
+<span class="sd">        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults</span>
 <span class="sd">            files when syncing Model.inlists with inlists in the model directory. If False, raise an exception </span>
 <span class="sd">            when inlist options are found that are not found in the defaults files.</span>
 <span class="sd">        command_name: Name of the "rn" script. Can be used for restarts by specifying "re"</span>

@@ -26,4 +26,5 @@ Functions
 .. autosummary::
    :nosignatures:
 
+   _canonical_option_name
    preview
