@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "morpy"
 authors = [{ name = "Jan Henneco", email = "jan.henneco@gmail.com" }]
-version = "0.1.0"
+version = "0.2.0"
 description = "Python interface the Modules for Experiments in Stellar Astrophysics code."
 readme = "README.md"
 requires-python = ">=3.11"

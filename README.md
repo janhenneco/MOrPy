@@ -170,6 +170,8 @@ The `morpy` package's main modules are:
 
 - `cli.py`: CLI functions for status and grid termination.
 
+- `log.py`: Basic setup for log messages. Also implements the ability do disable them.
+
 ## Issues
 
 Please use the repository's [Issues](https://github.com/janhenneco/MOrPy/issues) functionality to ask questions, report bugs, or make feature requests.
@@ -177,7 +179,7 @@ Please use the repository's [Issues](https://github.com/janhenneco/MOrPy/issues)
 ## Acknowledgements
 The general idea and many of the concepts of a `Python`-based tool to run grids of `MESA` models using the `mpi4py` stem from the `mesa-runner` in-house code that was developed at the Heidelberg Institute for Theoretical Physics (HITS, Germany) by Fabian Schneider and later maintained by Fabian Schneider and myself. 
 
-A very big thank you to all the people who tested out `MOrPy` and provided valuable feedback: *... list of testers ...*.
+A very big thank you to all the people who tested `MOrPy` so far and provided valuable feedback: Eva Laplace, Inmaculada Moyano, Sofia Mesini, Vazsony Varga, Lorens Niehof, Flore Poelmans. 
 
 I gratefully acknowledge UK Research and Innovation (UKRI) in the form of a Frontier Research grant under the UK government’s ERC Horizon Europe funding guarantee (SYMPHONY; PI Bowman; grant number: EP/Y031059/1).
 
