@@ -14,7 +14,6 @@ unrecognized namelist blocks for round-trip safety.
 """
 
 from pathlib import Path
-import warnings
 from .config import MesaConfig, MesaVersion
 from .options import (Inlist, 
                       DefaultsOptions, 
@@ -23,6 +22,8 @@ from .options import (Inlist,
                       UnclassifiedNamelist, 
                       MesaNameList,
                       _canonical_option_name)
+from .log import logger
+from typing import get_args, TypeGuard
 
 # MESA version at which kap and eos get separate defaults namelists
 KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
@@ -30,15 +31,13 @@ KAP_EOS_SPLIT_VERSION = MesaVersion.parse_mesa_version("r15140")
 # MESA version at which separate pgbinary defaults inlist and the pgbinary block become a thing
 PGBINARY_SPLIT_VERSION = MesaVersion.parse_mesa_version("r23.05.1")
 
-# All MESA namelist blocks that the code can currently handle
-KNOWN_NAMELISTS = {"controls",
-                   "star_job",
-                   "binary_controls",
-                   "binary_job",
-                   "kap",
-                   "eos",
-                   "pgstar",
-                   "pgbinary"}
+# All MESA namelist blocks that the code can currently handle.
+# Get the known namelists from the MesaNameList type definition
+# to avoid drift.
+KNOWN_NAMELISTS: frozenset[str] = frozenset(get_args(MesaNameList))
+
+def _is_known_namelist(name: str) -> TypeGuard[MesaNameList]:
+    return name in KNOWN_NAMELISTS
 
 def _base_option_name(name: str) -> str:
     return name.partition("(")[0].strip()
@@ -131,11 +130,8 @@ def build_defaults_options(defaults_dir: Path | str, config: MesaConfig) -> Defa
             config=config,
         )
     except FileNotFoundError:
-        warnings.warn(
-            "pgbinary.defaults not found for this MESA version; pgbinary defaults were not loaded.",
-            RuntimeWarning,
-            stacklevel=2,
-        )
+        logger.info(f"The MESA version you're using ({config.mesa_version.version_name}), does not have a separate default PGBINARY namelist. "
+                    f"No 'pgbinary' DefaultsFile was created, use the 'pgstar' DefaultsFile instead.")
 
     kap: DefaultsFile | None = None
     eos: DefaultsFile | None = None
@@ -285,7 +281,7 @@ def parse_inlist(source_path: Path | str,
             of the parsed inlist options. Will be created automatically based on MESA installation directory 
             if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
             provide it explicitly as an argument.
-        allow_unknown_options: If True, give a warning about inlist options that are not found in the defaults files. 
+        allow_unknown_options: If True, inform the user about inlist options that are not found in the defaults files. 
             If False, raise an exception when inlist options are found that re not found in the defaults files.
     Returns:
         Inlist object with MesaOption instances.
@@ -345,7 +341,7 @@ def parse_inlist(source_path: Path | str,
                 normalised_block_type = potential_block_type
             
             # Check if we're dealing with a regular namelist or an unrecognised namelist
-            if normalised_block_type in KNOWN_NAMELISTS:
+            if _is_known_namelist(normalised_block_type):
                 # Normnal behaviour for regular namelist
                 block_type = normalised_block_type
                 defaults_file = default_options[block_type]
@@ -424,11 +420,14 @@ def parse_inlist(source_path: Path | str,
             f"{namelist}: {', '.join(sorted(names))}"
             for namelist, names in sorted(unknown_options.items())
         )
-        warnings.warn(
-            f"Unknown inlist options found in {source_path} for loaded MESA defaults: {details}",
-            RuntimeWarning,
-            stacklevel=2,
-        )
+        logger.info(f"At least one unknown option was detected and added to the Inlist object '{il.name}'. "
+                    f"If this was not your intention, set 'allow_unknown_options = False' (default) to avoid this. "
+                    f"Details: {details}")
+        # warnings.warn(
+        #     f"Unknown inlist options found in {source_path} for loaded MESA defaults: {details}",
+        #     RuntimeWarning,
+        #     stacklevel=2,
+        # )
 
     return il
 

@@ -202,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_parser.html">morpy.parser module</a></li>
@@ -963,6 +964,100 @@
         <span class="s2">"failed_model_ids"</span><span class="p">:</span> <span class="n">failed_model_ids</span><span class="p">,</span>
         <span class="s2">"errors"</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span>
     <span class="p">}</span>
+
+<div class="viewcode-block" id="find_active_model_id_by_pid">
+<a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.find_active_model_id_by_pid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_active_model_id_by_pid</span><span class="p">(</span><span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span><span class="p">,</span> <span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the model_id of the active (running/preparing/queued) model currently using pid, if any."""</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">list_model_rows</span><span class="p">():</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"running"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">}:</span>
+            <span class="k">continue</span>
+        <span class="n">latest_run</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_latest_run</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">pid_text</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pid_text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">pid_text</span><span class="p">)</span> <span class="o">==</span> <span class="n">pid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">row</span><span class="o">.</span><span class="n">model_id</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="cancel_model">
+<a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.cancel_model">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cancel_model</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="n">Tracker</span><span class="p">,</span>
+    <span class="n">handle</span><span class="p">:</span> <span class="n">GridRunHandle</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">grace_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Cancel a single model by model_id: terminate its process and record cancellation in the DB.</span>
+
+<span class="sd">    Behavior:</span>
+<span class="sd">        - If `handle` is provided and the model is still tracked live in that</span>
+<span class="sd">          in-process grid session, terminates it cooperatively.</span>
+<span class="sd">        - Otherwise falls back to DB-recovery mode: reads the PID from the model's</span>
+<span class="sd">          latest run row, terminates the process (group), and records a</span>
+<span class="sd">          "cancelled" state transition plus a terminal RunResult.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This only cancels the single given model_id, unlike stop_grid() which</span>
+<span class="sd">        targets every active model tracked by the given tracker/handle.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">handle</span><span class="o">.</span><span class="n">_running_lock</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">_running_processes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">entry</span>
+            <span class="n">terminate_run_process</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">grace_seconds</span><span class="o">=</span><span class="n">grace_seconds</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">"model_id"</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span> <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"live"</span><span class="p">,</span> <span class="s2">"terminated"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_model_row</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No model found with model_id '</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">state</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"running"</span><span class="p">,</span> <span class="s2">"preparing"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">}:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"model_id"</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span>
+            <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"recovery"</span><span class="p">,</span>
+            <span class="s2">"terminated"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">"reason"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"model is not active (state=</span><span class="si">{</span><span class="n">state</span><span class="si">!r}</span><span class="s2">)"</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">latest_run</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">repo</span><span class="o">.</span><span class="n">get_latest_run</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">latest_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No run record found for model_id '</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">'; cannot resolve PID."</span><span class="p">)</span>
+
+    <span class="n">pid_text</span> <span class="o">=</span> <span class="n">latest_run</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pid_text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No PID recorded for model_id '</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+
+    <span class="n">pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pid_text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_pid_exists</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+        <span class="n">_mark_recovered_cancelled</span><span class="p">(</span>
+            <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
+            <span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">,</span>
+            <span class="n">from_state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+            <span class="n">latest_run</span><span class="o">=</span><span class="n">latest_run</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="s2">"Process already exited; marked cancelled on recovery"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"model_id"</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span> <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"recovery"</span><span class="p">,</span> <span class="s2">"terminated"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"already_exited"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="n">pid</span><span class="p">}</span>
+
+    <span class="n">ok</span> <span class="o">=</span> <span class="n">_terminate_pid_tree</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">grace_seconds</span><span class="o">=</span><span class="n">grace_seconds</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"model_id"</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span> <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"recovery"</span><span class="p">,</span> <span class="s2">"terminated"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="n">pid</span><span class="p">}</span>
+
+    <span class="n">_mark_recovered_cancelled</span><span class="p">(</span>
+        <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span>
+        <span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">,</span>
+        <span class="n">from_state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+        <span class="n">latest_run</span><span class="o">=</span><span class="n">latest_run</span><span class="p">,</span>
+        <span class="n">reason</span><span class="o">=</span><span class="s2">"Cancelled via cancel_model()"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"model_id"</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span> <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"recovery"</span><span class="p">,</span> <span class="s2">"terminated"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"pid"</span><span class="p">:</span> <span class="n">pid</span><span class="p">}</span></div>
+
 
 <div class="viewcode-block" id="run_models_local">
 <a class="viewcode-back" href="../../api/module_morpy_grid_run.html#morpy.run_models_local">[docs]</a>

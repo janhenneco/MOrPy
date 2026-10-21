@@ -203,6 +203,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
@@ -2588,6 +2589,41 @@ session) and the observer object (RunObserver) that registers state changes.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">cancel_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grace_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/grid_run.html#cancel_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cancel a single model by model_id: terminate its process and record cancellation in the DB.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>If <cite>handle</cite> is provided and the model is still tracked live in that
+in-process grid session, terminates it cooperatively.</p></li>
+<li><p>Otherwise falls back to DB-recovery mode: reads the PID from the model’s
+latest run row, terminates the process (group), and records a
+“cancelled” state transition plus a terminal RunResult.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This only cancels the single given model_id, unlike stop_grid() which
+targets every active model tracked by the given tracker/handle.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>tracker</strong> (<em>Tracker</em>)</p></li>
+<li><p><strong>handle</strong> (<em>GridRunHandle</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>force</strong> (<em>bool</em>)</p></li>
+<li><p><strong>grace_seconds</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, object]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">compile_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_rebuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/compile.html#compile_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compile a MESA project directory.</p>
 <dl class="field-list simple">
@@ -2653,15 +2689,17 @@ if it exists.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">create_projectdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_columns_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/project_setup.html#create_projectdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">create_projectdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">projectdir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_columns_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_files_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/project_setup.html#create_projectdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Create a MESA project directory from star/work or binary/work.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>projectdir_path</strong> (<em>Path</em><em> | </em><em>str</em>) – Path to the project directory to create.</p></li>
 <li><p><strong>mode</strong> (<em>Literal</em><em>[</em><em>'star'</em><em>, </em><em>'binary'</em><em>]</em>) – “star” or “binary”</p></li>
-<li><p><strong>include_columns_files</strong> (<em>bool</em>) – Add applicable *_columns.list files to the project directory.</p></li>
+<li><p><strong>include_columns_files</strong> (<em>bool</em>) – Add applicable <a href="#id1"><span class="problematic" id="id2">*</span></a>_columns.list files to the project directory.</p></li>
 <li><p><strong>src_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Use this src folder instead of the template src folder.</p></li>
+<li><p><strong>columns_files_path</strong> (<em>Path</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Copy all <a href="#id3"><span class="problematic" id="id4">*</span></a>_columns.list files from this folder instead, overriding
+include_columns_files and the template defaults.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig</p></li>
 </ul>
 </dd>
@@ -2730,6 +2768,23 @@ sharing it.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">find_active_model_id_by_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/grid_run.html#find_active_model_id_by_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the model_id of the active (running/preparing/queued) model currently using pid, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracker</strong> (<em>Tracker</em>)</p></li>
+<li><p><strong>pid</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">fortran_float_string_to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/utils.html#fortran_float_string_to_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2765,7 +2820,7 @@ sharing it.</p></li>
 <li><p><strong>source_dir</strong> (<em>Path</em><em> | </em><em>str</em>) – path to the directory in which the function will look for inlists</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object</p></li>
 <li><p><strong>default_options</strong> (<em>DefaultsOptions</em>) – DefaultsOptions object</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults files.
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults files.
 If False, raise an exception when inlist options are found that re not found in the defaults files.</p></li>
 </ul>
 </dd>
@@ -2831,7 +2886,7 @@ the ground truth.</p></li>
 <li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
 if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults
 files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
 when inlist options are found that are not found in the defaults files.</p></li>
 <li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”
@@ -2897,7 +2952,7 @@ to a new custom name by passing it to new_name.</p></li>
 of the parsed inlist options. Will be created automatically based on MESA installation directory
 if not provided my user. When multiple inlists are read, it is advisable to build this instance once and
 provide it explicitly as an argument.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults files.
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults files.
 If False, raise an exception when inlist options are found that re not found in the defaults files.</p></li>
 </ul>
 </dd>
@@ -2976,7 +3031,10 @@ MesaOption.description attribute</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tracker</strong> (<em>Tracker</em>) – Tracker object with Model repo and live tracker.</p></li>
 <li><p><strong>refresh_seconds</strong> (<em>float</em><em> | </em><em>None</em>) – If None, print once (snapshot). If &gt;0 , refresh
-with specified interval</p></li>
+with specified interval. In an interactive terminal (notebook=False)
+this opens a scrollable curses view: Up/Down/j/k to scroll one line,
+PageUp/PageDown for a page, g/Home and G/End to jump to top/bottom,
+q/Esc to quit.</p></li>
 <li><p><strong>notebook</strong> (<em>bool</em>) – Set to True for clear screen functionality in Jupyter notebooks</p></li>
 <li><p><strong>clear_screen</strong> (<em>bool</em>) – If True (and not notebook), clear terminal between refreshes.</p></li>
 <li><p><strong>show_resume_summary</strong> (<em>bool</em>)</p></li>
@@ -2986,6 +3044,12 @@ with specified interval</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">morpy.</span></span><span class="sig-name descname"><span class="pre">print_info_msgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/log.html#print_info_msgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Function that allows user to enable or disable info messages from MOrPy.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -3071,7 +3135,7 @@ the ground truth.</p></li>
 <li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
 if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults
 files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
 when inlist options are found that are not found in the defaults files.</p></li>
 <li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”

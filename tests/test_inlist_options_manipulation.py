@@ -27,14 +27,17 @@ def defaults_r24081(tmp_path):
 
 
 @pytest.fixture
-def defaults_r12778(tmp_path):
+def defaults_r12778(tmp_path, morpy_caplog):
     version_name = "r12778"
     config = make_config(tmp_path, version_name)
-    with pytest.warns(RuntimeWarning, match="pgbinary.defaults"):
-        defaults = mrun.build_defaults_options(
-            defaults_dir=DATA_DIR / version_name / "defaults",
-            config=config,
-        )
+    defaults = mrun.build_defaults_options(
+        defaults_dir=DATA_DIR / version_name / "defaults",
+        config=config,
+    )
+    assert any(
+        "does not have a separate default PGBINARY namelist" in record.message
+        for record in morpy_caplog.records
+    )
     return config, defaults
 
 
@@ -341,12 +344,11 @@ def test_sync_with_source_detects_empty_namelist_drift(tmp_path, defaults_r24081
         encoding="utf-8",
     )
 
-    with pytest.warns(UserWarning, match="Only empty known namelist blocks changed on disk"):
-        changed = inlist.sync_with_source(
-            default_options=defaults,
-            config=config,
-            on_difference="decouple",
-        )
+    changed = inlist.sync_with_source(
+        default_options=defaults,
+        config=config,
+        on_difference="decouple",
+    )
 
     assert changed is True
     assert inlist.source_path == source

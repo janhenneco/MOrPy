@@ -202,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/module_morpy_parser.html">morpy.parser module</a></li>
@@ -308,6 +309,45 @@
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_refresh_src</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">src_to_copy</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Overwrite an existing project's src with src_to_copy, atomically with rollback on failure."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">src_to_copy</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"src directory not found: </span><span class="si">{</span><span class="n">src_to_copy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">tmp_src</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".src.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src_to_copy</span><span class="p">,</span> <span class="n">tmp_src</span><span class="p">)</span>
+    <span class="n">old_src</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="s2">"src"</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".src.bak-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">old_src</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">backup</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tmp_src</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_src</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">backup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_src</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">backup</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_refresh_columns_files</span><span class="p">(</span>
+    <span class="n">projectdir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">,</span>
+    <span class="n">include_columns_files</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">custom_columns_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">defaults_template</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">star_defaults_template</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Overwrite an existing project's *_columns.list files from the resolved source."""</span>
+    <span class="k">if</span> <span class="n">custom_columns_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">custom_columns_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*_columns.list"</span><span class="p">):</span>
+            <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">src</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">include_columns_files</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_columns_files_for_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">star_defaults_template</span> <span class="o">/</span> <span class="n">name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"history_columns.list"</span><span class="p">,</span> <span class="s2">"profile_columns.list"</span><span class="p">)</span>
+                <span class="k">else</span> <span class="n">defaults_template</span> <span class="o">/</span> <span class="n">name</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">projectdir_path</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span>
+
 <div class="viewcode-block" id="create_projectdir">
 <a class="viewcode-back" href="../../api/module_morpy_project_setup.html#morpy.create_projectdir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_projectdir</span><span class="p">(</span>
@@ -315,7 +355,8 @@
     <span class="n">mode</span><span class="p">:</span> <span class="n">WorkdirMode</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">include_columns_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-     <span class="n">src_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">src_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">columns_files_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">MesaConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Create a MESA project directory from star/work or binary/work.</span>
@@ -323,8 +364,10 @@
 <span class="sd">    Args:</span>
 <span class="sd">        projectdir_path: Path to the project directory to create.</span>
 <span class="sd">        mode: "star" or "binary"</span>
-<span class="sd">        include_columns_files: Add applicable \*_columns.list files to the project directory.</span>
+<span class="sd">        include_columns_files: Add applicable *_columns.list files to the project directory.</span>
 <span class="sd">        src_path: Use this src folder instead of the template src folder.</span>
+<span class="sd">        columns_files_path: Copy all *_columns.list files from this folder instead, overriding</span>
+<span class="sd">            include_columns_files and the template defaults.</span>
 <span class="sd">        config: MesaConfig</span>
 
 <span class="sd">    Returns:</span>
@@ -345,18 +388,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">work_template</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Template work directory does not exist: </span><span class="si">{</span><span class="n">work_template</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="c1"># Idempotent path: existing directory is validated then returned.</span>
-    <span class="k">if</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Cannot create project directory because path exists and is not a directory: "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-        <span class="n">_validate_existing_projectdir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">projectdir_path</span>
-
-    <span class="n">projectdir_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
     <span class="n">custom_src</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">src_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">custom_src</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_path</span><span class="p">)</span>
@@ -368,6 +399,29 @@
                 <span class="s2">"Binary mode with custom src requires a run_binary_extras file "</span>
                 <span class="s2">"in the provided src directory."</span>
             <span class="p">)</span>
+
+    <span class="n">custom_columns_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">columns_files_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">custom_columns_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">columns_files_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">custom_columns_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Provided columns_files_path is not a directory: </span><span class="si">{</span><span class="n">custom_columns_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># Existing directory: validate scaffold, then refresh src/columns files from the supplied sources.</span>
+    <span class="k">if</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Cannot create project directory because path exists and is not a directory: "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">projectdir_path</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="n">_validate_existing_projectdir</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">)</span>
+        <span class="n">_refresh_src</span><span class="p">(</span><span class="n">projectdir_path</span><span class="p">,</span> <span class="n">custom_src</span> <span class="k">if</span> <span class="n">custom_src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">work_template</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">))</span>
+        <span class="n">_refresh_columns_files</span><span class="p">(</span>
+            <span class="n">projectdir_path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">include_columns_files</span><span class="p">,</span>
+            <span class="n">custom_columns_dir</span><span class="p">,</span> <span class="n">defaults_template</span><span class="p">,</span> <span class="n">star_defaults_template</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">projectdir_path</span>
+
+    <span class="n">projectdir_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">tmp_dir</span> <span class="o">=</span> <span class="n">projectdir_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">projectdir_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.tmp-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">committed</span> <span class="o">=</span> <span class="kc">False</span>
@@ -392,8 +446,11 @@
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"src directory not found: </span><span class="si">{</span><span class="n">src_to_copy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src_to_copy</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">)</span>
 
-        <span class="c1"># Optional assets</span>
-        <span class="k">if</span> <span class="n">include_columns_files</span><span class="p">:</span>
+        <span class="c1"># Optional assets: an explicit columns_files_path overrides include_columns_files.</span>
+        <span class="k">if</span> <span class="n">custom_columns_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">custom_columns_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*_columns.list"</span><span class="p">):</span>
+                <span class="n">_copy_entry</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tmp_dir</span> <span class="o">/</span> <span class="n">src</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">include_columns_files</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_columns_files_for_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"history_columns.list"</span><span class="p">,</span> <span class="s2">"profile_columns.list"</span><span class="p">):</span>
                     <span class="n">src</span> <span class="o">=</span> <span class="n">star_defaults_template</span> <span class="o">/</span> <span class="n">name</span>

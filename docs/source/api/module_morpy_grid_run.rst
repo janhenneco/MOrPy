@@ -48,6 +48,8 @@ Functions
    _summarize
    _terminate_pid_tree
    _wait_pid_exit
+   cancel_model
+   find_active_model_id_by_pid
    launch_grid
    run_grid
    run_models_local

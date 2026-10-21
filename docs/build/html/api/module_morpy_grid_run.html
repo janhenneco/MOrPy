@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="morpy.model module" href="module_morpy_model.html"><link rel="prev" title="morpy.errors module" href="module_morpy_errors.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="morpy.log module" href="module_morpy_log.html"><link rel="prev" title="morpy.errors module" href="module_morpy_errors.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>morpy.grid_run module - MOrPy Documentation</title>
@@ -203,6 +203,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
@@ -589,6 +590,58 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">morpy.grid_run.</span></span><span class="sig-name descname"><span class="pre">cancel_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grace_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/grid_run.html#cancel_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cancel a single model by model_id: terminate its process and record cancellation in the DB.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>If <cite>handle</cite> is provided and the model is still tracked live in that
+in-process grid session, terminates it cooperatively.</p></li>
+<li><p>Otherwise falls back to DB-recovery mode: reads the PID from the model’s
+latest run row, terminates the process (group), and records a
+“cancelled” state transition plus a terminal RunResult.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This only cancels the single given model_id, unlike stop_grid() which
+targets every active model tracked by the given tracker/handle.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>tracker</strong> (<em>Tracker</em>)</p></li>
+<li><p><strong>handle</strong> (<em>GridRunHandle</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>force</strong> (<em>bool</em>)</p></li>
+<li><p><strong>grace_seconds</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, object]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">morpy.grid_run.</span></span><span class="sig-name descname"><span class="pre">find_active_model_id_by_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/grid_run.html#find_active_model_id_by_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the model_id of the active (running/preparing/queued) model currently using pid, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracker</strong> (<em>Tracker</em>)</p></li>
+<li><p><strong>pid</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">morpy.grid_run.</span></span><span class="sig-name descname"><span class="pre">launch_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fifo'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_before_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unknown_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/grid_run.html#launch_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Launch a grid run in the background and return immediately.</p>
 <dl class="field-list simple">
@@ -887,6 +940,12 @@ repository recovery targets all active models in that DB.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_wait_pid_exit</span></code></p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancel_model</span></code></p></td>
+<td><p>Cancel a single model by model_id: terminate its process and record cancellation in the DB.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_active_model_id_by_pid</span></code></p></td>
+<td><p>Return the model_id of the active (running/preparing/queued) model currently using pid, if any.</p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_grid</span></code></p></td>
 <td><p>Launch a grid run in the background and return immediately.</p></td>
 </tr>
@@ -916,12 +975,12 @@ repository recovery targets all active models in that DB.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="module_morpy_model.html">
+          <a class="next-page" href="module_morpy_log.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">morpy.model module</div>
+                <div class="title">morpy.log module</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

@@ -203,6 +203,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
@@ -264,7 +265,7 @@
 <p>Status read models backed by repository data plus optional live process map.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.status.</span></span><span class="sig-name descname"><span class="pre">ModelStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">started_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finished_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/status.html#ModelStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">morpy.status.</span></span><span class="sig-name descname"><span class="pre">ModelStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">started_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finished_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">termination_reason</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/morpy/status.html#ModelStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Instance that holds run information about one model.</p>
 <dl class="field-list simple">
@@ -282,6 +283,7 @@
 <li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>backend</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 <li><p><strong>last_error</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>termination_reason</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -392,6 +394,17 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">termination_reason</span></span></dt>
+<dd><p>termination code/reason, if model finished naturally</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">backend</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
 <dd></dd></dl>
 
@@ -447,6 +460,11 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">termination_reason</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">updated_at</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
 <dd></dd></dl>
 
@@ -475,7 +493,10 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tracker</strong> (<em>Tracker</em>) – Tracker object with Model repo and live tracker.</p></li>
 <li><p><strong>refresh_seconds</strong> (<em>float</em><em> | </em><em>None</em>) – If None, print once (snapshot). If &gt;0 , refresh
-with specified interval</p></li>
+with specified interval. In an interactive terminal (notebook=False)
+this opens a scrollable curses view: Up/Down/j/k to scroll one line,
+PageUp/PageDown for a page, g/Home and G/End to jump to top/bottom,
+q/Esc to quit.</p></li>
 <li><p><strong>notebook</strong> (<em>bool</em>) – Set to True for clear screen functionality in Jupyter notebooks</p></li>
 <li><p><strong>clear_screen</strong> (<em>bool</em>) – If True (and not notebook), clear terminal between refreshes.</p></li>
 <li><p><strong>show_resume_summary</strong> (<em>bool</em>)</p></li>
@@ -508,13 +529,22 @@ with specified interval</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_build_resume_summary</span></code></p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_build_status_lines</span></code></p></td>
+<td><p>Build the status view as a flat list of single-column text lines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_curses_status_loop</span></code></p></td>
+<td><p>Render a scrollable, auto-refreshing status view inside a curses screen.</p></td>
+</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_model_status</span></code></p></td>
 <td><p>Return ModelStatus object associated with a specific model_id.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_status</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_state_order</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grid_status</span></code></p></td>
 <td><p>Return a list of ModelStatus objects.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_grid_status</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_grid_status</span></code></p></td>
 <td><p>Print the status of all grid models once or as a refreshing view.</p></td>
 </tr>
 </tbody>

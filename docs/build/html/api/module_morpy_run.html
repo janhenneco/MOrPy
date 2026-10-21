@@ -203,6 +203,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_config.html">morpy.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_errors.html">morpy.errors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_grid_run.html">morpy.grid_run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_morpy_log.html">morpy.log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_model.html">morpy.model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_options.html">morpy.options module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_morpy_parser.html">morpy.parser module</a></li>
@@ -291,7 +292,7 @@ the ground truth.</p></li>
 <li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
 if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults
 files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
 when inlist options are found that are not found in the defaults files.</p></li>
 <li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”
@@ -340,7 +341,7 @@ the ground truth.</p></li>
 <li><p><strong>default_options</strong> (<em>DefaultsOptions</em><em> | </em><em>None</em>) – DefaultOptions object. Should be passed if sync_before_run == True.</p></li>
 <li><p><strong>config</strong> (<em>MesaConfig</em><em> | </em><em>None</em>) – MesaConfig object. Will be reconstructed on the fly
 if not passed.</p></li>
-<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, give a warning about inlist options that are not found in the defaults
+<li><p><strong>allow_unknown_options</strong> (<em>bool</em>) – If True, inform the user about inlist options that are not found in the defaults
 files when syncing Model.inlists with inlists in the model directory. If False, raise an exception
 when inlist options are found that are not found in the defaults files.</p></li>
 <li><p><strong>command_name</strong> (<em>str</em>) – Name of the “rn” script. Can be used for restarts by specifying “re”
@@ -443,34 +444,37 @@ tracker.live_tracker and StateTransitions via the tracker.observer</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_emit_transition</span></code></p></td>
 <td><p>Private wrapper around _set_model_state that notifies the observer.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_command_name_for_model</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_termination_line</span></code></p></td>
+<td><p>Scan a MESA terminal output file from the end for the last line mentioning termination.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_command_name_for_model</span></code></p></td>
 <td><p>Use re automatically for models marked as restart when caller asks for rn.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_executable</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_executable</span></code></p></td>
 <td><p>Private helper to locate symlink to Fortran executable and check consistency with WorkdirMode.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_model_dir</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_model_dir</span></code></p></td>
 <td><p>Private helper function to resolve model directory associated with Model object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_run_script</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_resolve_run_script</span></code></p></td>
 <td><p>Private helper function to locate rn script in the model directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_model_state</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_model_state</span></code></p></td>
 <td><p>Private method to change the state of a Model object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_terminate_process_posix</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_terminate_process_posix</span></code></p></td>
 <td><p>Terminate or kill a process group on POSIX.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_model</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_model</span></code></p></td>
 <td><p>Function to launch a single model in a non-blocking way.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_model</span></code></p></td>
 <td><p>Function to launch a single model in a blocking way.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate_run_process</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate_run_process</span></code></p></td>
 <td><p>Terminate a launched run process and descendants when possible.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_model</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_model</span></code></p></td>
 <td><p>Wait for a launched model process to finish and return its final run result.</p></td>
 </tr>
 </tbody>

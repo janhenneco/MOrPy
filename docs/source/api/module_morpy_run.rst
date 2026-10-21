@@ -20,6 +20,7 @@ Functions
    :nosignatures:
 
    _emit_transition
+   _find_termination_line
    _resolve_command_name_for_model
    _resolve_executable
    _resolve_model_dir
