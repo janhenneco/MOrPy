@@ -1,5 +1,5 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23662416.svg)](https://doi.org/10.5281/zenodo.23662416)
-[![Documentation Status](https://readthedocs.org/projects/morpy/badge/?version=latest)](https://morpy.readthedocs.io/en/latest/)
+[![Documentation Status](https://img.shields.io/readthedocs/morpy/latest)](https://morpy.readthedocs.io/en/latest/)
 # MESA Orchestrator in Python (MOrPy)
 
 <div align="center">
