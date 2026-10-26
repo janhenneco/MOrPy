@@ -6,6 +6,6 @@ authors:
   orcid: "https://orcid.org/0000-0003-4307-0060"
 title: "MOrPy: MESA Orchestrator in Python"
 version: 0.2.1
-# doi: 10.5281/zenodo.1234
+doi: 10.5281/zenodo.23662416
 date-released: 2026-10-26
 url: "https://github.com/janhenneco/MOrPy"

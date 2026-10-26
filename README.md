@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23662416.svg)](https://doi.org/10.5281/zenodo.23662416)
+[![Documentation Status](https://readthedocs.org/projects/morpy/badge/?version=latest)](https://morpy.readthedocs.io/en/latest/)
 # MESA Orchestrator in Python (MOrPy)
 
 <div align="center">
@@ -182,6 +184,28 @@ The general idea and many of the concepts of a `Python`-based tool to run grids 
 A very big thank you to all the people who tested `MOrPy` so far and provided valuable feedback: Eva Laplace, Inmaculada Moyano, Sofia Mesini, Vazsony Varga, Lorens Niehof, Flore Poelmans, and Zihan Wang. 
 
 I gratefully acknowledge UK Research and Innovation (UKRI) in the form of a Frontier Research grant under the UK government’s ERC Horizon Europe funding guarantee (SYMPHONY; PI Bowman; grant number: EP/Y031059/1).
+
+## Citing MOrPy
+If you use `MOrPy` in your work, please cite it using the Zenodo DOI:
+
+> Henneco, J. (2026). *MOrPy: MESA Orchestrator in Python*. Zenodo. https://doi.org/10.5281/zenodo.23662416
+
+```bibtex
+@software{Henneco_MOrPy_2026,
+author = {Henneco, Jan},
+title = {{MOrPy: MESA Orchestrator in Python}},
+publisher = {Zenodo},
+doi = {10.5281/zenodo.23662416},
+url = {https://doi.org/10.5281/zenodo.23662416},
+year = {2026}
+}
+```
+
+The DOI always points to the latest release of `MOrPy`. If you would like to cite a specific version of `MOrPy`, pick the DOI corresponding to that version from the [Zenodo record](https://doi.org/10.5281/zenodo.23662416).
+
+You can also use the **"Cite this repository"** button on the right side of the GitHub page.
+
+Since `MOrPy` is a `Python` package that interacts with the `MESA` code, please also cite the `MESA` papers described in the [MESA documentation](https://mesastar.org/).
 
 
 ## Generative AI Disclosure

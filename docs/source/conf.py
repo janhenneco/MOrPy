@@ -9,16 +9,16 @@
 import os
 import sys
 from datetime import datetime
+from importlib.metadata import version as _get_version
+
+release = _get_version("morpy")
+version = ".".join(release.split(".")[:2])
 
 sys.path.insert(0, os.path.abspath("../../src"))
 
 project = 'MOrPy'
 author = 'Jan Henneco'
 copyright = f"{datetime.now():%Y}, {author}"
-
-
-version = '0.1'
-release = '0.1.0.dev0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -49,10 +49,6 @@ exclude_patterns = []
 html_theme = "sphinx_rtd_theme"
 html_title = "MOrPy Documentation"
 html_theme_options = {
-    "source_repository": "https://github.com/janhenneco/MOrPy/",
-    "source_branch": "main",
-    "source_directory": "docs/source/",
-    "navigation_with_keys": True,
     "style_nav_header_background": "white",
 }
 html_static_path = ["_static"]
