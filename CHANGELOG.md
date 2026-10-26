@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.1] - 2026-10-26
+
+### Added
+- CITATION.cff file with citation metadata
+- Releases are now archived on Zenodo
+
+### Changed
+- Changed the sphinx theme to the ReadTheDocs sphinx theme
+
+
+
 ## [0.2.0] - 2026-10-21
 
 ### Added

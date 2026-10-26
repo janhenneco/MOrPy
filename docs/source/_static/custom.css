@@ -1,0 +1,11 @@
+/* Logo a bit smaller and centred */
+.wy-side-nav-search img.logo {
+    max-width: 70% !important;
+    background: none !important;
+    padding: 0 !important;
+}
+
+/* Keep the search box visible on the white header */
+.wy-side-nav-search input[type="text"] {
+    border: 1px solid #ccc;
+}

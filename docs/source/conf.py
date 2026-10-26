@@ -28,7 +28,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
-    "myst_parser"
+    "myst_parser",
+    'sphinx_rtd_theme'
     ]
 
 autosummary_generate = True
@@ -45,14 +46,18 @@ napoleon_numpy_docstring = True
 templates_path = ["_templates"]
 exclude_patterns = []
 
-html_theme = "furo"
+html_theme = "sphinx_rtd_theme"
 html_title = "MOrPy Documentation"
 html_theme_options = {
     "source_repository": "https://github.com/janhenneco/MOrPy/",
     "source_branch": "main",
     "source_directory": "docs/source/",
     "navigation_with_keys": True,
+    "style_nav_header_background": "white",
 }
+html_static_path = ["_static"]
+html_logo = "_static/MOrPy_logo_notext.svg"
+html_css_files = ["custom.css"]
 
 language = 'en'
 
